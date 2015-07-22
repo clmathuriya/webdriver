@@ -1,2 +1,2 @@
 # webdriver
-find webdriver concepts related examples here.
+find webdriver related examples here.
