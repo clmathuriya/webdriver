@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<suite name="Demo Suite" parallel="false">
-	<listeners>
-		<listener class-name="com.plancess.selenium.reporter.PlancessReporter" />
-	</listeners>
-	<test name="Search Test">
+<suite name="Plancess Web APP Dev Suite" parallel="false">
+	<!-- <listeners> <listener class-name="com.plancess.selenium.reporter.PlancessReporter" 
+		/> </listeners> -->
+	<parameter name="browser" value="firefox" />
+	<test name="Home Page Test">
 		<classes>
-			<class name="com.plancess.selenium.tests.SearchTest" />
-			<!-- <class name="com.plancess.selenium.tests.WebDriverDemoShootoutTest"/> -->
+			<class name="com.plancess.selenium.tests.HomePageTest" />
 		</classes>
-	</test> <!-- Test -->
+	</test>
+
+	<!-- <test name="Signup Test"> <classes> <class name="com.plancess.selenium.tests.SignUpTest" 
+		/> </classes> </test> -->
 </suite> <!-- Suite -->

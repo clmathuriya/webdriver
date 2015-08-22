@@ -1,6 +1,7 @@
 package com.plancess.selenium.executor;
 
 import org.openqa.selenium.WebDriver;
+import org.testng.Reporter;
 
 import com.plancess.selenium.utils.Util;
 
@@ -14,7 +15,7 @@ public class Executioner {
 	}
 
 	public void navigateToURL(String url) {
-		//Reporter.log("Navigating to URL: " + url + "<br>", 0, true);
+		Reporter.log("Navigating to URL:" + url + "<br>", 0, true);
 		driver.navigate().to(url);
 		util.takeScreenshot(driver, "Navigated to URL :" + url + "<br>");
 

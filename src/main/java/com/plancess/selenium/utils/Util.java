@@ -23,7 +23,7 @@ public class Util {
 	String jira_attachment_baseURL = "";
 	String jira_attachment_authentication = "";
 
-	public void takeScreenshot(WebDriver driver, String step) {
+	public String takeScreenshot(WebDriver driver, String step) {
 		try {
 			File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 			// Now you can do whatever you need to do with it, for example copy
@@ -33,9 +33,28 @@ public class Util {
 			FileUtils.copyFile(scrFile, file);
 			Reporter.log("Screenshot for " + step + " captured as <a href='" + file.getAbsolutePath()
 					+ "' target='_blank'> screenshot </a> <br>");
+			return "Screenshot for " + step + " is :" + file.getName() + "\n";
 		} catch (Exception e) {
 			Reporter.log("Exception in taking screenshot");
 		}
+		return null;
+	}
+
+	public String takeScreenshot(WebDriver driver) {
+		try {
+			File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+			// Now you can do whatever you need to do with it, for example copy
+			// somewhere
+			String filename = "./screenshots/screenshot" + System.currentTimeMillis() + ".png";
+			File file = new File(filename);
+			FileUtils.copyFile(scrFile, file);
+			Reporter.log("Screenshot captured as <a href='" + file.getAbsolutePath()
+					+ "' target='_blank'> screenshot </a> <br>");
+			return "Screenshot : " + file.getName() + "\n";
+		} catch (Exception e) {
+			Reporter.log("Exception in taking screenshot");
+		}
+		return null;
 	}
 
 	public boolean addAttachmentToIssue(String issueKey, String fullfilename) throws IOException {
