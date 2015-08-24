@@ -52,8 +52,11 @@
 			<artifactId>json</artifactId>
 			<version>20141113</version>
 		</dependency>
-
-
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.12</version>
+		</dependency>
 
 	</dependencies>
 	<build>

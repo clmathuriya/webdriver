@@ -1,5 +1,7 @@
 package com.plancess.selenium.pages;
 
+import java.util.Map;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -31,6 +33,11 @@ public class LoginPage {
 		}
 		PageFactory.initElements(driver, this);
 
+	}
+
+	public DashBoard doLogin(Map<String, String> user) {
+
+		return new DashBoard(driver);
 	}
 
 }

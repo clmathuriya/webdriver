@@ -21,7 +21,7 @@
 1. Update maven project
    right click on project > maven> update project
 2. Add Page class in package "com.plancess.selenium.pages"
-2. Add TestNG tests in  package "com.plancess.selenium.tests"
+3. Add TestNG tests in  package "com.plancess.selenium.tests"
 
 #Running tests
 
