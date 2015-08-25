@@ -15,9 +15,10 @@ public class Executioner {
 	}
 
 	public void navigateToURL(String url) {
-		Reporter.log("Navigating to URL:" + url + "<br>", 0, true);
+		Reporter.log("Navigating to URL:" + url, 0, true);
 		driver.navigate().to(url);
-		util.takeScreenshot(driver, "Navigated to URL :" + url + "<br>");
+		driver.manage().window().maximize();
+		util.takeScreenshot(driver, "Navigated to URL :" + url);
 
 	}
 

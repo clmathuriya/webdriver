@@ -7,9 +7,8 @@ import org.openqa.selenium.support.PageFactory;
 
 import com.plancess.selenium.executor.Executioner;
 
-public class DashBoard {
+public class Dashboard {
 	private final WebDriver driver;
-	private String url = "http://dev.plancess.com/ui/#/";
 
 	@FindBy(css = "header img[title='Plancess Logo']")
 	WebElement plancessHeaderLogo;
@@ -17,20 +16,20 @@ public class DashBoard {
 	@FindBy(css = "footer img[title='Plancess Logo']")
 	WebElement plancessFooterLogo;
 
-	@FindBy(css = "a[ng-click='openLogin()']")
-	WebElement loginLink;
+	@FindBy(css = "a[ng-click='logoutUser()']")
+	WebElement logoutLink;
 
-	@FindBy(css = "a[ng-click='openSignUp()']")
-	WebElement signupLink;
+	@FindBy(css = "start-assessment-section")
+	WebElement startAssessmentSection;
 
 	@FindBy(css = "a[data-toggle='dropdown'] img")
 	WebElement toggleDropDown;
 
-	public DashBoard(WebDriver driver) {
+	public Dashboard(WebDriver driver) {
 		this.driver = driver;
-		new Executioner(driver).navigateToURL(url);
+		// new Executioner(driver).navigateToURL(url);
 		if (!"Plancess Dashboard".equals(driver.getTitle())) {
-			throw new IllegalStateException("This is not  the Plancess Home page");
+			throw new IllegalStateException("This is not  the Plancess Dashboard page");
 		}
 		PageFactory.initElements(driver, this);
 
@@ -42,10 +41,6 @@ public class DashBoard {
 		return driver;
 	}
 
-	public String getUrl() {
-		return url;
-	}
-
 	public WebElement getPlancessHeaderLogo() {
 		return plancessHeaderLogo;
 	}
@@ -54,30 +49,21 @@ public class DashBoard {
 		return plancessFooterLogo;
 	}
 
-	public WebElement getLoginLink() {
-		return loginLink;
-	}
-
-	public WebElement getSignupLink() {
-		return signupLink;
-	}
-
 	public WebElement getToggleDropDown() {
 		return toggleDropDown;
 	}
 
-	// user operations
-	public SignUpPage openSignUpPage() {
-		toggleDropDown.click();
-		signupLink.click();
-
-		return new SignUpPage(driver);
-
+	public WebElement getLogoutLink() {
+		return logoutLink;
 	}
 
-	public LoginPage openLoginPage() {
+	public WebElement getStartAssessmentSection() {
+		return startAssessmentSection;
+	}
+
+	public LoginPage logoutUser() {
 		toggleDropDown.click();
-		loginLink.click();
+		logoutLink.click();
 
 		return new LoginPage(driver);
 
@@ -97,16 +83,6 @@ public class DashBoard {
 
 	public boolean isToggleDropDownVisible() {
 		return toggleDropDown.isDisplayed();
-	}
-
-	public boolean isLoginLinkDisplayed() {
-
-		return loginLink.isDisplayed();
-	}
-
-	public boolean isSignUpLinkDisplayed() {
-
-		return signupLink.isDisplayed();
 	}
 
 	public void clickToggelDropDown() {

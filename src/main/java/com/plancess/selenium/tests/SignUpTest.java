@@ -9,6 +9,9 @@ import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -16,6 +19,7 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.plancess.selenium.pages.Dashboard;
 import com.plancess.selenium.pages.HomePage;
 import com.plancess.selenium.pages.SignUpPage;
 import com.plancess.selenium.utils.DataProviderClass;
@@ -26,6 +30,7 @@ public class SignUpTest extends BaseTest {
 	private HomePage homePage;
 	private SignUpPage signUpPage;
 	private String pageTitle = "Plancess Dashboard";
+	private WebDriverWait wait;
 
 	@Parameters({ "host_ip", "port", "os", "browser", "browserVersion" })
 	@BeforeMethod
@@ -41,7 +46,8 @@ public class SignUpTest extends BaseTest {
 
 			this.driver = new RemoteWebDriver(new URL("http://" + host + ":" + port + "/wd/hub"), capabilities);
 
-			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+			// driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+			wait = new WebDriverWait(driver, 15);
 			homePage = new HomePage(driver);
 
 			signUpPage = homePage.openSignUpPage();
@@ -58,7 +64,7 @@ public class SignUpTest extends BaseTest {
 		driver.quit();
 	}
 
-	@Test
+	@Test(groups = { "smoke", "regression" })
 	public void signUpContentTest() {
 
 		Assert.assertEquals(signUpPage.getTitle(), pageTitle, util.takeScreenshot(driver, "assert title"));
@@ -83,14 +89,15 @@ public class SignUpTest extends BaseTest {
 
 	}
 
-	@Test
+	@Test(groups = { "regression" })
 	public void signUpWithEmptyFieldsTest() {
 
-		Assert.assertEquals(signUpPage.getSubmit().getAttribute("disabled"), "disabled",
+		Assert.assertEquals(signUpPage.getSubmit().getAttribute("disabled"), "true",
 				util.takeScreenshot(driver, "assert submit button disabled for empty field values"));
 	}
 
-	@Test(dataProvider = "mandatoryData", dataProviderClass = DataProviderClass.class)
+	@Test(dataProvider = "mandatoryData", dataProviderClass = DataProviderClass.class, groups = { "smoke",
+			"regression" })
 	public void signUpWithMandatoryFieldsTest(Map<String, String> user) {
 
 		signUpPage.signUpWithMandatoryFiels(user);
@@ -99,53 +106,81 @@ public class SignUpTest extends BaseTest {
 				util.takeScreenshot(driver, "assert create user success message"));
 	}
 
-	@Test(dataProvider = "invalidEmails", dataProviderClass = DataProviderClass.class)
+	@Test(dataProvider = "invalidEmails", dataProviderClass = DataProviderClass.class, groups = { "regression" })
 	public void signUpWithInvalidEmailsTest(Map<String, String> user) {
 
-		signUpPage.signUp(user);
+		signUpPage.fillSignUpForm(user);
 
-		Assert.assertEquals(signUpPage.getSubmit().getAttribute("disabled"), "disabled",
-				util.takeScreenshot(driver, "assert submit button disabled for empty field values"));
+		Assert.assertEquals(signUpPage.getSubmit().getAttribute("disabled"), "true",
+				util.takeScreenshot(driver, "assert submit button disabled for invalid email ids"));
+		verifications.verifyEquals(signUpPage.getEmailErrorMessage().getText(), "Please enter correct email address",
+				util.takeScreenshot(driver, "assert error message for invalid email ids"));
 	}
 
-	@Test(dataProvider = "invalidPasswords", dataProviderClass = DataProviderClass.class)
+	@Test(dataProvider = "invalidPasswords", dataProviderClass = DataProviderClass.class, groups = { "regression" })
 	public void signUpWithInvalidPasswordsTest(Map<String, String> user) {
 
-		signUpPage.signUp(user);
-		Assert.assertEquals(signUpPage.getSubmit().getAttribute("disabled"), "disabled",
-				util.takeScreenshot(driver, "assert submit button disabled for empty field values"));
+		signUpPage.fillSignUpForm(user);
+		Assert.assertEquals(signUpPage.getSubmit().getAttribute("disabled"), "true",
+				util.takeScreenshot(driver, "assert submit button disabled for invalid password values"));
+		verifications.verifyEquals(signUpPage.getPasswordErrorMessage().getText(),
+				"Must contain at least 1 alphabet, 1 digit and 1 special character out of $@!%*?&^",
+				util.takeScreenshot(driver, "assert password error message for invalid password values"));
 	}
 
-	@Test(dataProvider = "invalidMobile", dataProviderClass = DataProviderClass.class)
+	@Test(dataProvider = "misMatchPasswords", dataProviderClass = DataProviderClass.class, groups = { "regression" })
+	public void signUpWithPasswordMismatchTest(Map<String, String> user) {
+
+		signUpPage.fillSignUpForm(user);
+		Assert.assertEquals(signUpPage.getSubmit().getAttribute("disabled"), "true",
+				util.takeScreenshot(driver, "assert submit button disabled for password mismatch"));
+		verifications.verifyTrue(
+				signUpPage.getConfirmPasswordErrorMessage().getText().contains("Passwords don't match"),
+				util.takeScreenshot(driver, "assert password mismatch error message for password mismatch"));
+	}
+
+	@Test(dataProvider = "invalidMobile", dataProviderClass = DataProviderClass.class, groups = { "regression" })
 	public void signUpWithInvalidMobileTest(Map<String, String> user) {
 
-		signUpPage.signUp(user);
-		Assert.assertEquals(signUpPage.getSubmit().getAttribute("disabled"), "disabled",
-				util.takeScreenshot(driver, "assert submit button disabled for empty field values"));
+		signUpPage.fillSignUpForm(user);
+		Assert.assertEquals(signUpPage.getSubmit().getAttribute("disabled"), "true",
+				util.takeScreenshot(driver, "assert submit button disabled for invalid mobile number"));
+		verifications.verifyEquals(signUpPage.getMobileErrorMessage().getText(),
+				"Valid phone number starting with 7,8 or 9 is required",
+				util.takeScreenshot(driver, "assert error message for invalid mobile number"));
 	}
 
-	@Test(dataProvider = "invalidNames", dataProviderClass = DataProviderClass.class)
+	@Test(dataProvider = "invalidNames", dataProviderClass = DataProviderClass.class, groups = { "regression" })
 	public void signUpWithInvalidNameTest(Map<String, String> user) {
-
-		signUpPage.signUp(user);
-		Assert.assertEquals(signUpPage.getSubmit().getAttribute("disabled"), "disabled",
-				util.takeScreenshot(driver, "assert submit button disabled for empty field values"));
+		signUpPage.fillSignUpForm(user);
+		Assert.assertEquals(signUpPage.getSubmit().getAttribute("disabled"), "true",
+				util.takeScreenshot(driver, "assert submit button disabled for invalid names"));
+		verifications.verifyEquals(signUpPage.getFirstNameErrorMessage().getText(), "Please enter minimum 3 characters",
+				util.takeScreenshot(driver, "assert error message for invalid first name"));
+		verifications.verifyEquals(signUpPage.getLastNameErrorMessage().getText(), "Please enter minimum 3 characters",
+				util.takeScreenshot(driver, "assert error message for invalid last name"));
 	}
 
-	@Test(dataProvider = "mandatoryData", dataProviderClass = DataProviderClass.class)
+	@Test(dataProvider = "mandatoryData", dataProviderClass = DataProviderClass.class, groups = { "regression" })
 	public void signUpWithExistingEmailTest(Map<String, String> user) {
+		user.put("email", "testuser@gmail.com");
+		signUpPage.signUpWithMandatoryFiels(user);
 
-		signUpPage.signUp(user);
-		Assert.assertEquals(signUpPage.getSubmit().getAttribute("disabled"), "disabled",
-				util.takeScreenshot(driver, "assert submit button disabled for empty field values"));
+		wait.until(ExpectedConditions.textToBePresentInElement(signUpPage.getFailureMessage(), user.get("email")));
+		Assert.assertEquals(signUpPage.getFailureMessage().getText(),
+				user.get("email") + " already exists in our database",
+				util.takeScreenshot(driver, "assert failure message for existing email"));
 	}
 
-	@Test(dataProvider = "validEmailPasswords", dataProviderClass = DataProviderClass.class)
+	@Test(dataProvider = "validEmailPasswords", dataProviderClass = DataProviderClass.class, groups = { "smoke",
+			"regression" })
 	public void signUpWithValidEmailPasswordsTest(Map<String, String> user) {
 
 		signUpPage.signUp(user);
-		Assert.assertEquals(signUpPage.getSubmit().getAttribute("disabled"), "disabled",
+		Assert.assertEquals(signUpPage.getSubmit().getAttribute("disabled"), "true",
 				util.takeScreenshot(driver, "assert submit button disabled for empty field values"));
+		Assert.assertEquals(signUpPage.getSuccessMessage().getText(), "Account created successfully!",
+				util.takeScreenshot(driver, "assert create user success message"));
 	}
 
 }

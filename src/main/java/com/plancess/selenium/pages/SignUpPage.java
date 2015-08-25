@@ -10,28 +10,29 @@ import org.openqa.selenium.support.PageFactory;
 public class SignUpPage {
 	private final WebDriver driver;
 	WebElement firstName;
-	@FindBy(xpath = "//*[.='Please enter atleast 3 characters']") //to be updated
+	@FindBy(xpath = "//input[@name='firstName']/../div")
 	WebElement firstNameErrorMessage;
 	WebElement lastName;
-	@FindBy(xpath = "//*[.='Please enter correct email address']")//to be updated
+	@FindBy(xpath = "//input[@name='lastName']/../div")
 	WebElement lastNameErrorMessage;
 
 	WebElement email;
 
-	@FindBy(xpath = "//*[.='Please enter correct email address']")
+	@FindBy(xpath = "//input[@name='email']/../div")
 	WebElement emailErrorMessage;
 
 	@FindBy(css = "input[name='tel']")
 	WebElement mobile;
 
-	@FindBy(xpath = "//*[.='Valid phone number starting with 7,8 or 9 is required']")
+	@FindBy(xpath = "//input[@name='tel']/../div")
 	WebElement mobileErrorMessage;
 
 	WebElement password;
-	@FindBy(xpath = "//*[.='Please enter correct email address']")//to be updated
+	@FindBy(xpath = "//input[@name='password']/../div")
 	WebElement passwordErrorMessage;
 	WebElement confirmPassword;
-	@FindBy(xpath = "//*[.='Please enter correct email address']")//to be updated
+	@FindBy(xpath = "//input[@name='confirmPassword']/../../div[3]")
+	// in case of password mismatch error check for contains not equals
 	WebElement confirmPasswordErrorMessage;
 
 	@FindBy(css = "input[type='Checkbox']")
@@ -49,7 +50,7 @@ public class SignUpPage {
 	@FindBy(xpath = "//div[.='Account created successfully!']")
 	WebElement successMessage;
 
-	@FindBy(xpath = "//div[.='Account created successfully!']")// to be updated
+	@FindBy(xpath = "//div[@class='error-message']")
 	WebElement failureMessage;
 
 	public SignUpPage(WebDriver driver) {
@@ -107,33 +108,69 @@ public class SignUpPage {
 		return toggleDropDown;
 	}
 
+	public WebElement getSuccessMessage() {
+		return successMessage;
+	}
+
+	public WebElement getConfirmPasswordErrorMessage() {
+		return confirmPasswordErrorMessage;
+	}
+
+	public WebElement getEmailErrorMessage() {
+		return emailErrorMessage;
+	}
+
+	public WebElement getFailureMessage() {
+		return failureMessage;
+	}
+
+	public WebElement getFirstNameErrorMessage() {
+		return firstNameErrorMessage;
+	}
+
+	public WebElement getLastNameErrorMessage() {
+		return lastNameErrorMessage;
+	}
+
+	public WebElement getMobileErrorMessage() {
+		return mobileErrorMessage;
+	}
+
+	public WebElement getPasswordErrorMessage() {
+		return passwordErrorMessage;
+	}
+
 	// user operations
 	public String getTitle() {
 
 		return driver.getTitle();
 	}
 
-	public WebElement getSuccessMessage() {
-		return successMessage;
-	}
-
-	public void signUpWithMandatoryFiels(Map<String, String> user) {
+	public Dashboard signUpWithMandatoryFiels(Map<String, String> user) {
 		email.sendKeys(user.get("email"));
 		password.sendKeys(user.get("password"));
 		confirmPassword.sendKeys(user.get("confirm_password"));
 		agreeCheckbox.click();
 		submit.click();
+		return new Dashboard(driver);
 
+	}
+
+	public void fillSignUpForm(Map<String, String> user) {
+		firstName.sendKeys(user.get("firstName"));
+
+		email.sendKeys(user.get("email"));
+		password.sendKeys(user.get("password"));
+		lastName.sendKeys(user.get("lastName"));
+		mobile.sendKeys(user.get("mobile"));
+		confirmPassword.sendKeys(user.get("confirm_password"));
+		if (agreeCheckbox.isEnabled())
+			agreeCheckbox.click();
 	}
 
 	public void signUp(Map<String, String> user) {
-		firstName.sendKeys(user.get("firstName"));
-		lastName.sendKeys(user.get("lastName"));
-		mobile.sendKeys(user.get("mobile"));
-		email.sendKeys(user.get("email"));
-		password.sendKeys(user.get("password"));
-		confirmPassword.sendKeys(user.get("confirm_password"));
-		agreeCheckbox.click();
+		fillSignUpForm(user);
 		submit.click();
 	}
+
 }
