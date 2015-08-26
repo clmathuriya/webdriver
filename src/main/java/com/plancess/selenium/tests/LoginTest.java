@@ -3,12 +3,12 @@ package com.plancess.selenium.tests;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -27,6 +27,7 @@ public class LoginTest extends BaseTest {
 	private HomePage homePage;
 	private LoginPage loginPage;
 	private String pageTitle = "Plancess Dashboard";
+	private WebDriverWait wait;
 
 	@Parameters({ "host_ip", "port", "os", "browser", "browserVersion" })
 	@BeforeMethod
@@ -42,8 +43,9 @@ public class LoginTest extends BaseTest {
 
 			this.driver = new RemoteWebDriver(new URL("http://" + host + ":" + port + "/wd/hub"), capabilities);
 
-			driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-			homePage = new HomePage(driver);
+			// driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+			wait = new WebDriverWait(driver, 30);
+			homePage = new HomePage(driver, wait);
 
 			loginPage = homePage.openLoginPage();
 

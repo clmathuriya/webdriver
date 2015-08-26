@@ -2,12 +2,12 @@ package com.plancess.selenium.tests;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -24,6 +24,8 @@ public class HomePageTest extends BaseTest {
 	private HomePage homePage;
 	private String pageTitle = "Plancess Dashboard";
 
+	private WebDriverWait wait;
+
 	@Parameters({ "host_ip", "port", "os", "browser", "browserVersion" })
 	@BeforeMethod
 	public void setUp(@Optional("localhost") String host, @Optional("4444") String port, @Optional("LINUX") String os,
@@ -36,10 +38,11 @@ public class HomePageTest extends BaseTest {
 			capabilities.setCapability("platform", Platform.valueOf(os));
 
 			this.driver = new RemoteWebDriver(new URL("http://" + host + ":" + port + "/wd/hub"), capabilities);
+			wait = new WebDriverWait(driver, 30);
 
-			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+			// driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 
-			homePage = new HomePage(driver);
+			homePage = new HomePage(driver, wait);
 
 		} catch (MalformedURLException e) {
 			Assert.fail("Unable to start selenium session make sure Grid hub is running on url :" + "http://" + host

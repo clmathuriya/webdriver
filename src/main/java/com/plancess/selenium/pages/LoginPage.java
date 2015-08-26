@@ -6,9 +6,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class LoginPage {
 	private final WebDriver driver;
+	private WebDriverWait wait;
 	WebElement email;
 
 	WebElement password;
@@ -35,8 +37,9 @@ public class LoginPage {
 	@FindBy(xpath = "//div[@class='error-message']")
 	WebElement failureMessage;
 
-	public LoginPage(WebDriver driver) {
+	public LoginPage(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
+		this.wait = wait;
 		if (!"Plancess Dashboard".equals(driver.getTitle())) {
 			throw new IllegalStateException("This is not  the Plancess Home page");
 		}
@@ -86,12 +89,12 @@ public class LoginPage {
 
 	public Dashboard doLogin(Map<String, String> user) {
 
-		return new Dashboard(driver);
+		return new Dashboard(driver, wait);
 	}
 
 	public SignUpPage navigateToSignUpPage() {
 		signupButton.click();
-		return new SignUpPage(driver);
+		return new SignUpPage(driver, wait);
 	}
 
 	public String getTitle() {

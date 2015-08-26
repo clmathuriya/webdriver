@@ -2,13 +2,20 @@ package com.plancess.selenium.pages;
 
 import java.util.Map;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SignUpPage {
 	private final WebDriver driver;
+	private WebDriverWait wait;
+	private Actions actions;;
+	private final String agreeCheckBoxXpath = "//input[@type='checkbox']";
 	WebElement firstName;
 	@FindBy(xpath = "//input[@name='firstName']/../div")
 	WebElement firstNameErrorMessage;
@@ -35,10 +42,10 @@ public class SignUpPage {
 	// in case of password mismatch error check for contains not equals
 	WebElement confirmPasswordErrorMessage;
 
-	@FindBy(css = "input[type='Checkbox']")
+	@FindBy(xpath = agreeCheckBoxXpath)
 	WebElement agreeCheckbox;
 
-	@FindBy(xpath = "//button[.='Submit']")
+	@FindBy(xpath = "//button[@type='submit']")
 	WebElement submit;
 
 	@FindBy(xpath = "//a[.='Back']")
@@ -53,8 +60,10 @@ public class SignUpPage {
 	@FindBy(xpath = "//div[@class='error-message']")
 	WebElement failureMessage;
 
-	public SignUpPage(WebDriver driver) {
+	public SignUpPage(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
+		this.wait = wait;
+		this.actions = new Actions(driver);
 		if (!"Plancess Dashboard".equals(driver.getTitle())) {
 			throw new IllegalStateException("This is not  the Plancess SignUp page");
 		}
@@ -93,10 +102,13 @@ public class SignUpPage {
 	}
 
 	public WebElement getAgreeCheckbox() {
+
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(agreeCheckBoxXpath)));
 		return agreeCheckbox;
 	}
 
 	public WebElement getSubmit() {
+		wait.until(ExpectedConditions.visibilityOf(submit));
 		return submit;
 	}
 
@@ -113,10 +125,12 @@ public class SignUpPage {
 	}
 
 	public WebElement getConfirmPasswordErrorMessage() {
+		wait.until(ExpectedConditions.visibilityOf(confirmPasswordErrorMessage));
 		return confirmPasswordErrorMessage;
 	}
 
 	public WebElement getEmailErrorMessage() {
+		wait.until(ExpectedConditions.visibilityOf(emailErrorMessage));
 		return emailErrorMessage;
 	}
 
@@ -133,10 +147,12 @@ public class SignUpPage {
 	}
 
 	public WebElement getMobileErrorMessage() {
+		wait.until(ExpectedConditions.visibilityOf(mobileErrorMessage));
 		return mobileErrorMessage;
 	}
 
 	public WebElement getPasswordErrorMessage() {
+		wait.until(ExpectedConditions.visibilityOf(passwordErrorMessage));
 		return passwordErrorMessage;
 	}
 
@@ -147,12 +163,19 @@ public class SignUpPage {
 	}
 
 	public Dashboard signUpWithMandatoryFiels(Map<String, String> user) {
+		wait.until(ExpectedConditions.visibilityOf(email));
 		email.sendKeys(user.get("email"));
 		password.sendKeys(user.get("password"));
 		confirmPassword.sendKeys(user.get("confirm_password"));
-		agreeCheckbox.click();
+		int trycount = 0;
+		while (!agreeCheckbox.isSelected() && trycount <= 5) {
+			actions.click(agreeCheckbox).build().perform();
+
+			trycount++;
+		}
+		wait.until(ExpectedConditions.elementToBeClickable(submit));
 		submit.click();
-		return new Dashboard(driver);
+		return new Dashboard(driver, wait);
 
 	}
 
@@ -164,13 +187,21 @@ public class SignUpPage {
 		lastName.sendKeys(user.get("lastName"));
 		mobile.sendKeys(user.get("mobile"));
 		confirmPassword.sendKeys(user.get("confirm_password"));
-		if (agreeCheckbox.isEnabled())
-			agreeCheckbox.click();
+
 	}
 
-	public void signUp(Map<String, String> user) {
+	public Dashboard signUp(Map<String, String> user) {
 		fillSignUpForm(user);
+		wait.until(ExpectedConditions.elementToBeClickable(agreeCheckbox));
+		int trycount = 0;
+		while (!agreeCheckbox.isSelected() && trycount <= 5) {
+			actions.click(agreeCheckbox).build().perform();
+
+			trycount++;
+		}
+		wait.until(ExpectedConditions.elementToBeClickable(submit));
 		submit.click();
+		return new Dashboard(driver, wait);
 	}
 
 }

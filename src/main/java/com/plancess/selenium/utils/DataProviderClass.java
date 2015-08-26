@@ -48,6 +48,42 @@ public class DataProviderClass {
 		return dataSet;
 	}
 
+	@DataProvider(name = "invalidEmail")
+	public static Object[][] signUpDataProviderWithInvalidEmail() {
+
+		Object[][] dataSet = new Object[1][1];
+		Map<String, String> user = new HashMap<String, String>();
+
+		user.put("firstName", "WebUser");
+		user.put("lastName", "Test");
+		user.put("mobile", "9876543210");
+		user.put("password", "P@ssw0rd");
+		user.put("confirm_password", "P@ssw0rd");
+
+		user.put("email", "webtest");
+		dataSet[0][0] = user;
+
+		return dataSet;
+	}
+
+	@DataProvider(name = "invalidPassword")
+	public static Object[][] signUpDataProviderWithInvalidPassword() {
+
+		Object[][] dataSet = new Object[1][1];
+		Map<String, String> user = new HashMap<String, String>();
+
+		user.put("firstName", "WebUser");
+		user.put("lastName", "Test");
+		user.put("mobile", "9876543210");
+		user.put("email", "webuser@plancess.com");
+
+		user.put("password", "n@t8");
+		user.put("confirm_password", "n@t8");
+		dataSet[0][0] = user;
+
+		return dataSet;
+	}
+
 	@DataProvider(name = "invalidPasswords")
 	public static Object[][] signUpDataProviderWithInvalidPasswords() {
 		String[] invalidPasswords = { "n@t8", "0nly@07", "!@##$%^&*", "onlyalphabets", "12345678", "$@!%*?&^",
@@ -90,6 +126,25 @@ public class DataProviderClass {
 
 	@DataProvider(name = "invalidMobile")
 	public static Object[][] signUpDataProviderWithInvalidMobile() {
+
+		Object[][] dataSet = new Object[1][1];
+		Map<String, String> user = new HashMap<String, String>();
+
+		user.put("firstName", "WebUser");
+		user.put("lastName", "Test");
+
+		user.put("email", "webuser@plancess.com");
+		user.put("password", "P@ssw0rd");
+		user.put("confirm_password", "P@ssw0rd");
+
+		user.put("mobile", "!@#$%^");
+		dataSet[0][0] = user;
+
+		return dataSet;
+	}
+
+	@DataProvider(name = "invalidMobiles")
+	public static Object[][] signUpDataProviderWithInvalidMobiles() {
 		String[] invalidMobiles = { "a", "!@#$%^", "1234", "123456789", "0000000000", "12345678", "asdf123456",
 				"asdfasdfasdf", "!@#$%^&*()_-+=", "12345678910", "000000000000000000", "asdf1234567" };
 		Object[][] dataSet = new Object[invalidMobiles.length][1];
@@ -129,6 +184,25 @@ public class DataProviderClass {
 			user.put("lastName", invalidNames[i]);
 			dataSet[i][0] = user;
 		}
+
+		return dataSet;
+	}
+
+	@DataProvider(name = "validEmailPassword")
+	public static Object[][] signUpDataProviderWithValidEmailPassword() {
+		long timestamp = System.currentTimeMillis();
+
+		Object[][] dataSet = new Object[1][1];
+		Map<String, String> user = new HashMap<String, String>();
+
+		user.put("firstName", "WebUser");
+		user.put("lastName", "Test");
+		user.put("mobile", "9876543210");
+
+		user.put("password", "$@!%*?&^123abcde");
+		user.put("confirm_password", "$@!%*?&^123abcde");
+		user.put("email", "webtest1" + timestamp + "@plancess.com");
+		dataSet[0][0] = user;
 
 		return dataSet;
 	}

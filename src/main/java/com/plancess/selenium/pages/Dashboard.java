@@ -4,11 +4,13 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.plancess.selenium.executor.Executioner;
 
 public class Dashboard {
 	private final WebDriver driver;
+	private WebDriverWait wait;
 
 	@FindBy(css = "header img[title='Plancess Logo']")
 	WebElement plancessHeaderLogo;
@@ -25,8 +27,9 @@ public class Dashboard {
 	@FindBy(css = "a[data-toggle='dropdown'] img")
 	WebElement toggleDropDown;
 
-	public Dashboard(WebDriver driver) {
+	public Dashboard(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
+		this.wait = wait;
 		// new Executioner(driver).navigateToURL(url);
 		if (!"Plancess Dashboard".equals(driver.getTitle())) {
 			throw new IllegalStateException("This is not  the Plancess Dashboard page");
@@ -65,7 +68,7 @@ public class Dashboard {
 		toggleDropDown.click();
 		logoutLink.click();
 
-		return new LoginPage(driver);
+		return new LoginPage(driver, wait);
 
 	}
 
