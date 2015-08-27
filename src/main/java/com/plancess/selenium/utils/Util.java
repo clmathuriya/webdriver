@@ -20,8 +20,20 @@ import org.openqa.selenium.WebDriver;
 import org.testng.Reporter;
 
 public class Util {
+	private static Util instance;
 	String jira_attachment_baseURL = "";
 	String jira_attachment_authentication = "";
+
+	private Util() {
+
+	}
+
+	public static Util getInstance() {
+		if (instance == null) {
+			instance = new Util();
+		}
+		return instance;
+	}
 
 	public String takeScreenshot(WebDriver driver, String step) {
 		try {

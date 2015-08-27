@@ -10,15 +10,15 @@ import com.plancess.selenium.utils.Verifications;
 
 public class BaseTest {
 	public WebDriver driver;
-	public Util util;
+	public static Util util;
 	public Verifications verifications;
 
 	@BeforeSuite
 	public void beforeSuite() {
 		// create driver here
 		// driver = new FirefoxDriver();
-		util = new Util();
-		verifications = new Verifications();
+//		util = Util.getInstance();
+//		verifications = Verifications.getInstance();
 
 	}
 

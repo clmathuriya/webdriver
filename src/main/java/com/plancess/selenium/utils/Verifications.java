@@ -4,6 +4,19 @@ import org.testng.Assert;
 
 public class Verifications extends Assert {
 
+	private static Verifications instance;
+
+	private Verifications() {
+
+	}
+
+	public static Verifications getInstance() {
+		if (instance == null) {
+			instance = new Verifications();
+		}
+		return instance;
+	}
+
 	public void verifyEquals(Object actual, Object expected) {
 		try {
 			Assert.assertEquals(actual, expected);

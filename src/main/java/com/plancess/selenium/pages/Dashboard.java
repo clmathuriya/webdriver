@@ -21,7 +21,7 @@ public class Dashboard {
 	@FindBy(css = "a[ng-click='logoutUser()']")
 	WebElement logoutLink;
 
-	@FindBy(css = "start-assessment-section")
+	@FindBy(css = ".start-assessment-section")
 	WebElement startAssessmentSection;
 
 	@FindBy(css = "a[data-toggle='dropdown'] img")

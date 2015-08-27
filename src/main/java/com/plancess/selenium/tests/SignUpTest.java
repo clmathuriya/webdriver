@@ -17,9 +17,12 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.plancess.selenium.executor.Executioner;
 import com.plancess.selenium.pages.HomePage;
 import com.plancess.selenium.pages.SignUpPage;
 import com.plancess.selenium.utils.DataProviderClass;
+import com.plancess.selenium.utils.Util;
+import com.plancess.selenium.utils.Verifications;
 
 public class SignUpTest extends BaseTest {
 
@@ -28,6 +31,7 @@ public class SignUpTest extends BaseTest {
 	private SignUpPage signUpPage;
 	private String pageTitle = "Plancess Dashboard";
 	private WebDriverWait wait;
+	private Executioner executor;
 
 	@Parameters({ "host_ip", "port", "os", "browser", "browserVersion" })
 	@BeforeMethod(alwaysRun = true)
@@ -45,9 +49,12 @@ public class SignUpTest extends BaseTest {
 
 			// driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 			wait = new WebDriverWait(driver, 30);
+			executor = new Executioner(driver, wait);
 			homePage = new HomePage(driver, wait);
 
 			signUpPage = homePage.openSignUpPage();
+			util = Util.getInstance();
+			verifications = Verifications.getInstance();
 
 		} catch (MalformedURLException e) {
 			Assert.fail("Unable to start selenium session make sure Grid hub is running on url :" + "http://" + host
@@ -61,7 +68,7 @@ public class SignUpTest extends BaseTest {
 		driver.quit();
 	}
 
-	@Test(groups = { "smoke", "regression" })
+	@Test(alwaysRun = true, groups = { "smoke", "regression" })
 	public void signUpContentTest() {
 
 		Assert.assertEquals(signUpPage.getTitle(), pageTitle, util.takeScreenshot(driver, "assert title"));
@@ -86,25 +93,26 @@ public class SignUpTest extends BaseTest {
 
 	}
 
-	@Test(groups = { "regression" })
+	@Test(alwaysRun = true, groups = { "regression" })
 	public void signUpWithEmptyFieldsTest() {
 
-		wait.until(ExpectedConditions.visibilityOf(signUpPage.getSubmit()));
+		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(signUpPage.getSubmit()));
 		Assert.assertEquals(signUpPage.getSubmit().getAttribute("disabled"), "true",
 				util.takeScreenshot(driver, "assert submit button disabled for empty field values"));
 	}
 
-	@Test(dataProvider = "mandatoryData", dataProviderClass = DataProviderClass.class, groups = { "smoke",
-			"regression" })
+	@Test(alwaysRun = true, dataProvider = "mandatoryData", dataProviderClass = DataProviderClass.class, groups = {
+			"smoke", "regression" })
 	public void signUpWithMandatoryFieldsTest(Map<String, String> user) {
 
 		signUpPage.signUpWithMandatoryFiels(user);
-		wait.until(ExpectedConditions.visibilityOf(signUpPage.getSuccessMessage()));
+		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(signUpPage.getSuccessMessage()));
 		Assert.assertEquals(signUpPage.getSuccessMessage().getText(), "Account created successfully!",
 				util.takeScreenshot(driver, "assert create user success message"));
 	}
 
-	@Test(dataProvider = "invalidEmail", dataProviderClass = DataProviderClass.class, groups = { "smoke" })
+	@Test(alwaysRun = true, dataProvider = "invalidEmail", dataProviderClass = DataProviderClass.class, groups = {
+			"smoke" })
 	public void signUpWithInvalidEmailTest(Map<String, String> user) {
 
 		signUpPage.fillSignUpForm(user);
@@ -115,7 +123,8 @@ public class SignUpTest extends BaseTest {
 				util.takeScreenshot(driver, "assert error message for invalid email ids"));
 	}
 
-	@Test(dataProvider = "invalidEmails", dataProviderClass = DataProviderClass.class, groups = { "regression" })
+	@Test(alwaysRun = true, dataProvider = "invalidEmails", dataProviderClass = DataProviderClass.class, groups = {
+			"regression" })
 	public void signUpWithInvalidEmailsTest(Map<String, String> user) {
 
 		signUpPage.fillSignUpForm(user);
@@ -126,7 +135,8 @@ public class SignUpTest extends BaseTest {
 				util.takeScreenshot(driver, "assert error message for invalid email ids"));
 	}
 
-	@Test(dataProvider = "invalidPassword", dataProviderClass = DataProviderClass.class, groups = { "regression" })
+	@Test(alwaysRun = true, dataProvider = "invalidPassword", dataProviderClass = DataProviderClass.class, groups = {
+			"regression" })
 	public void signUpWithInvalidPasswordTest(Map<String, String> user) {
 
 		signUpPage.fillSignUpForm(user);
@@ -137,7 +147,8 @@ public class SignUpTest extends BaseTest {
 				util.takeScreenshot(driver, "assert password error message for invalid password values"));
 	}
 
-	@Test(dataProvider = "invalidPasswords", dataProviderClass = DataProviderClass.class, groups = { "regression" })
+	@Test(alwaysRun = true, dataProvider = "invalidPasswords", dataProviderClass = DataProviderClass.class, groups = {
+			"regression" })
 	public void signUpWithInvalidPasswordsTest(Map<String, String> user) {
 
 		signUpPage.fillSignUpForm(user);
@@ -148,7 +159,8 @@ public class SignUpTest extends BaseTest {
 				util.takeScreenshot(driver, "assert password error message for invalid password values"));
 	}
 
-	@Test(dataProvider = "misMatchPasswords", dataProviderClass = DataProviderClass.class, groups = { "regression" })
+	@Test(alwaysRun = true, dataProvider = "misMatchPasswords", dataProviderClass = DataProviderClass.class, groups = {
+			"regression" })
 	public void signUpWithPasswordMismatchTest(Map<String, String> user) {
 
 		signUpPage.fillSignUpForm(user);
@@ -159,7 +171,8 @@ public class SignUpTest extends BaseTest {
 				util.takeScreenshot(driver, "assert password mismatch error message for password mismatch"));
 	}
 
-	@Test(dataProvider = "invalidMobile", dataProviderClass = DataProviderClass.class, groups = { "regression" })
+	@Test(alwaysRun = true, dataProvider = "invalidMobile", dataProviderClass = DataProviderClass.class, groups = {
+			"regression" })
 	public void signUpWithInvalidMobileTest(Map<String, String> user) {
 
 		signUpPage.fillSignUpForm(user);
@@ -170,7 +183,8 @@ public class SignUpTest extends BaseTest {
 				util.takeScreenshot(driver, "assert error message for invalid mobile number"));
 	}
 
-	@Test(dataProvider = "invalidMobiles", dataProviderClass = DataProviderClass.class, groups = { "regression" })
+	@Test(alwaysRun = true, dataProvider = "invalidMobiles", dataProviderClass = DataProviderClass.class, groups = {
+			"regression" })
 	public void signUpWithInvalidMobilesTest(Map<String, String> user) {
 
 		signUpPage.fillSignUpForm(user);
@@ -181,7 +195,8 @@ public class SignUpTest extends BaseTest {
 				util.takeScreenshot(driver, "assert error message for invalid mobile number"));
 	}
 
-	@Test(dataProvider = "invalidNames", dataProviderClass = DataProviderClass.class, groups = { "regression" })
+	@Test(alwaysRun = true, dataProvider = "invalidNames", dataProviderClass = DataProviderClass.class, groups = {
+			"regression" })
 	public void signUpWithInvalidNameTest(Map<String, String> user) {
 		signUpPage.fillSignUpForm(user);
 		Assert.assertEquals(signUpPage.getSubmit().getAttribute("disabled"), "true",
@@ -192,19 +207,21 @@ public class SignUpTest extends BaseTest {
 				util.takeScreenshot(driver, "assert error message for invalid last name"));
 	}
 
-	@Test(dataProvider = "mandatoryData", dataProviderClass = DataProviderClass.class, groups = { "regression" })
+	@Test(alwaysRun = true, dataProvider = "mandatoryData", dataProviderClass = DataProviderClass.class, groups = {
+			"regression" })
 	public void signUpWithExistingEmailTest(Map<String, String> user) {
 		user.put("email", "testuser@gmail.com");
 		signUpPage.signUpWithMandatoryFiels(user);
+		executor.softWaitForCondition(
+				ExpectedConditions.textToBePresentInElement(signUpPage.getFailureMessage(), user.get("email")));
 
-		wait.until(ExpectedConditions.textToBePresentInElement(signUpPage.getFailureMessage(), user.get("email")));
 		Assert.assertEquals(signUpPage.getFailureMessage().getText(),
 				user.get("email") + " already exists in our database",
 				util.takeScreenshot(driver, "assert failure message for existing email"));
 	}
 
-	@Test(dataProvider = "validEmailPassword", dataProviderClass = DataProviderClass.class, groups = { "smoke",
-			"regression" })
+	@Test(alwaysRun = true, dataProvider = "validEmailPassword", dataProviderClass = DataProviderClass.class, groups = {
+			"smoke", "regression" })
 	public void signUpWithValidEmailPasswordTest(Map<String, String> user) {
 
 		signUpPage.signUp(user);
@@ -214,8 +231,8 @@ public class SignUpTest extends BaseTest {
 				util.takeScreenshot(driver, "assert create user success message"));
 	}
 
-	@Test(dataProvider = "validEmailPasswords", dataProviderClass = DataProviderClass.class, groups = { "smoke",
-			"regression" })
+	@Test(alwaysRun = true, dataProvider = "validEmailPasswords", dataProviderClass = DataProviderClass.class, groups = {
+			"smoke", "regression" })
 	public void signUpWithValidEmailPasswordsTest(Map<String, String> user) {
 
 		signUpPage.signUp(user);

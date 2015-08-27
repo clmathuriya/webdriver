@@ -6,11 +6,15 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.plancess.selenium.executor.Executioner;
 
 public class LoginPage {
 	private final WebDriver driver;
 	private WebDriverWait wait;
+	private Executioner executor;
 	WebElement email;
 
 	WebElement password;
@@ -34,12 +38,13 @@ public class LoginPage {
 	@FindBy(linkText = "Forgot Password?")
 	WebElement forgotPasswordLink;
 
-	@FindBy(xpath = "//div[@class='error-message']")
+	@FindBy(xpath = "//form[@name='form']/div[3]")
 	WebElement failureMessage;
 
 	public LoginPage(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
 		this.wait = wait;
+
 		if (!"Plancess Dashboard".equals(driver.getTitle())) {
 			throw new IllegalStateException("This is not  the Plancess Home page");
 		}
@@ -88,6 +93,10 @@ public class LoginPage {
 	}
 
 	public Dashboard doLogin(Map<String, String> user) {
+		wait.until(ExpectedConditions.visibilityOf(email));
+		email.sendKeys(user.get("email"));
+		password.sendKeys(user.get("password"));
+		loginButton.click();
 
 		return new Dashboard(driver, wait);
 	}

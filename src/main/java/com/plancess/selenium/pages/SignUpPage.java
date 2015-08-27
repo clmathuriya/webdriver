@@ -173,13 +173,14 @@ public class SignUpPage {
 
 			trycount++;
 		}
-		wait.until(ExpectedConditions.elementToBeClickable(submit));
-		submit.click();
+		actions.click(submit).build().perform();
+
 		return new Dashboard(driver, wait);
 
 	}
 
 	public void fillSignUpForm(Map<String, String> user) {
+		wait.until(ExpectedConditions.visibilityOf(firstName));
 		firstName.sendKeys(user.get("firstName"));
 
 		email.sendKeys(user.get("email"));
@@ -192,15 +193,20 @@ public class SignUpPage {
 
 	public Dashboard signUp(Map<String, String> user) {
 		fillSignUpForm(user);
-		wait.until(ExpectedConditions.elementToBeClickable(agreeCheckbox));
+
 		int trycount = 0;
 		while (!agreeCheckbox.isSelected() && trycount <= 5) {
-			actions.click(agreeCheckbox).build().perform();
 
-			trycount++;
+			try {
+				// wait.until(ExpectedConditions.elementToBeClickable(agreeCheckbox));
+				actions.click(agreeCheckbox).build().perform();
+
+				trycount++;
+			} catch (Exception e) {
+				trycount++;
+			}
 		}
-		wait.until(ExpectedConditions.elementToBeClickable(submit));
-		submit.click();
+		actions.click(submit).build().perform();
 		return new Dashboard(driver, wait);
 	}
 

@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite name="Plancess Web APP Suite" parallel="false">
-	<listeners>
-		<listener class-name="com.plancess.selenium.reporter.PlancessReporter" />
-	</listeners>
-	<!-- <groups> <run> <include name="smoke" /> </run> </groups> -->
-	<!-- <parameter name="browser" value="firefox" /> <test name="Home Page 
-		Test"> <classes> <class name="com.plancess.selenium.tests.HomePageTest" /> 
-		</classes> </test> -->
-	<!-- <parameter name="browser" value="firefox" /> -->
-	<test name="Signup Test">
+	<!-- <listeners> <listener class-name="com.plancess.selenium.reporter.PlancessReporter" 
+		/> </listeners> -->
+
+
+	<parameter name="browser" value="chrome" />
+	<parameter name="os" value="WINDOWS" />
+	<test name="WebApp Test">
+		<!-- <groups> <run> <include name="smoke" /> </run> </groups> -->
 		<classes>
 			<class name="com.plancess.selenium.tests.SignUpTest" />
+			<class name="com.plancess.selenium.tests.LoginTest" />
 		</classes>
 	</test>
+
 </suite> <!-- Suite -->

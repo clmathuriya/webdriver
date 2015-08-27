@@ -34,7 +34,7 @@ public class HomePage {
 	public HomePage(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
 		this.wait = wait;
-		new Executioner(driver).navigateToURL(url);
+		new Executioner(driver, wait).navigateToURL(url);
 		if (!"Plancess Dashboard".equals(driver.getTitle())) {
 			throw new IllegalStateException("This is not  the Plancess Home page");
 		}
@@ -80,7 +80,7 @@ public class HomePage {
 		toggleDropDown.click();
 		signupLink.click();
 
-		return new SignUpPage(driver,wait);
+		return new SignUpPage(driver, wait);
 
 	}
 
@@ -88,7 +88,7 @@ public class HomePage {
 		toggleDropDown.click();
 		loginLink.click();
 
-		return new LoginPage(driver,wait);
+		return new LoginPage(driver, wait);
 
 	}
 

@@ -8,6 +8,8 @@ import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -16,10 +18,13 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.plancess.selenium.executor.Executioner;
 import com.plancess.selenium.pages.Dashboard;
 import com.plancess.selenium.pages.HomePage;
 import com.plancess.selenium.pages.LoginPage;
 import com.plancess.selenium.utils.DataProviderClass;
+import com.plancess.selenium.utils.Util;
+import com.plancess.selenium.utils.Verifications;
 
 public class LoginTest extends BaseTest {
 
@@ -28,6 +33,7 @@ public class LoginTest extends BaseTest {
 	private LoginPage loginPage;
 	private String pageTitle = "Plancess Dashboard";
 	private WebDriverWait wait;
+	private Executioner executor;
 
 	@Parameters({ "host_ip", "port", "os", "browser", "browserVersion" })
 	@BeforeMethod
@@ -45,9 +51,12 @@ public class LoginTest extends BaseTest {
 
 			// driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 			wait = new WebDriverWait(driver, 30);
+			executor = new Executioner(driver, wait);
 			homePage = new HomePage(driver, wait);
 
 			loginPage = homePage.openLoginPage();
+			util = Util.getInstance();
+			verifications = Verifications.getInstance();
 
 		} catch (MalformedURLException e) {
 			Assert.fail("Unable to start selenium session make sure Grid hub is running on url :" + "http://" + host
@@ -65,6 +74,7 @@ public class LoginTest extends BaseTest {
 	public void loginContentTest() {
 
 		Assert.assertEquals(loginPage.getTitle(), pageTitle, util.takeScreenshot(driver, "assert title"));
+		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(loginPage.getEmail()));
 
 		verifications.verifyTrue(loginPage.getEmail().isDisplayed(),
 				util.takeScreenshot(driver, "verify email field displayed"));
@@ -73,7 +83,7 @@ public class LoginTest extends BaseTest {
 
 		verifications.verifyTrue(loginPage.getLoginButton().isDisplayed(),
 				util.takeScreenshot(driver, "verify login button displayed"));
-		verifications.verifyTrue(loginPage.getRemember().isDisplayed(),
+		verifications.verifyTrue(loginPage.getRemember().getAttribute("name").equals("remember"),
 				util.takeScreenshot(driver, "verify remember checkbox displayed"));
 
 		verifications.verifyTrue(loginPage.getForgotPasswordLink().isDisplayed(),
@@ -90,33 +100,37 @@ public class LoginTest extends BaseTest {
 
 	@Test(groups = { "regression" })
 	public void loginWithEmptyFieldsTest() {
-
+		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(loginPage.getLoginButton()));
 		Assert.assertEquals(loginPage.getLoginButton().getAttribute("disabled"), "true",
 				util.takeScreenshot(driver, "assert submit button disabled for empty field values"));
 	}
 
-	@Test(dataProvider = "invalidEmails", dataProviderClass = DataProviderClass.class, groups = { "regression" })
+	@Test(dataProvider = "loginWithNonExistingEmail", dataProviderClass = DataProviderClass.class, groups = {
+			"regression" })
 	public void loginWithNonExistingEmailsTest(Map<String, String> user) {
 
 		loginPage.doLogin(user);
 
-		verifications.verifyEquals(loginPage.getFailureMessage().getText(), "Invalid credentials given",
+		verifications.verifyEquals(loginPage.getFailureMessage().getText(), "Invalid username or password",
 				util.takeScreenshot(driver, "assert error message for invalid credentials"));
 	}
 
-	@Test(dataProvider = "invalidPasswords", dataProviderClass = DataProviderClass.class, groups = { "regression" })
-	public void signUpWithInvalidPasswordsTest(Map<String, String> user) {
+	@Test(dataProvider = "loginWithInvalidPassword", dataProviderClass = DataProviderClass.class, groups = {
+			"regression" })
+	public void loginWithInvalidPasswordTest(Map<String, String> user) {
 
 		loginPage.doLogin(user);
-		verifications.verifyEquals(loginPage.getFailureMessage().getText(), "Invalid credentials given",
+		executor.softWaitForWebElement(loginPage.getFailureMessage());
+		verifications.verifyEquals(loginPage.getFailureMessage().getText(), "Invalid username or password",
 				util.takeScreenshot(driver, "assert error message for invalid credentials"));
 	}
 
-	@Test(dataProvider = "validEmailPasswords", dataProviderClass = DataProviderClass.class, groups = { "smoke",
+	@Test(dataProvider = "loginWithValidEmailPassword", dataProviderClass = DataProviderClass.class, groups = { "smoke",
 			"regression" })
-	public void signUpWithValidEmailPasswordsTest(Map<String, String> user) {
+	public void loginWithValidEmailPasswordTest(Map<String, String> user) {
 
 		Dashboard dashboard = loginPage.doLogin(user);
+		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(dashboard.getStartAssessmentSection()));
 
 		Assert.assertTrue(dashboard.getStartAssessmentSection().isDisplayed(),
 				util.takeScreenshot(driver, "assert user login succefull and start assessment section displayed"));

@@ -65,7 +65,7 @@ public class PlancessReporter implements IReporter {
 
 					Reporter.log("Passed tests for suite '" + suiteName + "' is:" + passCount, true);
 					Reporter.log("Failed tests for suite '" + suiteName + "' is:" + failCount, true);
-					if (tc.getFailedTests().getAllResults().size() == 0)
+					if (failCount == 0 && skipCount == 0)
 						buildStatus = "Success";
 					Reporter.log("Skipped tests for suite '" + suiteName + "' is:" + skipCount, true);
 					HttpClient client = HttpClientBuilder.create().build();

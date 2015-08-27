@@ -87,8 +87,8 @@ public class DataProviderClass {
 	@DataProvider(name = "invalidPasswords")
 	public static Object[][] signUpDataProviderWithInvalidPasswords() {
 		String[] invalidPasswords = { "n@t8", "0nly@07", "!@##$%^&*", "onlyalphabets", "12345678", "$@!%*?&^",
-				"alphanumeric10", "alphaspcl@", "123!@$", "morethan16p@ssw0rd", "seventeen@1234567", "0", "with space",
-				"sql' or '1'='1", "_________", "¢£¥®asddf12234" };
+				"alphanumeric10", "alphaspcl@", "123!@$", "morethan16p@ssw0rd", "seventeen@1234567", "01234",
+				"with space", "sql' or '1'='1", "_________", "¢£¥®asddf12234" };
 		Object[][] dataSet = new Object[invalidPasswords.length][1];
 		Map<String, String> user = new HashMap<String, String>();
 
@@ -237,6 +237,50 @@ public class DataProviderClass {
 			user.put("email", validEmails[i]);
 			dataSet[i][0] = user;
 		}
+
+		return dataSet;
+	}
+
+	// login data providers
+
+	@DataProvider(name = "loginWithNonExistingEmail")
+	public static Object[][] loginDataProviderWithNonExistingEmail() {
+
+		Object[][] dataSet = new Object[1][1];
+		Map<String, String> user = new HashMap<String, String>();
+
+		user.put("email", "nonexistingemail@plancess.com");
+		user.put("password", "P@ssw0rd");
+
+		dataSet[0][0] = user;
+
+		return dataSet;
+	}
+
+	@DataProvider(name = "loginWithInvalidPassword")
+	public static Object[][] loginDataProviderWithInvalidPassword() {
+
+		Object[][] dataSet = new Object[1][1];
+		Map<String, String> user = new HashMap<String, String>();
+
+		user.put("email", "testuser@gmail.com");
+		user.put("password", "InvalidPassword");
+
+		dataSet[0][0] = user;
+
+		return dataSet;
+	}
+
+	@DataProvider(name = "loginWithValidEmailPassword")
+	public static Object[][] loginDataProviderWithValidEmailPassword() {
+
+		Object[][] dataSet = new Object[1][1];
+		Map<String, String> user = new HashMap<String, String>();
+
+		user.put("email", "testuser@gmail.com");
+		user.put("password", "P@ssw0rd");
+
+		dataSet[0][0] = user;
 
 		return dataSet;
 	}

@@ -16,6 +16,7 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.plancess.selenium.pages.HomePage;
+import com.plancess.selenium.utils.Util;
 
 public class HomePageTest extends BaseTest {
 
