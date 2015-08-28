@@ -285,4 +285,26 @@ public class DataProviderClass {
 		return dataSet;
 	}
 
+	// update user profile data providers
+
+	@DataProvider(name = "userProfileValidData")
+	public static Object[][] userProfileDataProviderWithValidDetails() {
+
+		Object[][] dataSet = new Object[1][1];
+		Map<String, String> user = new HashMap<String, String>();
+
+		user.put("email", "testuser@gmail.com");
+		user.put("password", "P@ssw0rd");
+		user.put("firstName", "Web");
+		user.put("lastName", "User");
+		user.put("mobile", "9876543210");
+		user.put("dob", "28/08/1990");
+		user.put("target_year", "2018");
+		user.put("target_year", "2018");
+
+		dataSet[0][0] = user;
+
+		return dataSet;
+	}
+
 }

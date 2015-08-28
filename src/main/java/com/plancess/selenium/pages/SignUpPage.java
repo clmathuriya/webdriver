@@ -57,7 +57,7 @@ public class SignUpPage {
 	@FindBy(xpath = "//div[.='Account created successfully!']")
 	WebElement successMessage;
 
-	@FindBy(xpath = "//div[@class='error-message']")
+	@FindBy(xpath = "//*[@name='form']/div[5]")
 	WebElement failureMessage;
 
 	public SignUpPage(WebDriver driver, WebDriverWait wait) {
@@ -167,7 +167,8 @@ public class SignUpPage {
 		email.sendKeys(user.get("email"));
 		password.sendKeys(user.get("password"));
 		confirmPassword.sendKeys(user.get("confirm_password"));
-		int trycount = 0;
+		actions.click(agreeCheckbox).build().perform();
+		int trycount = 1;
 		while (!agreeCheckbox.isSelected() && trycount <= 5) {
 			actions.click(agreeCheckbox).build().perform();
 

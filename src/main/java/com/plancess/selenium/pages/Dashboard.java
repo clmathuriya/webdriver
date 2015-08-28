@@ -21,6 +21,15 @@ public class Dashboard {
 	@FindBy(css = "a[ng-click='logoutUser()']")
 	WebElement logoutLink;
 
+	@FindBy(css = "a[ui-sref='profile.main']")
+	WebElement profileLink;
+
+	@FindBy(css = "a[ui-sref='profile.security']")
+	WebElement securityLink;
+
+	@FindBy(css = "a[ui-sref='profile.purchases']")
+	WebElement purchasesLink;
+
 	@FindBy(css = ".start-assessment-section")
 	WebElement startAssessmentSection;
 
@@ -64,11 +73,31 @@ public class Dashboard {
 		return startAssessmentSection;
 	}
 
+	public WebElement getProfileLink() {
+		return profileLink;
+	}
+
+	public WebElement getPurchasesLink() {
+		return purchasesLink;
+	}
+
+	public WebElement getSecurityLink() {
+		return securityLink;
+	}
+
 	public LoginPage logoutUser() {
 		toggleDropDown.click();
 		logoutLink.click();
 
 		return new LoginPage(driver, wait);
+
+	}
+
+	public ProfilePage navigateToUserProfile() {
+		toggleDropDown.click();
+		profileLink.click();
+
+		return new ProfilePage(driver, wait);
 
 	}
 

@@ -18,6 +18,7 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.plancess.selenium.executor.Executioner;
+import com.plancess.selenium.pages.Dashboard;
 import com.plancess.selenium.pages.HomePage;
 import com.plancess.selenium.pages.SignUpPage;
 import com.plancess.selenium.utils.DataProviderClass;
@@ -32,6 +33,7 @@ public class SignUpTest extends BaseTest {
 	private String pageTitle = "Plancess Dashboard";
 	private WebDriverWait wait;
 	private Executioner executor;
+	private Dashboard dashboard;
 
 	@Parameters({ "host_ip", "port", "os", "browser", "browserVersion" })
 	@BeforeMethod(alwaysRun = true)
@@ -224,22 +226,28 @@ public class SignUpTest extends BaseTest {
 			"smoke", "regression" })
 	public void signUpWithValidEmailPasswordTest(Map<String, String> user) {
 
-		signUpPage.signUp(user);
-		Assert.assertEquals(signUpPage.getSubmit().getAttribute("disabled"), "true",
-				util.takeScreenshot(driver, "assert submit button disabled for empty field values"));
-		Assert.assertEquals(signUpPage.getSuccessMessage().getText(), "Account created successfully!",
-				util.takeScreenshot(driver, "assert create user success message"));
+		dashboard = signUpPage.signUp(user);
+		executor.softWaitForWebElement(dashboard.getStartAssessmentSection());
+
+		Assert.assertTrue(
+				dashboard.getStartAssessmentSection().isDisplayed()
+						|| signUpPage.getSuccessMessage().getText().equals("Account created successfully!"),
+				util.takeScreenshot(driver,
+						"assert create user success message and start assessment section displayed"));
+
 	}
 
 	@Test(alwaysRun = true, dataProvider = "validEmailPasswords", dataProviderClass = DataProviderClass.class, groups = {
 			"smoke", "regression" })
 	public void signUpWithValidEmailPasswordsTest(Map<String, String> user) {
 
-		signUpPage.signUp(user);
-		Assert.assertEquals(signUpPage.getSubmit().getAttribute("disabled"), "true",
-				util.takeScreenshot(driver, "assert submit button disabled for empty field values"));
-		Assert.assertEquals(signUpPage.getSuccessMessage().getText(), "Account created successfully!",
-				util.takeScreenshot(driver, "assert create user success message"));
+		dashboard = signUpPage.signUp(user);
+		executor.softWaitForWebElement(dashboard.getStartAssessmentSection());
+		Assert.assertTrue(
+				dashboard.getStartAssessmentSection().isDisplayed()
+						|| signUpPage.getSuccessMessage().getText().equals("Account created successfully!"),
+				util.takeScreenshot(driver,
+						"assert create user success message and start assessment section displayed"));
 	}
 
 }
