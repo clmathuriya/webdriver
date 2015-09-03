@@ -1,5 +1,6 @@
 package com.plancess.selenium.executor;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -53,6 +54,16 @@ public class Executioner {
 			wait.until(ExpectedConditions.visibilityOf(element));
 		} catch (Exception e) {
 			Reporter.log("wait timeout for web element", 0, true);
+			System.out.println("time out for web element");
+		}
+	}
+
+	public boolean isElementExist(By by) {
+		try {
+			driver.findElement(by);
+			return true;
+		} catch (Exception e) {
+			return false;
 		}
 	}
 

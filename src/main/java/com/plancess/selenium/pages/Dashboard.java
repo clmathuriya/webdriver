@@ -2,11 +2,10 @@ package com.plancess.selenium.pages;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import com.plancess.selenium.executor.Executioner;
 
 public class Dashboard {
 	private final WebDriver driver;
@@ -33,12 +32,14 @@ public class Dashboard {
 	@FindBy(css = ".start-assessment-section")
 	WebElement startAssessmentSection;
 
-	@FindBy(css = "a[data-toggle='dropdown'] img")
+	@FindBy(xpath = ".//img[@title='Profile']")
 	WebElement toggleDropDown;
+	private Actions actions;
 
 	public Dashboard(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
 		this.wait = wait;
+		this.actions = new Actions(driver);
 		// new Executioner(driver).navigateToURL(url);
 		if (!"Plancess Dashboard".equals(driver.getTitle())) {
 			throw new IllegalStateException("This is not  the Plancess Dashboard page");
@@ -98,6 +99,15 @@ public class Dashboard {
 		profileLink.click();
 
 		return new ProfilePage(driver, wait);
+
+	}
+
+	public SecurityPage navigateToUserSecurity() {
+		// actions.click(toggleDropDown).build().perform();
+		toggleDropDown.click();
+		securityLink.click();
+
+		return new SecurityPage(driver, wait);
 
 	}
 

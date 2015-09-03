@@ -29,6 +29,9 @@ public class HomePage {
 	@FindBy(css = "a[data-toggle='dropdown'] img")
 	WebElement toggleDropDown;
 
+	@FindBy(css = "a[ng-click='logoutUser()']")
+	WebElement logoutLink;
+
 	// getter and setters
 
 	public HomePage(WebDriver driver, WebDriverWait wait) {
@@ -86,6 +89,7 @@ public class HomePage {
 
 	public LoginPage openLoginPage() {
 		toggleDropDown.click();
+		tryLogout();
 		loginLink.click();
 
 		return new LoginPage(driver, wait);
@@ -120,5 +124,16 @@ public class HomePage {
 
 	public void clickToggelDropDown() {
 		toggleDropDown.click();
+	}
+
+	public void tryLogout() {
+
+		try {
+			logoutLink.click();
+			toggleDropDown.click();
+		} catch (Exception e) {
+			System.out.println("user not logged in");
+		}
+
 	}
 }
