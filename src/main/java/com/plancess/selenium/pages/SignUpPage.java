@@ -35,6 +35,7 @@ public class SignUpPage {
 	WebElement mobileErrorMessage;
 
 	WebElement password;
+
 	@FindBy(xpath = "//input[@name='password']/../div")
 	WebElement passwordErrorMessage;
 	WebElement confirmPassword;
@@ -121,6 +122,7 @@ public class SignUpPage {
 	}
 
 	public WebElement getSuccessMessage() {
+		wait.until(ExpectedConditions.visibilityOf(successMessage));
 		return successMessage;
 	}
 
@@ -135,6 +137,7 @@ public class SignUpPage {
 	}
 
 	public WebElement getFailureMessage() {
+		wait.until(ExpectedConditions.visibilityOf(failureMessage));
 		return failureMessage;
 	}
 

@@ -38,8 +38,6 @@ public class Util {
 	public String takeScreenshot(WebDriver driver, String step) {
 		try {
 			File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-			// Now you can do whatever you need to do with it, for example copy
-			// somewhere
 			String filename = "./screenshots/screenshot" + System.currentTimeMillis() + ".png";
 			File file = new File(filename);
 			FileUtils.copyFile(scrFile, file);

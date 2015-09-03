@@ -5,11 +5,13 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class Dashboard {
 	private final WebDriver driver;
 	private WebDriverWait wait;
+	private Actions actions;
 
 	@FindBy(css = "header img[title='Plancess Logo']")
 	WebElement plancessHeaderLogo;
@@ -20,7 +22,7 @@ public class Dashboard {
 	@FindBy(css = "a[ng-click='logoutUser()']")
 	WebElement logoutLink;
 
-	@FindBy(css = "a[ui-sref='profile.main']")
+	@FindBy(xpath = "//a[contains(.,'Profile')]")
 	WebElement profileLink;
 
 	@FindBy(css = "a[ui-sref='profile.security']")
@@ -71,6 +73,7 @@ public class Dashboard {
 	}
 
 	public WebElement getStartAssessmentSection() {
+
 		return startAssessmentSection;
 	}
 
@@ -87,6 +90,7 @@ public class Dashboard {
 	}
 
 	public LoginPage logoutUser() {
+
 		toggleDropDown.click();
 		logoutLink.click();
 
@@ -95,6 +99,7 @@ public class Dashboard {
 	}
 
 	public ProfilePage navigateToUserProfile() {
+
 		toggleDropDown.click();
 		profileLink.click();
 

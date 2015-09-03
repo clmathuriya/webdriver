@@ -173,7 +173,7 @@ public class ProfilePage {
 		lastName.sendKeys(user.get("lastName"));
 		mobile.clear();
 		mobile.sendKeys(user.get("mobile"));
-		dob.clear();
+		//dob.clear();
 		dob.sendKeys(user.get("dob"));
 		new Select(exam_target_year).selectByVisibleText(user.get("target_year"));
 		int trycount = 0;

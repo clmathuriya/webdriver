@@ -31,3 +31,9 @@
 	$java -jar selenium-server-standalone-2.47.1.jar -role node -nodeConfig node.json -Dwebdriver.ie.driver=.\IEDriverServer.exe -Dwebdriver.chrome.driver=./chromedriver
 3. Run project as maven test
 	$mvn test
+	
+#To run with headless firefox 
+1. sudo apt-get install Xvfb firefox
+2.  Xvfb :1 -screen 0 1024x768x24 &
+
+

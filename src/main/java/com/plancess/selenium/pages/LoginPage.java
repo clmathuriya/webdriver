@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -15,6 +16,7 @@ public class LoginPage {
 	private final WebDriver driver;
 	private WebDriverWait wait;
 	private Executioner executor;
+	private Actions actions;
 	WebElement email;
 
 	WebElement password;
@@ -44,6 +46,7 @@ public class LoginPage {
 	public LoginPage(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
 		this.wait = wait;
+		this.actions = new Actions(driver);
 
 		if (!"Plancess Dashboard".equals(driver.getTitle())) {
 			throw new IllegalStateException("This is not  the Plancess Home page");
@@ -94,15 +97,17 @@ public class LoginPage {
 
 	public Dashboard doLogin(Map<String, String> user) {
 		wait.until(ExpectedConditions.visibilityOf(email));
+		email.clear();
 		email.sendKeys(user.get("email"));
+		password.clear();
 		password.sendKeys(user.get("password"));
-		loginButton.click();
+		actions.click(loginButton).build().perform();
 
 		return new Dashboard(driver, wait);
 	}
 
 	public SignUpPage navigateToSignUpPage() {
-		signupButton.click();
+		actions.click(signupButton).build().perform();
 		return new SignUpPage(driver, wait);
 	}
 

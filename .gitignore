@@ -6,3 +6,4 @@ screenshots/*
 target/*
 test-output/*
 
+/target/

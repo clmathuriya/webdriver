@@ -77,18 +77,38 @@ public class DataProviderClass {
 		user.put("mobile", "9876543210");
 		user.put("email", "webuser@plancess.com");
 
-		user.put("password", "n@t8");
+		user.put("password", "onlychars");
 		user.put("confirm_password", "n@t8");
 		dataSet[0][0] = user;
 
 		return dataSet;
 	}
 
-	@DataProvider(name = "invalidPasswords")
-	public static Object[][] signUpDataProviderWithInvalidPasswords() {
-		String[] invalidPasswords = { "n@t8", "0nly@07", "!@##$%^&*", "onlyalphabets", "12345678", "$@!%*?&^",
-				"alphanumeric10", "alphaspcl@", "123!@$", "morethan16p@ssw0rd", "seventeen@1234567", "01234",
-				"with space", "sql' or '1'='1", "_________", "¢£¥®asddf12234" };
+	@DataProvider(name = "invalidPasswordsLessThanEightChars")
+	public static Object[][] signUpDataProviderWithInvalidPasswordsLessThanEightChars() {
+		String[] invalidPasswords = { "n@t8", "0nly@07" };
+		Object[][] dataSet = new Object[invalidPasswords.length][1];
+		Map<String, String> user = new HashMap<String, String>();
+
+		user.put("firstName", "WebUser");
+		user.put("lastName", "Test");
+		user.put("mobile", "9876543210");
+		user.put("email", "webuser@plancess.com");
+
+		for (int i = 0; i < invalidPasswords.length; i++) {
+			user.put("password", invalidPasswords[i]);
+			user.put("confirm_password", invalidPasswords[i]);
+			dataSet[i][0] = user;
+		}
+
+		return dataSet;
+	}
+
+	@DataProvider(name = "invalidPasswordsMoreThanEightChars")
+	public static Object[][] signUpDataProviderWithInvalidPasswordsMoreThanEightChars() {
+		String[] invalidPasswords = { "!@##$%^&*", "onlyalphabets", "12345678", "$@!%*?&^", "alphanumeric10",
+				"alphaspcl@", "morethan16p@ssw0rd", "seventeen@1234567", "with space", "sql' or '1'='1", "_________",
+				"¢£¥®asddf12234" };
 		Object[][] dataSet = new Object[invalidPasswords.length][1];
 		Map<String, String> user = new HashMap<String, String>();
 
@@ -166,8 +186,30 @@ public class DataProviderClass {
 		return dataSet;
 	}
 
-	@DataProvider(name = "invalidNames")
-	public static Object[][] signUpDataProviderWithInvalidNames() {
+	@DataProvider(name = "invalidNamesLessThanThreeChars")
+	public static Object[][] signUpDataProviderWithInvalidNamesLessThanThreeChars() {
+		String[] invalidNames = { "a", "ab", "aa" };
+		Object[][] dataSet = new Object[invalidNames.length][1];
+		Map<String, String> user = new HashMap<String, String>();
+
+		user.put("mobile", "9876543210");
+
+		user.put("email", "webuser@plancess.com");
+		user.put("password", "P@ssw0rd");
+		user.put("confirm_password", "P@ssw0rd");
+
+		for (int i = 0; i < invalidNames.length; i++) {
+
+			user.put("firstName", invalidNames[i]);
+			user.put("lastName", invalidNames[i]);
+			dataSet[i][0] = user;
+		}
+
+		return dataSet;
+	}
+
+	@DataProvider(name = "invalidNamesMoreThanThreeChars")
+	public static Object[][] signUpDataProviderWithInvalidNamesMoreThanThreeChars() {
 		String[] invalidNames = { "!@#$%^&*()_-+=", "1234", "asdf111", "12345" };
 		Object[][] dataSet = new Object[invalidNames.length][1];
 		Map<String, String> user = new HashMap<String, String>();
