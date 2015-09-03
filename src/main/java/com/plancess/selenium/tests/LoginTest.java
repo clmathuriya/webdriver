@@ -8,10 +8,10 @@ import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
+import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
@@ -66,7 +66,12 @@ public class LoginTest extends BaseTest {
 	}
 
 	@AfterMethod
-	public void tearDown() {
+	public void tearDown(ITestResult testResult) {
+
+		if (testResult.getStatus() == ITestResult.FAILURE) {
+			verifications.verifyEquals(testResult.getStatus(), ITestResult.SUCCESS,
+					util.takeScreenshot(driver, "verify test status for :" + testResult.getTestName()));
+		}
 		driver.quit();
 	}
 

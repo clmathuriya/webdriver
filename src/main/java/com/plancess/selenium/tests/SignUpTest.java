@@ -149,9 +149,20 @@ public class SignUpTest extends BaseTest {
 				util.takeScreenshot(driver, "assert password error message for invalid password values"));
 	}
 
-	@Test(alwaysRun = true, dataProvider = "invalidPasswords", dataProviderClass = DataProviderClass.class, groups = {
+	@Test(alwaysRun = true, dataProvider = "invalidPasswordsLessThanEightChars", dataProviderClass = DataProviderClass.class, groups = {
 			"regression" })
-	public void signUpWithInvalidPasswordsTest(Map<String, String> user) {
+	public void signUpWithInvalidPasswordsLessThanEightCharsTest(Map<String, String> user) {
+
+		signUpPage.fillSignUpForm(user);
+		Assert.assertEquals(signUpPage.getSubmit().getAttribute("disabled"), "true",
+				util.takeScreenshot(driver, "assert submit button disabled for invalid password values"));
+		verifications.verifyEquals(signUpPage.getPasswordErrorMessage().getText(), "Password is too short",
+				util.takeScreenshot(driver, "assert password error message for invalid password values"));
+	}
+
+	@Test(alwaysRun = true, dataProvider = "invalidPasswordsMoreThanEightChars", dataProviderClass = DataProviderClass.class, groups = {
+			"regression" })
+	public void signUpWithInvalidPasswordsMoreThaneightCharsTest(Map<String, String> user) {
 
 		signUpPage.fillSignUpForm(user);
 		Assert.assertEquals(signUpPage.getSubmit().getAttribute("disabled"), "true",
@@ -197,15 +208,27 @@ public class SignUpTest extends BaseTest {
 				util.takeScreenshot(driver, "assert error message for invalid mobile number"));
 	}
 
-	@Test(alwaysRun = true, dataProvider = "invalidNames", dataProviderClass = DataProviderClass.class, groups = {
+	@Test(alwaysRun = true, dataProvider = "invalidNamesLessThanThreeChars", dataProviderClass = DataProviderClass.class, groups = {
 			"regression" })
-	public void signUpWithInvalidNameTest(Map<String, String> user) {
+	public void signUpWithInvalidNameLessThanThreeCharsTest(Map<String, String> user) {
 		signUpPage.fillSignUpForm(user);
 		Assert.assertEquals(signUpPage.getSubmit().getAttribute("disabled"), "true",
 				util.takeScreenshot(driver, "assert submit button disabled for invalid names"));
 		verifications.verifyEquals(signUpPage.getFirstNameErrorMessage().getText(), "Please enter minimum 3 characters",
 				util.takeScreenshot(driver, "assert error message for invalid first name"));
 		verifications.verifyEquals(signUpPage.getLastNameErrorMessage().getText(), "Please enter minimum 3 characters",
+				util.takeScreenshot(driver, "assert error message for invalid last name"));
+	}
+
+	@Test(alwaysRun = true, dataProvider = "invalidNamesMoreThanThreeChars", dataProviderClass = DataProviderClass.class, groups = {
+			"regression" })
+	public void signUpWithInvalidNameMoreThanThreeCharsTest(Map<String, String> user) {
+		signUpPage.fillSignUpForm(user);
+		Assert.assertEquals(signUpPage.getSubmit().getAttribute("disabled"), "true",
+				util.takeScreenshot(driver, "assert submit button disabled for invalid names"));
+		verifications.verifyEquals(signUpPage.getFirstNameErrorMessage().getText(), "Please enter a valid data",
+				util.takeScreenshot(driver, "assert error message for invalid first name"));
+		verifications.verifyEquals(signUpPage.getLastNameErrorMessage().getText(), "Please enter a valid data",
 				util.takeScreenshot(driver, "assert error message for invalid last name"));
 	}
 
