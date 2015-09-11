@@ -1,14 +1,17 @@
-package com.plancess.selenium.pages;
+package com.plancess.selenium.lms.pages;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class Dashboard {
+import com.plancess.selenium.pages.LoginPage;
+import com.plancess.selenium.pages.ProfilePage;
+import com.plancess.selenium.pages.SecurityPage;
+
+public class ThankYouPage {
 	private final WebDriver driver;
 	private WebDriverWait wait;
 	private Actions actions;
@@ -37,13 +40,14 @@ public class Dashboard {
 	@FindBy(xpath = ".//img[@title='Profile']")
 	WebElement toggleDropDown;
 
-	public Dashboard(WebDriver driver, WebDriverWait wait) {
+	public ThankYouPage(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
 		this.wait = wait;
 		this.actions = new Actions(driver);
 		// new Executioner(driver).navigateToURL(url);
-		if (!"Plancess Dashboard".equals(driver.getTitle())) {
-			throw new IllegalStateException("This is not  the Plancess Dashboard page");
+
+		if (!driver.getCurrentUrl().contains("thankyou")) {
+			throw new IllegalStateException("This is not a Thank you page");
 		}
 		PageFactory.initElements(driver, this);
 

@@ -3,16 +3,19 @@ package com.plancess.selenium.utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class ExcelReader {
+
+	private Row row;
 
 	public String[][] readExcelFile(String filepath, String sheetName) {
 		try {
@@ -20,17 +23,22 @@ public class ExcelReader {
 			FileInputStream file = new FileInputStream(new File(filepath));
 
 			// Get the workbook instance for XLS file
-			HSSFWorkbook workbook = new HSSFWorkbook(file);
+			XSSFWorkbook workbook = new XSSFWorkbook(file);
 
 			// Get first sheet from the workbook
-			HSSFSheet sheet = workbook.getSheet(sheetName);
+			XSSFSheet sheet = workbook.getSheet(sheetName);
 
 			// Iterate through each rows from first sheet
 			Iterator<Row> rowIterator = sheet.iterator();
-			String[][] sheetData = new String[sheet.getLastRowNum()][];
+			row = rowIterator.next();
+			int cells = row.getPhysicalNumberOfCells();
+			String[][] sheetData = new String[sheet.getPhysicalNumberOfRows()][cells];
+			// reset row iterator
+			rowIterator = sheet.iterator();
 			int i = 0, j = 0;
+
 			while (rowIterator.hasNext()) {
-				Row row = rowIterator.next();
+				row = rowIterator.next();
 				j = 0;
 
 				// For each row, iterate through each columns
@@ -39,7 +47,23 @@ public class ExcelReader {
 
 					Cell cell = cellIterator.next();
 
-					sheetData[i][j++] = cell.getStringCellValue();
+					if (cell != null) {
+						String cellValue = null;
+						switch (cell.getCellType()) {
+						case Cell.CELL_TYPE_STRING:
+							cellValue = cell.getStringCellValue();
+							break;
+						case Cell.CELL_TYPE_NUMERIC:
+							cellValue = String.valueOf(cell.getNumericCellValue());
+							break;
+						case Cell.CELL_TYPE_BOOLEAN:
+							cellValue = String.valueOf(cell.getBooleanCellValue());
+							break;
+						default:
+						}
+						sheetData[i][j++] = cellValue;
+
+					}
 
 				}
 				i++;
@@ -54,5 +78,45 @@ public class ExcelReader {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public Object[][] getUserDataFromExcel(String fileName, String sheetName) {
+
+		Map<String, String> user = new HashMap<String, String>();
+
+		ClassLoader classLoader = getClass().getClassLoader();
+		File file = new File(classLoader.getResource(fileName).getFile());
+
+		String[][] excelData = readExcelFile(file.getAbsolutePath(), sheetName);
+		int rowCount = 0;
+
+		for (int i = 0; i < excelData.length; i++) {
+
+			if (excelData[i][0].equalsIgnoreCase("Yes")) {
+
+				rowCount++;
+
+			}
+
+		}
+		Object[][] dataSet = new Object[rowCount][1];
+		int index = 0;
+
+		for (int i = 0; i < excelData.length; i++) {
+
+			if (excelData[i][0].equalsIgnoreCase("Yes")) {
+
+				for (int j = 0; j < excelData[i].length; j++) {
+
+					user.put(excelData[0][j], excelData[i][j]);
+
+				}
+				dataSet[index++][0] = user;
+
+			}
+
+		}
+
+		return dataSet;
 	}
 }

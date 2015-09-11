@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="Plancess LMS Web APP Suite" parallel="false">
+	<!-- <listeners> <listener class-name="com.plancess.selenium.reporter.PlancessReporter" 
+		/> </listeners> -->
+
+
+	<parameter name="browser" value="firefox" />
+	<parameter name="os" value="WINDOWS" />
+	<test name="LMS WebApp Test">
+		<!-- <groups> <run> <include name="smoke" /> </run> </groups> -->
+		<classes>
+			<class name="com.plancess.selenium.lms.tests.SignUpTest" />
+
+		</classes>
+	</test>
+
+</suite> <!-- Suite -->

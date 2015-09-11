@@ -41,8 +41,8 @@ public class Util {
 			String filename = "./screenshots/screenshot" + System.currentTimeMillis() + ".png";
 			File file = new File(filename);
 			FileUtils.copyFile(scrFile, file);
-			Reporter.log("Screenshot for " + step + " captured as <a href='" + file.getAbsolutePath()
-					+ "' target='_blank'> screenshot </a> <br>");
+			Reporter.log("<br> Screenshot for " + step + " captured as <a href='" + file.getAbsolutePath()
+					+ "' target='_blank'> screenshot </a> <br>", true);
 			return "Screenshot for " + step + " is :" + file.getName() + "\n";
 		} catch (Exception e) {
 			Reporter.log("Exception in taking screenshot");
