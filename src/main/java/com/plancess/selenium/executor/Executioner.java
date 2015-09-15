@@ -67,4 +67,12 @@ public class Executioner {
 		}
 	}
 
+	public WebElement getElement(By by) {
+		try {
+			return driver.findElement(by);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
 }

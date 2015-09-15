@@ -10,6 +10,7 @@
 		<!-- <groups> <run> <include name="smoke" /> </run> </groups> -->
 		<classes>
 			<class name="com.plancess.selenium.lms.tests.SignUpTest" />
+			<class name="com.plancess.selenium.lms.tests.CampaignTest" />
 
 		</classes>
 	</test>

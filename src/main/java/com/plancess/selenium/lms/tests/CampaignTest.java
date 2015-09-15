@@ -4,29 +4,35 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.Assert;
+import org.testng.AssertJUnit;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
+import org.testng.annotations.Test;
 
 import com.plancess.selenium.executor.Executioner;
-import com.plancess.selenium.lms.pages.LeadDetailsPage;
+import com.plancess.selenium.lms.pages.AddCampaignPage;
+import com.plancess.selenium.lms.pages.DashboardPage;
 import com.plancess.selenium.lms.pages.LoginPage;
 import com.plancess.selenium.lms.pages.SignUpPage;
 import com.plancess.selenium.utils.ExcelReader;
 import com.plancess.selenium.utils.Util;
 import com.plancess.selenium.utils.Verifications;
 
-public class SignUpTest {
+public class CampaignTest {
 
 	private WebDriver driver;
 	private SignUpPage signUpPage;
@@ -37,8 +43,9 @@ public class SignUpTest {
 	private Util util;
 	private Verifications verifications;
 
-	private LeadDetailsPage leadDetailsPage;
+	private DashboardPage dashBoardPage;
 	private LoginPage loginPage;
+	private AddCampaignPage addCampaignPage;
 
 	@Parameters({ "host_ip", "port", "os", "browser", "browserVersion" })
 	@BeforeMethod(alwaysRun = true)
@@ -62,8 +69,8 @@ public class SignUpTest {
 			verifications = Verifications.getInstance();
 
 		} catch (MalformedURLException e) {
-			Assert.fail("Unable to start selenium session make sure Grid hub is running on url :" + "http://" + host
-					+ ":" + port + "/wd/hub");
+			AssertJUnit.fail("Unable to start selenium session make sure Grid hub is running on url :" + "http://"
+					+ host + ":" + port + "/wd/hub");
 
 		}
 	}
@@ -74,17 +81,9 @@ public class SignUpTest {
 	}
 
 	@Test(alwaysRun = true, dataProvider = "LmsDataProvider")
-	public void signUpTest(Map<String, String> user) {
+	public void createCampaignTest(Map<String, String> user) {
 
-		executor.navigateToURL(user.get("campaignUrl"));
-		signUpPage = new SignUpPage(driver, wait);
-
-		signUpPage.signUp(user);
-		String leadId = driver.getCurrentUrl().split("leadid=")[1].split("&")[0];
-		verifications.verifyTrue(driver.getCurrentUrl().contains("thankyou"),
-				util.takeScreenshot(driver, "Verify thank you page"));
-
-		// to verify lead details
+		// login to crm
 
 		executor.navigateToURL(user.get("baseUrl") + "auth");
 		loginPage = new LoginPage(driver, wait);
@@ -93,24 +92,14 @@ public class SignUpTest {
 		executor.softWaitForCondition(ExpectedConditions.titleContains("Plancess - CRM"));
 		verifications.verifyTrue(driver.getTitle().contains("Plancess - CRM"),
 				util.takeScreenshot(driver, "Verify Dashboard"));
-		executor.navigateToURL(user.get("baseUrl") + "lead/view/" + leadId);
-		leadDetailsPage = new LeadDetailsPage(driver, wait);
-		verifications.verifyEquals(leadDetailsPage.getPhone().getText(), user.get("mobile"),
-				util.takeScreenshot(driver, "Verify Lead mobile Details"));
-		verifications.verifyEquals(leadDetailsPage.getName().getText(), user.get("name"),
-				util.takeScreenshot(driver, "Verify Lead name Details"));
-		verifications.verifyEquals(leadDetailsPage.getEmail().getText(), user.get("email"),
-				util.takeScreenshot(driver, "Verify Lead email Details"));
-		verifications.verifyEquals(leadDetailsPage.getCity().getText(), user.get("city"),
-				util.takeScreenshot(driver, "Verify Lead city Details"));
-		verifications.verifyEquals(leadDetailsPage.getTarget_year().getText(), user.get("target_year"),
-				util.takeScreenshot(driver, "Verify Lead Target Year Details"));
-		executor.softWaitForWebElement(leadDetailsPage.getCampaignLink());
-		verifications.verifyTrue(
-				user.get("campaignUrl").contains(leadDetailsPage.getCampaignLink().getAttribute("href")),
-				util.takeScreenshot(driver, "Verify Lead compaign Details"));
-		verifications.verifyEquals(leadDetailsPage.getLeadType().getText(), user.get("leadType"),
-				util.takeScreenshot(driver, "Verify Lead Type Details"));
+
+		dashBoardPage = new DashboardPage(driver, wait);
+		addCampaignPage = dashBoardPage.openAddCampaignPage();
+		String campaignId = addCampaignPage.addCampaign(user);
+		WebElement element = executor
+				.getElement(By.xpath(".//*[@id='mytable']/tbody/tr/td[contains(.,'" + campaignId + "')]"));
+		verifications.verifyTrue(element != null && element.isDisplayed(),
+				util.takeScreenshot(driver, "verify campaign created."));
 
 	}
 
@@ -118,7 +107,7 @@ public class SignUpTest {
 	public Object[][] LmsSignUpDataProvider() {
 
 		ExcelReader excelReader = new ExcelReader();
-		return excelReader.getUserDataFromExcel("testData.xlsx", "lmsUserData");
+		return excelReader.getUserDataFromExcel("testData.xlsx", "Campaign");
 
 	}
 
