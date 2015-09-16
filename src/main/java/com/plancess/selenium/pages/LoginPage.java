@@ -31,7 +31,7 @@ public class LoginPage {
 	@FindBy(xpath = "//button[@type='submit']")
 	WebElement loginButton;
 
-	@FindBy(xpath = "//*[@ui-sref='signup']")
+	@FindBy(xpath = "//*[@ng-click='signUpForFree()'']")
 	WebElement signupButton;
 
 	@FindBy(css = "a[data-toggle='dropdown'] img")

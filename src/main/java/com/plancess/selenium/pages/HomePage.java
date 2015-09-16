@@ -12,7 +12,7 @@ import com.plancess.selenium.executor.Executioner;
 public class HomePage {
 	private final WebDriver driver;
 	private WebDriverWait wait;
-	private String url = "http://dev.plancess.com/ui/#/";
+	private String url = "http://dev.plancess.com/ui/app/#/";
 
 	@FindBy(css = "header img[title='Plancess Logo']")
 	WebElement plancessHeaderLogo;
@@ -132,7 +132,7 @@ public class HomePage {
 			logoutLink.click();
 			toggleDropDown.click();
 		} catch (Exception e) {
-			System.out.println("user not logged in");
+			System.out.println("user not logged in opening login page ...");
 		}
 
 	}

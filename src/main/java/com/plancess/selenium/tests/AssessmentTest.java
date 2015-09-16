@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -42,7 +43,7 @@ public class AssessmentTest extends BaseTest {
 
 	@Parameters({ "host_ip", "port", "os", "browser", "browserVersion" })
 	@BeforeMethod
-	public void setUp(@Optional("localhost") String host, @Optional("4444") String port, @Optional("LINUX") String os,
+	public void setUp(@Optional("localhost") String host, @Optional("4444") String port, @Optional("WINDOWS") String os,
 			@Optional("firefox") String browser, @Optional("40.0") String browserVersion) {
 
 		try {
@@ -75,11 +76,13 @@ public class AssessmentTest extends BaseTest {
 		driver.quit();
 	}
 
-	@Test(dataProvider = "takeTestValidData", groups = { "smoke", "regression" })
-	public void takeTestWithValidDataTest(Map<String, String> user) {
+	@Test(dataProvider = "noMoreTestDataProvider", groups = { "regression" })
+	public void noMoreTestErorTest(Map<String, String> user) {
+
+		// takeTestWithValidDataTest(user);
 
 		Dashboard dashboard = loginPage.doLogin(user);
-		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(dashboard.getStartAssessmentSection()));
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//button[@type='submit']")));
 
 		Assert.assertTrue(dashboard.getStartAssessmentSection().isDisplayed(),
 				util.takeScreenshot(driver, "assert user login succefull and start assessment section displayed"));
@@ -87,101 +90,184 @@ public class AssessmentTest extends BaseTest {
 		switch (user.get("subject").toLowerCase()) {
 
 		case "physics":
+			executor.softWaitForWebElement(dashboard.getPhysicsTakeTest());
 			dashboard.getPhysicsTakeTest().click();
+			break;
 		case "chemistry":
+			executor.softWaitForWebElement(dashboard.getChemistryTakeTest());
 			dashboard.getChemistryTakeTest().click();
+			break;
 		case "math":
 		case "maths":
 		case "mathematics":
+			executor.softWaitForWebElement(dashboard.getMathsTakeTest());
 			dashboard.getMathsTakeTest().click();
+			break;
 		default:
 			Assert.fail("Subject :" + user.get("subject") + "not found");
 
 		}
-		dashboard.getStartTest().click();
+		executor.softWaitForWebElement(dashboard.getToastTitle());
+		Assert.assertTrue(executor.isElementExist(By.cssSelector("div.toast-title")),
+				util.takeScreenshot(driver, "Verify if no more tests exist for this subject"));
 
-		for (WebElement choice : dashboard.getAnswerChoicesA()) {
-			if (choice.isDisplayed()) {
-				choice.click();
-			}
+		dashboard.logoutUser();
+
+	}
+
+	@Test(dataProvider = "takeTestValidData", groups = { "smoke", "regression" })
+	public void takeTestWithValidDataTest(Map<String, String> user) {
+
+		Dashboard dashboard = loginPage.doLogin(user);
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//button[@type='submit']")));
+
+		Assert.assertTrue(dashboard.getStartAssessmentSection().isDisplayed(),
+				util.takeScreenshot(driver, "assert user login succefull and start assessment section displayed"));
+
+		switch (user.get("subject").toLowerCase()) {
+
+		case "physics":
+			executor.softWaitForWebElement(dashboard.getPhysicsTakeTest());
+			dashboard.getPhysicsTakeTest().click();
+			break;
+		case "chemistry":
+			executor.softWaitForWebElement(dashboard.getChemistryTakeTest());
+			dashboard.getChemistryTakeTest().click();
+			break;
+		case "math":
+		case "maths":
+		case "mathematics":
+			executor.softWaitForWebElement(dashboard.getMathsTakeTest());
+			dashboard.getMathsTakeTest().click();
+			break;
+		default:
+			Assert.fail("Subject :" + user.get("subject") + "not found");
+
 		}
+		Assert.assertTrue(!executor.isElementExist(By.cssSelector("div.toast-title")),
+				util.takeScreenshot(driver, "Verify if no more tests exist for this subject"));
+		executor.softWaitForWebElement(dashboard.getStartTest());
+		dashboard.getStartTest().click();
+		executor.softWaitForWebElement(dashboard.getNextButton());
+
+		// to test pause/resume button
+
+		dashboard.getPauseTestButton().click();
+		executor.softWaitForWebElement(dashboard.getResumeTest());
+		Assert.assertTrue(dashboard.getResumeTest().isDisplayed(),
+				util.takeScreenshot(driver, "verify resume test button displayed"));
+
+		// to test hint button and hint text
+
+		dashboard.getHintButton().click();
+		executor.softWaitForWebElement(dashboard.getHintText());
+		Assert.assertTrue(dashboard.getHintText().isDisplayed(),
+				util.takeScreenshot(driver, "verify hint text displayed"));
+
 		int count = 0;
 		switch (user.get("answerChoices").toLowerCase()) {
 
 		case "a":
-			while (dashboard.getNextButton().isEnabled() && count <= 90) {
+			while (dashboard.getNextButton().isEnabled() && count++ <= 90) {
 				for (WebElement choice : dashboard.getAnswerChoicesA()) {
 					if (choice.isDisplayed()) {
 						choice.click();
 					}
 				}
-				if (dashboard.getNextButton().isEnabled()) {
+				if (dashboard.getNextButton().isEnabled()
+						&& dashboard.getNextButton().getAttribute("aria-disabled").equals("false")) {
 					dashboard.getNextButton().click();
 				} else {
 					dashboard.getSubmitTestButton().click();
 					dashboard.getConfirmSubmitTestButton().click();
+					break;
 				}
 			}
+			dashboard.getSubmitTestButton().click();
+			dashboard.getConfirmSubmitTestButton().click();
+			break;
 
 		case "b":
-			while (dashboard.getNextButton().isEnabled() && count <= 90) {
+			while (dashboard.getNextButton().isEnabled() && count++ <= 90) {
 				for (WebElement choice : dashboard.getAnswerChoicesB()) {
 					if (choice.isDisplayed()) {
 						choice.click();
 					}
 				}
-				if (dashboard.getNextButton().isEnabled()) {
+				if (dashboard.getNextButton().isEnabled()
+						&& dashboard.getNextButton().getAttribute("aria-disabled").equals("false")) {
 					dashboard.getNextButton().click();
 				} else {
 					dashboard.getSubmitTestButton().click();
 					dashboard.getConfirmSubmitTestButton().click();
 				}
 			}
+			dashboard.getSubmitTestButton().click();
+			dashboard.getConfirmSubmitTestButton().click();
+			break;
 		case "c":
-			while (dashboard.getNextButton().isEnabled() && count <= 90) {
+			while (dashboard.getNextButton().isEnabled() && count++ <= 90) {
 				for (WebElement choice : dashboard.getAnswerChoicesC()) {
 					if (choice.isDisplayed()) {
 						choice.click();
 					}
 				}
-				if (dashboard.getNextButton().isEnabled()) {
+				if (dashboard.getNextButton().isEnabled()
+						&& dashboard.getNextButton().getAttribute("aria-disabled").equals("false")) {
 					dashboard.getNextButton().click();
 				} else {
 					dashboard.getSubmitTestButton().click();
 					dashboard.getConfirmSubmitTestButton().click();
 				}
 			}
+			dashboard.getSubmitTestButton().click();
+			dashboard.getConfirmSubmitTestButton().click();
+			break;
 		case "d":
-			while (dashboard.getNextButton().isEnabled() && count <= 90) {
+			while (dashboard.getNextButton().isEnabled() && count++ <= 90) {
 				for (WebElement choice : dashboard.getAnswerChoicesD()) {
 					if (choice.isDisplayed()) {
 						choice.click();
 					}
 				}
-				if (dashboard.getNextButton().isEnabled()) {
+				if (dashboard.getNextButton().isEnabled()
+						&& dashboard.getNextButton().getAttribute("aria-disabled").equals("false")) {
 					dashboard.getNextButton().click();
 				} else {
 					dashboard.getSubmitTestButton().click();
 					dashboard.getConfirmSubmitTestButton().click();
 				}
 			}
+			dashboard.getSubmitTestButton().click();
+			dashboard.getConfirmSubmitTestButton().click();
+			break;
+		default:
+			Assert.fail("invalid answer choic option.");
 
 		}
 
 		reportPage = new ReportPage(driver, wait);
+		executor.softWaitForWebElement(reportPage.getTopicTitle());
 		Assert.assertTrue(reportPage.getTopicTitle().isDisplayed(),
-				util.takeScreenshot(driver, "verify toast title displayed"));
+				util.takeScreenshot(driver, "verify topic title displayed"));
 		Assert.assertTrue(reportPage.getRecomendationsSection().isDisplayed(),
-				util.takeScreenshot(driver, "verify toast title displayed"));
+				util.takeScreenshot(driver, "verify recommendations section displayed"));
 		Assert.assertTrue(reportPage.getQuestionsWisePerformance().isDisplayed(),
-				util.takeScreenshot(driver, "verify toast title displayed"));
+				util.takeScreenshot(driver, "verify questions wise performance displayed"));
+		dashboard.logoutUser();
 
+	}
+
+	@DataProvider(name = "noMoreTestDataProvider")
+	public Object[][] noMoreTestDataProvider() {
+
+		return new ExcelReader().getUserDataFromExcel("testData.xlsx", "assessment_no_test");
 	}
 
 	@DataProvider(name = "takeTestValidData")
 	public Object[][] takeTestValidData() {
 
-		return new ExcelReader().getUserDataFromExcel("testData.xlsx", "assessment");
+		return new ExcelReader().getUserDataFromExcel("testData.xlsx", "assessment_valid");
 	}
 
 }

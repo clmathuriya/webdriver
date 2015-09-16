@@ -8,6 +8,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.FindBys;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class Dashboard {
@@ -86,15 +87,28 @@ public class Dashboard {
 	@FindBy(xpath = "//button[@ng-click='submit()']")
 	WebElement confirmSubmitTestButton;
 
+	@FindBy(css = "div.toast-title")
+	WebElement toastTitle;
+
+	@FindBy(css = "div.toast-message")
+	WebElement toastMessage;
+
+	@FindBy(xpath = "//*[@name='lightbulb-o']")
+	WebElement hintButton;
+
+	@FindBy(xpath = "//*[@ng-if='showHint']")
+	WebElement hintText;
+
 	public Dashboard(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
 		this.wait = wait;
 		this.actions = new Actions(driver);
 		// new Executioner(driver).navigateToURL(url);
+		PageFactory.initElements(driver, this);
+		wait.until(ExpectedConditions.titleIs("Plancess Dashboard"));
 		if (!"Plancess Dashboard".equals(driver.getTitle())) {
 			throw new IllegalStateException("This is not  the Plancess Dashboard page");
 		}
-		PageFactory.initElements(driver, this);
 
 	}
 
@@ -223,6 +237,22 @@ public class Dashboard {
 
 	public WebElement getConfirmSubmitTestButton() {
 		return confirmSubmitTestButton;
+	}
+
+	public WebElement getToastTitle() {
+		return toastTitle;
+	}
+
+	public WebElement getToastMessage() {
+		return toastMessage;
+	}
+
+	public WebElement getHintButton() {
+		return hintButton;
+	}
+
+	public WebElement getHintText() {
+		return hintText;
 	}
 
 	public LoginPage logoutUser() {

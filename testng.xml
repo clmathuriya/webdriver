@@ -19,6 +19,7 @@
 			<class name="com.plancess.selenium.tests.LoginTest" />
 			<class name="com.plancess.selenium.tests.UserSecurityTest" />
 			<class name="com.plancess.selenium.tests.UserProfileTest" />
+			<class name="com.plancess.selenium.tests.AssessmentTest" />
 		</classes>
 	</test>
 
