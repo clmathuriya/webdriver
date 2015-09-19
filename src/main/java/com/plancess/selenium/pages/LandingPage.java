@@ -9,10 +9,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.plancess.selenium.executor.Executioner;
 
-public class HomePage {
+public class LandingPage {
 	private final WebDriver driver;
 	private WebDriverWait wait;
-	private String url = "http://dev.plancess.com/ui/app/#/";
+	private String url = "http://dev.plancess.com/ui/";
 
 	@FindBy(css = "header img[title='Preplane Logo']")
 	WebElement plancessHeaderLogo;
@@ -20,10 +20,10 @@ public class HomePage {
 	@FindBy(css = "footer img[title='Plancess Logo']")
 	WebElement plancessFooterLogo;
 
-	@FindBy(css = "a[ng-click='openLogin()']")
+	@FindBy(xpath = "//a[.='Login']")
 	WebElement loginLink;
 
-	@FindBy(css = "a[ng-click='openSignUp()']")
+	@FindBy(xpath = "//a[.='Sign Up']")
 	WebElement signupLink;
 
 	@FindBy(css = "a[data-toggle='dropdown'] img")
@@ -34,12 +34,12 @@ public class HomePage {
 
 	// getter and setters
 
-	public HomePage(WebDriver driver, WebDriverWait wait) {
+	public LandingPage(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
 		this.wait = wait;
 		new Executioner(driver, wait).navigateToURL(url);
-		if (!"Plancess Dashboard".equals(driver.getTitle())) {
-			throw new IllegalStateException("This is not  the Plancess Home page");
+		if (!"Plancess".equals(driver.getTitle())) {
+			throw new IllegalStateException("This is not  the Plancess Landing page");
 		}
 		PageFactory.initElements(driver, this);
 
@@ -79,20 +79,21 @@ public class HomePage {
 	}
 
 	// user operations
-	public SignUpPage openSignUpPage() {
-		toggleDropDown.click();
+	public SignUpDialogPage openSignUpDialogPage() {
+		// toggleDropDown.click();
 		signupLink.click();
 
-		return new SignUpPage(driver, wait);
+		return new SignUpDialogPage(driver, wait);
 
 	}
 
-	public LoginPage openLoginPage() {
-		toggleDropDown.click();
-		tryLogout();
+	public LoginDialogPage openLoginDialogPage() {
+		// toggleDropDown.click();
+		// tryLogout();
+		wait.until(ExpectedConditions.visibilityOf(loginLink));
 		loginLink.click();
 
-		return new LoginPage(driver, wait);
+		return new LoginDialogPage(driver, wait);
 
 	}
 

@@ -39,7 +39,7 @@ public class UserProfileTest extends BaseTest {
 
 	@Parameters({ "host_ip", "port", "os", "browser", "browserVersion" })
 	@BeforeMethod
-	public void setUp(@Optional("localhost") String host, @Optional("4444") String port, @Optional("LINUX") String os,
+	public void setUp(@Optional("localhost") String host, @Optional("4444") String port, @Optional("WINDOWS") String os,
 			@Optional("firefox") String browser, @Optional("40.0") String browserVersion) {
 
 		try {

@@ -2,7 +2,6 @@ package com.plancess.selenium.tests;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.openqa.selenium.Platform;
@@ -22,19 +21,18 @@ import org.testng.annotations.Test;
 
 import com.plancess.selenium.executor.Executioner;
 import com.plancess.selenium.pages.Dashboard;
-import com.plancess.selenium.pages.HomePage;
-import com.plancess.selenium.pages.LoginPage;
-import com.plancess.selenium.utils.DataProviderClass;
+import com.plancess.selenium.pages.LandingPage;
+import com.plancess.selenium.pages.LoginDialogPage;
 import com.plancess.selenium.utils.ExcelReader;
 import com.plancess.selenium.utils.Util;
 import com.plancess.selenium.utils.Verifications;
 
-public class LoginTest extends BaseTest {
+public class LoginFromLandingPageTest extends BaseTest {
 
 	private WebDriver driver;
-	private HomePage homePage;
-	private LoginPage loginPage;
-	private String pageTitle = "Plancess Dashboard";
+	private LandingPage landingPage;
+	private LoginDialogPage loginDialogPage;
+	private String pageTitle = "Plancess";
 	private WebDriverWait wait;
 	private Executioner executor;
 
@@ -55,9 +53,9 @@ public class LoginTest extends BaseTest {
 			// driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 			wait = new WebDriverWait(driver, 30);
 			executor = new Executioner(driver, wait);
-			homePage = new HomePage(driver, wait);
+			landingPage = new LandingPage(driver, wait);
 
-			loginPage = homePage.openLoginPage();
+			loginDialogPage = landingPage.openLoginDialogPage();
 			util = Util.getInstance();
 			verifications = Verifications.getInstance();
 
@@ -81,64 +79,73 @@ public class LoginTest extends BaseTest {
 	@Test(groups = { "smoke", "regression" })
 	public void loginContentTest() {
 
-		Assert.assertEquals(loginPage.getTitle(), pageTitle, util.takeScreenshot(driver, "assert title"));
-		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(loginPage.getEmail()));
+		Assert.assertEquals(loginDialogPage.getTitle(), pageTitle, util.takeScreenshot(driver, "assert title"));
+		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(loginDialogPage.getEmail()));
 
-		verifications.verifyTrue(loginPage.getEmail().isDisplayed(),
+		verifications.verifyTrue(loginDialogPage.getEmail().isDisplayed(),
 				util.takeScreenshot(driver, "verify email field displayed"));
-		verifications.verifyTrue(loginPage.getPassword().isDisplayed(),
+		verifications.verifyTrue(loginDialogPage.getPassword().isDisplayed(),
 				util.takeScreenshot(driver, "verify password field displayed"));
 
-		verifications.verifyTrue(loginPage.getLoginButton().isDisplayed(),
+		verifications.verifyTrue(loginDialogPage.getLoginButton().isDisplayed(),
 				util.takeScreenshot(driver, "verify login button displayed"));
-		verifications.verifyTrue(loginPage.getRemember().getAttribute("name").equals("remember"),
-				util.takeScreenshot(driver, "verify remember checkbox displayed"));
+		// verifications.verifyTrue(loginDialogPage.getRemember().getAttribute("name").equals("remember"),
+		// util.takeScreenshot(driver, "verify remember checkbox displayed"));
 
-		verifications.verifyTrue(loginPage.getForgotPasswordLink().isDisplayed(),
+		verifications.verifyTrue(loginDialogPage.getForgotPasswordLink().isDisplayed(),
 				util.takeScreenshot(driver, "verify forgot password  link displayed"));
-		verifications.verifyTrue(loginPage.getSignupButton().isDisplayed(),
-				util.takeScreenshot(driver, "verify signup button displayed"));
+				// verifications.verifyTrue(loginDialogPage.getSignupButton().isDisplayed(),
+				// util.takeScreenshot(driver, "verify signup button
+				// displayed"));
 
-		verifications.verifyTrue(loginPage.getPlancessFooterLogo().isDisplayed(),
-				util.takeScreenshot(driver, "verify plancess footer logo displayed"));
-		verifications.verifyTrue(loginPage.getPlancessHeaderLogo().isDisplayed(),
-				util.takeScreenshot(driver, "verify plancess header logo displayed"));
+		// verifications.verifyTrue(loginDialogPage.getPlancessFooterLogo().isDisplayed(),
+		// util.takeScreenshot(driver, "verify plancess footer logo
+		// displayed"));
+		// verifications.verifyTrue(loginDialogPage.getPlancessHeaderLogo().isDisplayed(),
+		// util.takeScreenshot(driver, "verify plancess header logo
+		// displayed"));
 
 	}
 
 	@Test(groups = { "regression" })
 	public void loginWithEmptyFieldsTest() {
-		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(loginPage.getLoginButton()));
-		Assert.assertEquals(loginPage.getLoginButton().getAttribute("disabled"), "true",
+		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(loginDialogPage.getLoginButton()));
+		Assert.assertEquals(loginDialogPage.getLoginButton().getAttribute("disabled"), "true",
 				util.takeScreenshot(driver, "assert submit button disabled for empty field values"));
 	}
 
 	@Test(dataProvider = "loginWithNonExistingEmail", groups = { "regression" })
 	public void loginWithNonExistingEmailsTest(Map<String, String> user) {
 
-		loginPage.doLogin(user);
+		loginDialogPage.doLogin(user);
 
-		verifications.verifyEquals(loginPage.getFailureMessage().getText(), "Invalid username or password",
+		verifications.verifyEquals(loginDialogPage.getFailureMessage().getText(), "Invalid username or password",
 				util.takeScreenshot(driver, "assert error message for invalid credentials"));
 	}
 
 	@Test(dataProvider = "loginWithInvalidPassword", groups = { "regression" })
 	public void loginWithInvalidPasswordTest(Map<String, String> user) {
 
-		loginPage.doLogin(user);
-		executor.softWaitForWebElement(loginPage.getFailureMessage());
-		verifications.verifyEquals(loginPage.getFailureMessage().getText(), "Invalid username or password",
+		wait.until(ExpectedConditions.visibilityOf(loginDialogPage.getEmail()));
+		loginDialogPage.getEmail().clear();
+		loginDialogPage.getEmail().sendKeys(user.get("email"));
+		loginDialogPage.getPassword().clear();
+		loginDialogPage.getPassword().sendKeys(user.get("password"));
+		loginDialogPage.getActions().click(loginDialogPage.getLoginButton()).build().perform();
+		executor.softWaitForCondition(ExpectedConditions.textToBePresentInElement(loginDialogPage.getFailureMessage(),
+				"Invalid username or password"));
+		verifications.verifyEquals(loginDialogPage.getFailureMessage().getText(), "Invalid username or password",
 				util.takeScreenshot(driver, "assert error message for invalid credentials"));
 	}
 
 	@Test(dataProvider = "loginWithValidEmailPassword", groups = { "smoke", "regression" })
 	public void loginWithValidEmailPasswordTest(Map<String, String> user) {
 
-		Dashboard dashboard = loginPage.doLogin(user);
-		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(dashboard.getStartAssessmentSection()));
+		Dashboard dashboard = loginDialogPage.doLogin(user);
+		executor.softWaitForWebElement(dashboard.getWelcomeMessage());
 
-		Assert.assertTrue(dashboard.getStartAssessmentSection().isDisplayed(),
-				util.takeScreenshot(driver, "assert user login succefull and start assessment section displayed"));
+		Assert.assertTrue(dashboard.getWelcomeMessage().isDisplayed(),
+				util.takeScreenshot(driver, "assert user login succefull and welcome message displayed"));
 	}
 
 	// login data providers section

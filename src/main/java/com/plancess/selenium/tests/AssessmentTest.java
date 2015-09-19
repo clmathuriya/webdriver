@@ -8,6 +8,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -40,10 +41,12 @@ public class AssessmentTest extends BaseTest {
 	private Executioner executor;
 	private ProfilePage userProfile;
 	private ReportPage reportPage;
+	private Dashboard dashboard;
+	private Actions actions;
 
 	@Parameters({ "host_ip", "port", "os", "browser", "browserVersion" })
 	@BeforeMethod
-	public void setUp(@Optional("localhost") String host, @Optional("4444") String port, @Optional("WINDOWS") String os,
+	public void setUp(@Optional("localhost") String host, @Optional("4444") String port, @Optional("LINUX") String os,
 			@Optional("firefox") String browser, @Optional("40.0") String browserVersion) {
 
 		try {
@@ -57,6 +60,7 @@ public class AssessmentTest extends BaseTest {
 
 			// driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 			wait = new WebDriverWait(driver, 30);
+			actions = new Actions(driver);
 			executor = new Executioner(driver, wait);
 			homePage = new HomePage(driver, wait);
 
@@ -81,7 +85,7 @@ public class AssessmentTest extends BaseTest {
 
 		// takeTestWithValidDataTest(user);
 
-		Dashboard dashboard = loginPage.doLogin(user);
+		dashboard = loginPage.doLogin(user);
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//button[@type='submit']")));
 
 		Assert.assertTrue(dashboard.getStartAssessmentSection().isDisplayed(),
@@ -118,7 +122,7 @@ public class AssessmentTest extends BaseTest {
 	@Test(dataProvider = "takeTestValidData", groups = { "smoke", "regression" })
 	public void takeTestWithValidDataTest(Map<String, String> user) {
 
-		Dashboard dashboard = loginPage.doLogin(user);
+		dashboard = loginPage.doLogin(user);
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//button[@type='submit']")));
 
 		Assert.assertTrue(dashboard.getStartAssessmentSection().isDisplayed(),
@@ -129,40 +133,77 @@ public class AssessmentTest extends BaseTest {
 		case "physics":
 			executor.softWaitForWebElement(dashboard.getPhysicsTakeTest());
 			dashboard.getPhysicsTakeTest().click();
+			// to test cancel button
+
+			executor.softWaitForWebElement(dashboard.getStartTest());
+			// dashboard.getStartTest().click();
+			dashboard.getCancelButton().click();
+			dashboard.getPhysicsTakeTest().click();
+			executor.softWaitForWebElement(dashboard.getStartTest());
+
 			break;
 		case "chemistry":
 			executor.softWaitForWebElement(dashboard.getChemistryTakeTest());
 			dashboard.getChemistryTakeTest().click();
+			// to test cancel button
+
+			executor.softWaitForWebElement(dashboard.getStartTest());
+			// dashboard.getStartTest().click();
+			dashboard.getCancelButton().click();
+			dashboard.getChemistryTakeTest().click();
+			executor.softWaitForWebElement(dashboard.getStartTest());
+
 			break;
 		case "math":
 		case "maths":
 		case "mathematics":
 			executor.softWaitForWebElement(dashboard.getMathsTakeTest());
 			dashboard.getMathsTakeTest().click();
+			// to test cancel button
+
+			executor.softWaitForWebElement(dashboard.getStartTest());
+			// dashboard.getStartTest().click();
+			dashboard.getCancelButton().click();
+			dashboard.getMathsTakeTest().click();
+			executor.softWaitForWebElement(dashboard.getStartTest());
+
 			break;
 		default:
 			Assert.fail("Subject :" + user.get("subject") + "not found");
 
 		}
 		Assert.assertTrue(!executor.isElementExist(By.cssSelector("div.toast-title")),
-				util.takeScreenshot(driver, "Verify if no more tests exist for this subject"));
-		executor.softWaitForWebElement(dashboard.getStartTest());
+				util.takeScreenshot(driver, "Verify if no more tests error does not exist for this subject"));
+		verifications.verifyEquals(dashboard.getTimeRequired().getText().trim(), user.get("timeRequired").trim(),
+				util.takeScreenshot(driver, "verify time required"));
+		verifications.verifyEquals(dashboard.getTotalQuestions().getText().trim(), user.get("totalQuestions"),
+				util.takeScreenshot(driver, "verify number of total questions"));
+
 		dashboard.getStartTest().click();
 		executor.softWaitForWebElement(dashboard.getNextButton());
 
 		// to test pause/resume button
 
 		dashboard.getPauseTestButton().click();
+		executor.softWaitForWebElement(dashboard.getRemainingTime());
+		String remainingTime = dashboard.getRemainingTime().getText().trim();
 		executor.softWaitForWebElement(dashboard.getResumeTest());
-		Assert.assertTrue(dashboard.getResumeTest().isDisplayed(),
+		verifications.verifyTrue(dashboard.getResumeTest().isDisplayed(),
 				util.takeScreenshot(driver, "verify resume test button displayed"));
+		verifications.verifyEquals(dashboard.getRemainingTime().getText().trim(), remainingTime, util.takeScreenshot(
+				driver, "verify remaining time not changing for paused test expected=" + remainingTime));
+		dashboard.getResumeTest().click();
 
 		// to test hint button and hint text
 
 		dashboard.getHintButton().click();
 		executor.softWaitForWebElement(dashboard.getHintText());
-		Assert.assertTrue(dashboard.getHintText().isDisplayed(),
+		verifications.verifyTrue(dashboard.getHintText().isDisplayed(),
 				util.takeScreenshot(driver, "verify hint text displayed"));
+
+		// to test mark for review option
+
+		dashboard.getMarkForReview().click();
 
 		int count = 0;
 		switch (user.get("answerChoices").toLowerCase()) {
@@ -248,12 +289,24 @@ public class AssessmentTest extends BaseTest {
 
 		reportPage = new ReportPage(driver, wait);
 		executor.softWaitForWebElement(reportPage.getTopicTitle());
-		Assert.assertTrue(reportPage.getTopicTitle().isDisplayed(),
+		verifications.verifyTrue(reportPage.getTopicTitle().isDisplayed(),
 				util.takeScreenshot(driver, "verify topic title displayed"));
-		Assert.assertTrue(reportPage.getRecomendationsSection().isDisplayed(),
+		verifications.verifyTrue(reportPage.getRecomendationsSection().isDisplayed(),
 				util.takeScreenshot(driver, "verify recommendations section displayed"));
-		Assert.assertTrue(reportPage.getQuestionsWisePerformance().isDisplayed(),
+		verifications.verifyTrue(reportPage.getQuestionsWisePerformance().isDisplayed(),
 				util.takeScreenshot(driver, "verify questions wise performance displayed"));
+		actions.click(dashboard.getDashBoardButton()).build().perform();
+		executor.softWaitForWebElement(dashboard.getPerformanceSection());
+		verifications.verifyTrue(dashboard.getPerformanceSection().isDisplayed(),
+				util.takeScreenshot(driver, "verify performance section displayed on report page"));
+		// to verify notification displayed for test completion
+		dashboard.getNotificationsButton().click();
+		String notificationItemText = dashboard.getNotificationItem().getText().toLowerCase();
+		verifications.verifyTrue(
+				notificationItemText.contains(user.get("subject")) && notificationItemText.contains("completed"),
+				util.takeScreenshot(driver,
+						"verify notification item contains test completed for subject" + user.get("subject")));
+
 		dashboard.logoutUser();
 
 	}

@@ -30,8 +30,7 @@ public class DataProviderClass {
 				"web Test <web_api_test@plancess.com>", "webapi.user.plancess.com",
 				"web@test@email@plancess@@plancess.com", ".webtest@plancess.com", "username.@plancess.com",
 				"username..username@plancess.com", "username@plancess.com (some name)", "username@plancess",
-				"username@-plancess.com", "username" + timestamp + "@192.168.123.1111", "username@plancess..com",
-				"¢£¥®@plancess.com" };
+				"username@-plancess.com", "username@plancess..com", "¢£¥®@plancess.com" };
 		Object[][] dataSet = new Object[invalidEmails.length][1];
 		Map<String, String> user = new HashMap<String, String>();
 
@@ -77,51 +76,9 @@ public class DataProviderClass {
 		user.put("mobile", "9876543210");
 		user.put("email", "webuser@plancess.com");
 
-		user.put("password", "onlychars");
-		user.put("confirm_password", "n@t8");
+		user.put("password", "1234");
+		user.put("confirm_password", "1234");
 		dataSet[0][0] = user;
-
-		return dataSet;
-	}
-
-	@DataProvider(name = "invalidPasswordsLessThanEightChars")
-	public static Object[][] signUpDataProviderWithInvalidPasswordsLessThanEightChars() {
-		String[] invalidPasswords = { "n@t8", "0nly@07" };
-		Object[][] dataSet = new Object[invalidPasswords.length][1];
-		Map<String, String> user = new HashMap<String, String>();
-
-		user.put("firstName", "WebUser");
-		user.put("lastName", "Test");
-		user.put("mobile", "9876543210");
-		user.put("email", "webuser@plancess.com");
-
-		for (int i = 0; i < invalidPasswords.length; i++) {
-			user.put("password", invalidPasswords[i]);
-			user.put("confirm_password", invalidPasswords[i]);
-			dataSet[i][0] = user;
-		}
-
-		return dataSet;
-	}
-
-	@DataProvider(name = "invalidPasswordsMoreThanEightChars")
-	public static Object[][] signUpDataProviderWithInvalidPasswordsMoreThanEightChars() {
-		String[] invalidPasswords = { "!@##$%^&*", "onlyalphabets", "12345678", "$@!%*?&^", "alphanumeric10",
-				"alphaspcl@", "morethan16p@ssw0rd", "seventeen@1234567", "with space", "sql' or '1'='1", "_________",
-				"¢£¥®asddf12234" };
-		Object[][] dataSet = new Object[invalidPasswords.length][1];
-		Map<String, String> user = new HashMap<String, String>();
-
-		user.put("firstName", "WebUser");
-		user.put("lastName", "Test");
-		user.put("mobile", "9876543210");
-		user.put("email", "webuser@plancess.com");
-
-		for (int i = 0; i < invalidPasswords.length; i++) {
-			user.put("password", invalidPasswords[i]);
-			user.put("confirm_password", invalidPasswords[i]);
-			dataSet[i][0] = user;
-		}
 
 		return dataSet;
 	}
@@ -252,17 +209,16 @@ public class DataProviderClass {
 	@DataProvider(name = "validEmailPasswords")
 	public static Object[][] signUpDataProviderWithValidEmailPasswords() {
 		long timestamp = System.currentTimeMillis();
-		String[] validEmails = { "webtest1" + timestamp + "@plancess.com",
-				"web.test.firstname.lastname" + timestamp + "@plancess.com",
-				"webtestuser" + timestamp + "@plancess.com", "webtestuser2" + timestamp + "@plancess-edu.com",
-				"firstname+lastname+web+test" + timestamp + "@plancess.com",
-				"firstname.lastnamewebtest" + timestamp + "@123.123.123.123",
-				"firstname.lastnamewebtest" + timestamp + "@[123.123.123.123]",
-				"\"firstname.lastnamewebtest" + timestamp + "\"@plancess.com",
-				"1234567890webtest" + timestamp + "@plancess.com",
-				"firstname.lastnamewebtest3" + timestamp + "@plancess.name",
-				"____@webtest" + timestamp + "plancess.com", "emailwebtest" + timestamp + "@plancess.co.in",
-				"firstname-lastnamewebtest" + timestamp + "@plancess.com" };
+		String[] validEmails = { "web.test.firstname.lastname1" + timestamp + "@plancess.com",
+				"webtestuser2" + timestamp + "@plancess.com", "webtestuser3" + timestamp + "@plancess-edu.com",
+				"firstname+lastname+web+test4" + timestamp + "@plancess.com",
+				"firstname.lastnamewebtest5" + timestamp + "@123.123.123.123",
+				"firstname.lastnamewebtest6" + timestamp + "@[123.123.123.123]",
+				"\"firstname.lastnamewebtest7" + timestamp + "\"@plancess.com",
+				"1234567890webtest8" + timestamp + "@plancess.com",
+				"firstname.lastnamewebtest39" + timestamp + "@plancess.name",
+				"____@webtest10" + timestamp + "plancess.com", "emailwebtest11" + timestamp + "@plancess.co.in",
+				"firstname-lastnamewebtest12" + timestamp + "@plancess.com" };
 		String[] validPasswords = { "123456A@", "1234567B!", "123456789C@", "123456789D$", "1234567890E%",
 				"12345678901F&", "123456789012g^", "1234567890123h*", "12345678901234i?", "$@!%*?&^123456ab",
 				"$@!%*?&^12345abc", "$@!%*?&^1234abcd", "$@!%*?&^123abcde" };
@@ -285,48 +241,6 @@ public class DataProviderClass {
 
 	// login data providers
 
-	@DataProvider(name = "loginWithNonExistingEmail")
-	public static Object[][] loginDataProviderWithNonExistingEmail() {
-
-		Object[][] dataSet = new Object[1][1];
-		Map<String, String> user = new HashMap<String, String>();
-
-		user.put("email", "nonexistingemail@plancess.com");
-		user.put("password", "P@ssw0rd");
-
-		dataSet[0][0] = user;
-
-		return dataSet;
-	}
-
-	@DataProvider(name = "loginWithInvalidPassword")
-	public static Object[][] loginDataProviderWithInvalidPassword() {
-
-		Object[][] dataSet = new Object[1][1];
-		Map<String, String> user = new HashMap<String, String>();
-
-		user.put("email", "testuser@gmail.com");
-		user.put("password", "InvalidPassword");
-
-		dataSet[0][0] = user;
-
-		return dataSet;
-	}
-
-	@DataProvider(name = "loginWithValidEmailPassword")
-	public static Object[][] loginDataProviderWithValidEmailPassword() {
-
-		Object[][] dataSet = new Object[1][1];
-		Map<String, String> user = new HashMap<String, String>();
-
-		user.put("email", "testuser@gmail.com");
-		user.put("password", "P@ssw0rd");
-
-		dataSet[0][0] = user;
-
-		return dataSet;
-	}
-
 	// update user profile data providers
 
 	@DataProvider(name = "userProfileValidData")
@@ -348,24 +262,24 @@ public class DataProviderClass {
 
 		return dataSet;
 	}
-	
+
 	// update user security data providers
 
-		@DataProvider(name = "userSecurityValidData")
-		public static Object[][] userSecurityDataProviderWithValidDetails() {
+	@DataProvider(name = "userSecurityValidData")
+	public static Object[][] userSecurityDataProviderWithValidDetails() {
 
-			Object[][] dataSet = new Object[1][1];
-			Map<String, String> user = new HashMap<String, String>();
+		Object[][] dataSet = new Object[1][1];
+		Map<String, String> user = new HashMap<String, String>();
 
-			user.put("email", "testuser1@plancess.com");
-			user.put("password", "P@ssw0rd");
-			user.put("currentPassword", "P@ssw0rd");
-			user.put("newPassword", "P@ssw0rd1");
-			user.put("confirmPassword", "P@ssw0rd1");
-			
-			dataSet[0][0] = user;
+		user.put("email", "testuser1@plancess.com");
+		user.put("password", "P@ssw0rd");
+		user.put("currentPassword", "P@ssw0rd");
+		user.put("newPassword", "P@ssw0rd1");
+		user.put("confirmPassword", "P@ssw0rd1");
 
-			return dataSet;
-		}
+		dataSet[0][0] = user;
+
+		return dataSet;
+	}
 
 }

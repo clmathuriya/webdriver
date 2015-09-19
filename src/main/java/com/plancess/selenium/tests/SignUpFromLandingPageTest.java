@@ -22,18 +22,19 @@ import org.testng.annotations.Test;
 import com.plancess.selenium.executor.Executioner;
 import com.plancess.selenium.pages.Dashboard;
 import com.plancess.selenium.pages.HomePage;
-import com.plancess.selenium.pages.SignUpPage;
+import com.plancess.selenium.pages.LandingPage;
+import com.plancess.selenium.pages.SignUpDialogPage;
 import com.plancess.selenium.utils.DataProviderClass;
 import com.plancess.selenium.utils.ExcelReader;
 import com.plancess.selenium.utils.Util;
 import com.plancess.selenium.utils.Verifications;
 
-public class SignUpTest extends BaseTest {
+public class SignUpFromLandingPageTest extends BaseTest {
 
 	private WebDriver driver;
-	private HomePage homePage;
-	private SignUpPage signUpPage;
-	private String pageTitle = "Plancess Dashboard";
+	private LandingPage landingPage;
+	private SignUpDialogPage signUpDialogPage;
+	private String pageTitle = "Plancess";
 	private WebDriverWait wait;
 	private Executioner executor;
 	private Dashboard dashboard;
@@ -55,9 +56,9 @@ public class SignUpTest extends BaseTest {
 			// driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 			wait = new WebDriverWait(driver, 30);
 			executor = new Executioner(driver, wait);
-			homePage = new HomePage(driver, wait);
+			landingPage = new LandingPage(driver, wait);
 
-			signUpPage = homePage.openSignUpPage();
+			signUpDialogPage = landingPage.openSignUpDialogPage();
 			util = Util.getInstance();
 			verifications = Verifications.getInstance();
 
@@ -76,24 +77,24 @@ public class SignUpTest extends BaseTest {
 	@Test(alwaysRun = true, groups = { "smoke", "regression" })
 	public void signUpContentTest() {
 
-		Assert.assertEquals(signUpPage.getTitle(), pageTitle, util.takeScreenshot(driver, "assert title"));
-		verifications.verifyTrue(signUpPage.getFirstName().isDisplayed(),
+		Assert.assertEquals(signUpDialogPage.getTitle(), pageTitle, util.takeScreenshot(driver, "assert title"));
+		verifications.verifyTrue(signUpDialogPage.getFirstName().isDisplayed(),
 				util.takeScreenshot(driver, "verify firstname field displayed"));
-		verifications.verifyTrue(signUpPage.getLastName().isDisplayed(),
+		verifications.verifyTrue(signUpDialogPage.getLastName().isDisplayed(),
 				util.takeScreenshot(driver, "verify lastname field displayed"));
-		verifications.verifyTrue(signUpPage.getMobile().isDisplayed(),
+		verifications.verifyTrue(signUpDialogPage.getMobile().isDisplayed(),
 				util.takeScreenshot(driver, "verify mobile field displayed"));
-		verifications.verifyTrue(signUpPage.getEmail().isDisplayed(),
+		verifications.verifyTrue(signUpDialogPage.getEmail().isDisplayed(),
 				util.takeScreenshot(driver, "verify email field displayed"));
-		verifications.verifyTrue(signUpPage.getPassword().isDisplayed(),
+		verifications.verifyTrue(signUpDialogPage.getPassword().isDisplayed(),
 				util.takeScreenshot(driver, "verify password field displayed"));
-		verifications.verifyTrue(signUpPage.getConfirmPassword().isDisplayed(),
+		verifications.verifyTrue(signUpDialogPage.getConfirmPassword().isDisplayed(),
 				util.takeScreenshot(driver, "verify confirm password field displayed"));
-		verifications.verifyTrue(signUpPage.getAgreeCheckbox().getAttribute("aria-checked").equals("false"),
+		verifications.verifyTrue(signUpDialogPage.getAgreeCheckbox().getAttribute("aria-checked").equals("false"),
 				util.takeScreenshot(driver, "verify agree checkbox displayed"));
-		verifications.verifyTrue(signUpPage.getBack().isDisplayed(),
+		verifications.verifyTrue(signUpDialogPage.getBack().isDisplayed(),
 				util.takeScreenshot(driver, "verify back button displayed"));
-		verifications.verifyTrue(signUpPage.getSubmit().isDisplayed(),
+		verifications.verifyTrue(signUpDialogPage.getSubmit().isDisplayed(),
 				util.takeScreenshot(driver, "verify submit button displayed"));
 
 	}
@@ -101,17 +102,17 @@ public class SignUpTest extends BaseTest {
 	@Test(alwaysRun = true, groups = { "regression" })
 	public void signUpWithEmptyFieldsTest() {
 
-		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(signUpPage.getSubmit()));
-		Assert.assertEquals(signUpPage.getSubmit().getAttribute("disabled"), "true",
+		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(signUpDialogPage.getSubmit()));
+		Assert.assertEquals(signUpDialogPage.getSubmit().getAttribute("disabled"), "true",
 				util.takeScreenshot(driver, "assert submit button disabled for empty field values"));
 	}
 
 	@Test(alwaysRun = true, dataProvider = "mandatoryData", groups = { "smoke", "regression" })
 	public void signUpWithMandatoryFieldsTest(Map<String, String> user) {
 
-		signUpPage.signUpWithMandatoryFiels(user);
-		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(signUpPage.getSuccessMessage()));
-		Assert.assertEquals(signUpPage.getSuccessMessage().getText(), "Account created successfully!",
+		signUpDialogPage.signUpWithMandatoryFiels(user);
+		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(signUpDialogPage.getSuccessMessage()));
+		Assert.assertEquals(signUpDialogPage.getSuccessMessage().getText(), "Account created successfully!",
 				util.takeScreenshot(driver, "assert create user success message"));
 	}
 
@@ -119,11 +120,12 @@ public class SignUpTest extends BaseTest {
 			"smoke" })
 	public void signUpWithInvalidEmailTest(Map<String, String> user) {
 
-		signUpPage.fillSignUpForm(user);
+		signUpDialogPage.fillSignUpForm(user);
 
-		Assert.assertEquals(signUpPage.getSubmit().getAttribute("disabled"), "true",
+		Assert.assertEquals(signUpDialogPage.getSubmit().getAttribute("disabled"), "true",
 				util.takeScreenshot(driver, "assert submit button disabled for invalid email ids"));
-		verifications.verifyEquals(signUpPage.getEmailErrorMessage().getText(), "Please enter correct email address",
+		verifications.verifyEquals(signUpDialogPage.getEmailErrorMessage().getText(),
+				"Please enter correct email address",
 				util.takeScreenshot(driver, "assert error message for invalid email ids"));
 	}
 
@@ -131,11 +133,12 @@ public class SignUpTest extends BaseTest {
 			"regression" })
 	public void signUpWithInvalidEmailsTest(Map<String, String> user) {
 
-		signUpPage.fillSignUpForm(user);
+		signUpDialogPage.fillSignUpForm(user);
 
-		Assert.assertEquals(signUpPage.getSubmit().getAttribute("disabled"), "true",
+		Assert.assertEquals(signUpDialogPage.getSubmit().getAttribute("disabled"), "true",
 				util.takeScreenshot(driver, "assert submit button disabled for invalid email ids"));
-		verifications.verifyEquals(signUpPage.getEmailErrorMessage().getText(), "Please enter correct email address",
+		verifications.verifyEquals(signUpDialogPage.getEmailErrorMessage().getText(),
+				"Please enter correct email address",
 				util.takeScreenshot(driver, "assert error message for invalid email ids"));
 	}
 
@@ -143,10 +146,10 @@ public class SignUpTest extends BaseTest {
 			"regression" })
 	public void signUpWithInvalidPasswordTest(Map<String, String> user) {
 
-		signUpPage.fillSignUpForm(user);
-		Assert.assertEquals(signUpPage.getSubmit().getAttribute("disabled"), "true",
+		signUpDialogPage.fillSignUpForm(user);
+		Assert.assertEquals(signUpDialogPage.getSubmit().getAttribute("disabled"), "true",
 				util.takeScreenshot(driver, "assert submit button disabled for invalid password values"));
-		verifications.verifyEquals(signUpPage.getPasswordErrorMessage().getText(), "Password is too short",
+		verifications.verifyEquals(signUpDialogPage.getPasswordErrorMessage().getText(), "Password is too short",
 				util.takeScreenshot(driver, "assert password error message for invalid password values"));
 	}
 
@@ -154,11 +157,11 @@ public class SignUpTest extends BaseTest {
 			"regression" })
 	public void signUpWithPasswordMismatchTest(Map<String, String> user) {
 
-		signUpPage.fillSignUpForm(user);
-		Assert.assertEquals(signUpPage.getSubmit().getAttribute("disabled"), "true",
+		signUpDialogPage.fillSignUpForm(user);
+		Assert.assertEquals(signUpDialogPage.getSubmit().getAttribute("disabled"), "true",
 				util.takeScreenshot(driver, "assert submit button disabled for password mismatch"));
 		verifications.verifyTrue(
-				signUpPage.getConfirmPasswordErrorMessage().getText().contains("Passwords don't match"),
+				signUpDialogPage.getConfirmPasswordErrorMessage().getText().contains("Passwords don't match"),
 				util.takeScreenshot(driver, "assert password mismatch error message for password mismatch"));
 	}
 
@@ -166,10 +169,10 @@ public class SignUpTest extends BaseTest {
 			"regression" })
 	public void signUpWithInvalidMobileTest(Map<String, String> user) {
 
-		signUpPage.fillSignUpForm(user);
-		Assert.assertEquals(signUpPage.getSubmit().getAttribute("disabled"), "true",
+		signUpDialogPage.fillSignUpForm(user);
+		Assert.assertEquals(signUpDialogPage.getSubmit().getAttribute("disabled"), "true",
 				util.takeScreenshot(driver, "assert submit button disabled for invalid mobile number"));
-		verifications.verifyEquals(signUpPage.getMobileErrorMessage().getText(),
+		verifications.verifyEquals(signUpDialogPage.getMobileErrorMessage().getText(),
 				"Valid phone number starting with 7,8 or 9 is required",
 				util.takeScreenshot(driver, "assert error message for invalid mobile number"));
 	}
@@ -178,10 +181,10 @@ public class SignUpTest extends BaseTest {
 			"regression" })
 	public void signUpWithInvalidMobilesTest(Map<String, String> user) {
 
-		signUpPage.fillSignUpForm(user);
-		Assert.assertEquals(signUpPage.getSubmit().getAttribute("disabled"), "true",
+		signUpDialogPage.fillSignUpForm(user);
+		Assert.assertEquals(signUpDialogPage.getSubmit().getAttribute("disabled"), "true",
 				util.takeScreenshot(driver, "assert submit button disabled for invalid mobile number"));
-		verifications.verifyEquals(signUpPage.getMobileErrorMessage().getText(),
+		verifications.verifyEquals(signUpDialogPage.getMobileErrorMessage().getText(),
 				"Valid phone number starting with 7,8 or 9 is required",
 				util.takeScreenshot(driver, "assert error message for invalid mobile number"));
 	}
@@ -189,24 +192,26 @@ public class SignUpTest extends BaseTest {
 	@Test(alwaysRun = true, dataProvider = "invalidNamesLessThanThreeChars", dataProviderClass = DataProviderClass.class, groups = {
 			"regression" })
 	public void signUpWithInvalidNameLessThanThreeCharsTest(Map<String, String> user) {
-		signUpPage.fillSignUpForm(user);
-		Assert.assertEquals(signUpPage.getSubmit().getAttribute("disabled"), "true",
+		signUpDialogPage.fillSignUpForm(user);
+		Assert.assertEquals(signUpDialogPage.getSubmit().getAttribute("disabled"), "true",
 				util.takeScreenshot(driver, "assert submit button disabled for invalid names"));
-		verifications.verifyEquals(signUpPage.getFirstNameErrorMessage().getText(), "Please enter minimum 3 characters",
+		verifications.verifyEquals(signUpDialogPage.getFirstNameErrorMessage().getText(),
+				"Please enter minimum 3 characters",
 				util.takeScreenshot(driver, "assert error message for invalid first name"));
-		verifications.verifyEquals(signUpPage.getLastNameErrorMessage().getText(), "Please enter minimum 3 characters",
+		verifications.verifyEquals(signUpDialogPage.getLastNameErrorMessage().getText(),
+				"Please enter minimum 3 characters",
 				util.takeScreenshot(driver, "assert error message for invalid last name"));
 	}
 
 	@Test(alwaysRun = true, dataProvider = "invalidNamesMoreThanThreeChars", dataProviderClass = DataProviderClass.class, groups = {
 			"regression" })
 	public void signUpWithInvalidNameMoreThanThreeCharsTest(Map<String, String> user) {
-		signUpPage.fillSignUpForm(user);
-		Assert.assertEquals(signUpPage.getSubmit().getAttribute("disabled"), "true",
+		signUpDialogPage.fillSignUpForm(user);
+		Assert.assertEquals(signUpDialogPage.getSubmit().getAttribute("disabled"), "true",
 				util.takeScreenshot(driver, "assert submit button disabled for invalid names"));
-		verifications.verifyEquals(signUpPage.getFirstNameErrorMessage().getText(), "Please enter a valid data",
+		verifications.verifyEquals(signUpDialogPage.getFirstNameErrorMessage().getText(), "Please enter a valid data",
 				util.takeScreenshot(driver, "assert error message for invalid first name"));
-		verifications.verifyEquals(signUpPage.getLastNameErrorMessage().getText(), "Please enter a valid data",
+		verifications.verifyEquals(signUpDialogPage.getLastNameErrorMessage().getText(), "Please enter a valid data",
 				util.takeScreenshot(driver, "assert error message for invalid last name"));
 	}
 
@@ -214,11 +219,11 @@ public class SignUpTest extends BaseTest {
 			"regression" })
 	public void signUpWithExistingEmailTest(Map<String, String> user) {
 		user.put("email", "testuser@gmail.com");
-		signUpPage.signUpWithMandatoryFiels(user);
+		signUpDialogPage.signUpWithMandatoryFiels(user);
 		executor.softWaitForCondition(
-				ExpectedConditions.textToBePresentInElement(signUpPage.getFailureMessage(), user.get("email")));
+				ExpectedConditions.textToBePresentInElement(signUpDialogPage.getFailureMessage(), user.get("email")));
 
-		Assert.assertEquals(signUpPage.getFailureMessage().getText(),
+		Assert.assertEquals(signUpDialogPage.getFailureMessage().getText(),
 				user.get("email") + " already exists in our database",
 				util.takeScreenshot(driver, "assert failure message for existing email"));
 	}
@@ -227,12 +232,12 @@ public class SignUpTest extends BaseTest {
 			"smoke", "regression" })
 	public void signUpWithValidEmailPasswordTest(Map<String, String> user) {
 
-		dashboard = signUpPage.signUp(user);
+		dashboard = signUpDialogPage.signUp(user);
 		executor.softWaitForWebElement(dashboard.getStartAssessmentSection());
 
 		Assert.assertTrue(
 				dashboard.getStartAssessmentSection().isDisplayed()
-						|| signUpPage.getSuccessMessage().getText().equals("Account created successfully!"),
+						|| signUpDialogPage.getSuccessMessage().getText().equals("Account created successfully!"),
 				util.takeScreenshot(driver,
 						"assert create user success message and start assessment section displayed"));
 
@@ -244,11 +249,11 @@ public class SignUpTest extends BaseTest {
 
 		user.put("email", user.get("username") + timestamp + user.get("domain"));
 
-		dashboard = signUpPage.signUp(user);
+		dashboard = signUpDialogPage.signUp(user);
 		executor.softWaitForWebElement(dashboard.getStartAssessmentSection());
 		Assert.assertTrue(
 				dashboard.getStartAssessmentSection().isDisplayed()
-						|| signUpPage.getSuccessMessage().getText().equals("Account created successfully!"),
+						|| signUpDialogPage.getSuccessMessage().getText().equals("Account created successfully!"),
 				util.takeScreenshot(driver,
 						"assert create user success message and start assessment section displayed"));
 	}

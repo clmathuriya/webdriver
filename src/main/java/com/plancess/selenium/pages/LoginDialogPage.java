@@ -12,13 +12,15 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.plancess.selenium.executor.Executioner;
 
-public class LoginPage {
+public class LoginDialogPage {
 	private final WebDriver driver;
 	private WebDriverWait wait;
 	private Executioner executor;
 	private Actions actions;
+	@FindBy(xpath = ".//*[@id='loginForm']//*[@name='email']")
 	WebElement email;
 
+	@FindBy(xpath = ".//*[@id='loginForm']//*[@name='password']")
 	WebElement password;
 	WebElement remember;
 
@@ -28,7 +30,7 @@ public class LoginPage {
 	@FindBy(css = "footer img[title='Plancess Logo']")
 	WebElement plancessFooterLogo;
 
-	@FindBy(xpath = "//button[@type='submit']")
+	@FindBy(xpath = "//*[@id='loginBtn']")
 	WebElement loginButton;
 
 	@FindBy(xpath = "//*[@ng-click='signUpForFree()']")
@@ -40,19 +42,23 @@ public class LoginPage {
 	@FindBy(linkText = "Forgot Password?")
 	WebElement forgotPasswordLink;
 
-	@FindBy(xpath = "//div[@class='error-message']")
+	@FindBy(xpath = "//div[@class='error-message' and @id='loginError']")
 	WebElement failureMessage;
 
-	public LoginPage(WebDriver driver, WebDriverWait wait) {
+	public LoginDialogPage(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
 		this.wait = wait;
 		this.actions = new Actions(driver);
 
-		if (!"Plancess Dashboard".equals(driver.getTitle())) {
+		if (!"Plancess".equals(driver.getTitle())) {
 			throw new IllegalStateException("This is not  the Plancess Home page");
 		}
 		PageFactory.initElements(driver, this);
 
+	}
+
+	public Actions getActions() {
+		return actions;
 	}
 
 	public WebElement getEmail() {

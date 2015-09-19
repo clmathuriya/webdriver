@@ -17,6 +17,7 @@ import org.testng.annotations.Test;
 
 import com.plancess.selenium.pages.HomePage;
 import com.plancess.selenium.utils.Util;
+import com.plancess.selenium.utils.Verifications;
 
 public class HomePageTest extends BaseTest {
 
@@ -40,6 +41,8 @@ public class HomePageTest extends BaseTest {
 
 			this.driver = new RemoteWebDriver(new URL("http://" + host + ":" + port + "/wd/hub"), capabilities);
 			wait = new WebDriverWait(driver, 30);
+			util = Util.getInstance();
+			verifications = Verifications.getInstance();
 
 			// driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 

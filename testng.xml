@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite name="Plancess Web APP Suite" parallel="false">
-	<!-- <listeners> <listener class-name="com.plancess.selenium.reporter.PlancessReporter" 
-		/> </listeners> -->
+	<listeners>
+		<listener class-name="com.plancess.selenium.reporter.PlancessReporter" />
+	</listeners>
 
 
 	<!-- <parameter name="browser" value="iPad" /> <parameter name="os" value="MAC" 

@@ -54,6 +54,18 @@ public class Dashboard {
 	@FindBy(xpath = ".//button[.='Start Test']")
 	WebElement startTest;
 
+	@FindBy(xpath = "//*[@ng-click='cancel()']")
+	WebElement cancelButton;
+
+	@FindBy(xpath = "//*[contains(text(),'TIME REQUIRED:')]/span")
+	WebElement timeRequired;
+
+	@FindBy(xpath = "//*[contains(text(),'REMAINING TIME:')]/span")
+	WebElement remainingTime;
+
+	@FindBy(xpath = "//h3[.='Total Questions']/following-sibling::p")
+	WebElement totalQuestions;
+
 	@FindBy(xpath = ".//button[.='Resume Test']")
 	WebElement resumeTest;
 
@@ -98,6 +110,21 @@ public class Dashboard {
 
 	@FindBy(xpath = "//*[@ng-if='showHint']")
 	WebElement hintText;
+
+	@FindBy(xpath = "//*[@ui-sref='app.dashboard']")
+	WebElement dashBoardButton;
+
+	@FindBy(xpath = "ng-if='!isNewUser'")
+	WebElement performanceSection;
+
+	@FindBy(xpath = "//*[@ng-show='bell']")
+	WebElement notificationsButton;
+
+	@FindBy(xpath = "//ul[@class='list-group']/li")
+	WebElement notificationItem;
+
+	@FindBy(xpath = ".//*[@data-toggle='dropdown']/span[contains(.,'Hi')]")
+	WebElement welcomeMessage;
 
 	public Dashboard(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
@@ -175,8 +202,12 @@ public class Dashboard {
 		return dashboard;
 	}
 
-	public WebDriverWait getWait() {
-		return wait;
+	public WebElement getDashBoardButton() {
+		return dashBoardButton;
+	}
+
+	public WebElement getPerformanceSection() {
+		return performanceSection;
 	}
 
 	public WebElement getPhysicsTakeTest() {
@@ -195,8 +226,24 @@ public class Dashboard {
 		return startTest;
 	}
 
+	public WebElement getCancelButton() {
+		return cancelButton;
+	}
+
+	public WebElement getTimeRequired() {
+		return timeRequired;
+	}
+
+	public WebElement getTotalQuestions() {
+		return totalQuestions;
+	}
+
 	public WebElement getResumeTest() {
 		return resumeTest;
+	}
+
+	public WebElement getRemainingTime() {
+		return remainingTime;
 	}
 
 	public List<WebElement> getAnswerChoicesA() {
@@ -253,6 +300,18 @@ public class Dashboard {
 
 	public WebElement getHintText() {
 		return hintText;
+	}
+
+	public WebElement getNotificationsButton() {
+		return notificationsButton;
+	}
+
+	public WebElement getNotificationItem() {
+		return notificationItem;
+	}
+
+	public WebElement getWelcomeMessage() {
+		return welcomeMessage;
 	}
 
 	public LoginPage logoutUser() {
