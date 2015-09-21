@@ -108,7 +108,9 @@ public class ExcelReader {
 
 				for (int j = 0; j < excelData[i].length; j++) {
 
-					user.put(excelData[0][j], excelData[i][j]);
+					if (excelData[0][j] != null && excelData[i][j] != null)
+
+						user.put(excelData[0][j], excelData[i][j]);
 
 				}
 				dataSet[index++][0] = user;

@@ -117,8 +117,14 @@ public class LoginFromLandingPageTest extends BaseTest {
 	@Test(dataProvider = "loginWithNonExistingEmail", groups = { "regression" })
 	public void loginWithNonExistingEmailsTest(Map<String, String> user) {
 
-		loginDialogPage.doLogin(user);
-
+		wait.until(ExpectedConditions.visibilityOf(loginDialogPage.getEmail()));
+		loginDialogPage.getEmail().clear();
+		loginDialogPage.getEmail().sendKeys(user.get("email"));
+		loginDialogPage.getPassword().clear();
+		loginDialogPage.getPassword().sendKeys(user.get("password"));
+		loginDialogPage.getActions().click(loginDialogPage.getLoginButton()).build().perform();
+		executor.softWaitForCondition(ExpectedConditions.textToBePresentInElement(loginDialogPage.getFailureMessage(),
+				"Invalid username or password"));
 		verifications.verifyEquals(loginDialogPage.getFailureMessage().getText(), "Invalid username or password",
 				util.takeScreenshot(driver, "assert error message for invalid credentials"));
 	}

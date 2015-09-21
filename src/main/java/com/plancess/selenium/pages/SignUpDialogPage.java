@@ -16,18 +16,16 @@ public class SignUpDialogPage {
 	private WebDriverWait wait;
 	private Actions actions;;
 	private final String agreeCheckBoxXpath = "//input[@type='checkbox']";
-	WebElement firstName;
-	@FindBy(xpath = "//input[@name='firstName']/../div")
+	WebElement fname;
+	@FindBy(xpath = "//*[@id='regFnameError']")
 	WebElement firstNameErrorMessage;
-	WebElement lastName;
-	@FindBy(xpath = "//input[@name='lastName']/../div")
+	WebElement lname;
+	@FindBy(xpath = "//*[@id='regLnameError']")
 	WebElement lastNameErrorMessage;
-
-	WebElement name;
 
 	WebElement email;
 
-	@FindBy(xpath = "//input[@name='email']/../div")
+	@FindBy(xpath = ".//*[@id='regEmailError']")
 	WebElement emailErrorMessage;
 
 	@FindBy(css = "input[name='tel']")
@@ -38,29 +36,29 @@ public class SignUpDialogPage {
 
 	WebElement password;
 
-	@FindBy(xpath = "//input[@name='password']/../div")
+	@FindBy(xpath = ".//*[@id='regPasswordError']")
 	WebElement passwordErrorMessage;
-	WebElement confirmPassword;
-	@FindBy(xpath = "//input[@name='confirmPassword']/../../div[3]")
-	// in case of password mismatch error check for contains not equals
-	WebElement confirmPasswordErrorMessage;
+	// WebElement confirmPassword;
+	// @FindBy(xpath = "//input[@name='confirmPassword']/../../div[3]")
+	// // in case of password mismatch error check for contains not equals
+	// WebElement confirmPasswordErrorMessage;
 
-	@FindBy(xpath = agreeCheckBoxXpath)
-	WebElement agreeCheckbox;
+	// @FindBy(xpath = agreeCheckBoxXpath)
+	// WebElement agreeCheckbox;
 
-	@FindBy(xpath = "//button[@type='submit']")
+	@FindBy(xpath = "//input[@id='regBtn']")
 	WebElement submit;
 
-	@FindBy(xpath = "//a[.='Back']")
-	WebElement back;
+	// @FindBy(xpath = "//a[.='Back']")
+	// WebElement back;
 
-	@FindBy(css = "a[data-toggle='dropdown'] img")
-	WebElement toggleDropDown;
+	// @FindBy(css = "a[data-toggle='dropdown'] img")
+	// WebElement toggleDropDown;
 
 	@FindBy(xpath = "//div[.='Account created successfully!']")
 	WebElement successMessage;
 
-	@FindBy(xpath = "//*[@name='form']/div[5]")
+	@FindBy(xpath = "//*[@id='regEmailError']")
 	WebElement failureMessage;
 
 	public SignUpDialogPage(WebDriver driver, WebDriverWait wait) {
@@ -81,11 +79,12 @@ public class SignUpDialogPage {
 	}
 
 	public WebElement getFirstName() {
-		return firstName;
+
+		return fname;
 	}
 
 	public WebElement getLastName() {
-		return lastName;
+		return lname;
 	}
 
 	public WebElement getEmail() {
@@ -100,37 +99,14 @@ public class SignUpDialogPage {
 		return password;
 	}
 
-	public WebElement getConfirmPassword() {
-		return confirmPassword;
-	}
-
-	public WebElement getAgreeCheckbox() {
-
-		wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(agreeCheckBoxXpath)));
-		return agreeCheckbox;
-	}
-
 	public WebElement getSubmit() {
 		wait.until(ExpectedConditions.visibilityOf(submit));
 		return submit;
 	}
 
-	public WebElement getBack() {
-		return back;
-	}
-
-	public WebElement getToggleDropDown() {
-		return toggleDropDown;
-	}
-
 	public WebElement getSuccessMessage() {
 		wait.until(ExpectedConditions.visibilityOf(successMessage));
 		return successMessage;
-	}
-
-	public WebElement getConfirmPasswordErrorMessage() {
-		wait.until(ExpectedConditions.visibilityOf(confirmPasswordErrorMessage));
-		return confirmPasswordErrorMessage;
 	}
 
 	public WebElement getEmailErrorMessage() {
@@ -161,10 +137,6 @@ public class SignUpDialogPage {
 		return passwordErrorMessage;
 	}
 
-	public WebElement getName() {
-		return name;
-	}
-
 	// user operations
 	public String getTitle() {
 
@@ -173,16 +145,18 @@ public class SignUpDialogPage {
 
 	public Dashboard signUpWithMandatoryFiels(Map<String, String> user) {
 		wait.until(ExpectedConditions.visibilityOf(email));
+		email.clear();
 		email.sendKeys(user.get("email"));
+		password.clear();
 		password.sendKeys(user.get("password"));
-		confirmPassword.sendKeys(user.get("confirm_password"));
-		actions.click(agreeCheckbox).build().perform();
-		int trycount = 1;
-		while (!agreeCheckbox.isSelected() && trycount <= 5) {
-			actions.click(agreeCheckbox).build().perform();
-
-			trycount++;
-		}
+		// confirmPassword.sendKeys(user.get("confirm_password"));
+		// actions.click(agreeCheckbox).build().perform();
+		// int trycount = 1;
+		// while (!agreeCheckbox.isSelected() && trycount <= 5) {
+		// actions.click(agreeCheckbox).build().perform();
+		//
+		// trycount++;
+		// }
 		actions.click(submit).build().perform();
 
 		return new Dashboard(driver, wait);
@@ -190,32 +164,34 @@ public class SignUpDialogPage {
 	}
 
 	public void fillSignUpForm(Map<String, String> user) {
-		wait.until(ExpectedConditions.visibilityOf(firstName));
-		firstName.sendKeys(user.get("firstName"));
+		wait.until(ExpectedConditions.visibilityOf(fname));
+		fname.sendKeys(user.get("firstName"));
+		lname.sendKeys(user.get("lastName"));
 
 		email.sendKeys(user.get("email"));
 		password.sendKeys(user.get("password"));
-		lastName.sendKeys(user.get("lastName"));
-		mobile.sendKeys(user.get("mobile"));
-		confirmPassword.sendKeys(user.get("confirm_password"));
+
+		// mobile.sendKeys(user.get("mobile"));
+		// confirmPassword.sendKeys(user.get("confirm_password"));
 
 	}
 
 	public Dashboard signUp(Map<String, String> user) {
 		fillSignUpForm(user);
 
-		int trycount = 0;
-		while (!agreeCheckbox.isSelected() && trycount <= 5) {
-
-			try {
-				// wait.until(ExpectedConditions.elementToBeClickable(agreeCheckbox));
-				actions.click(agreeCheckbox).build().perform();
-
-				trycount++;
-			} catch (Exception e) {
-				trycount++;
-			}
-		}
+		// int trycount = 0;
+		// while (!agreeCheckbox.isSelected() && trycount <= 5) {
+		//
+		// try {
+		// //
+		// wait.until(ExpectedConditions.elementToBeClickable(agreeCheckbox));
+		// actions.click(agreeCheckbox).build().perform();
+		//
+		// trycount++;
+		// } catch (Exception e) {
+		// trycount++;
+		// }
+		// }
 		actions.click(submit).build().perform();
 		return new Dashboard(driver, wait);
 	}

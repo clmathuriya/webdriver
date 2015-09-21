@@ -16,7 +16,10 @@ public class Dashboard {
 	private WebDriverWait wait;
 	private Actions actions;
 
-	@FindBy(css = "header img[title='Plancess Logo']")
+	@FindBy(css = "header img[title='Preplane Logo']") // there are two elements
+														// with css but selenium
+														// will pick 1st one
+														// which we want
 	WebElement plancessHeaderLogo;
 
 	@FindBy(css = "footer img[title='Plancess Logo']")
@@ -111,7 +114,7 @@ public class Dashboard {
 	@FindBy(xpath = "//*[@ng-if='showHint']")
 	WebElement hintText;
 
-	@FindBy(xpath = "//*[@ui-sref='app.dashboard']")
+	@FindBy(xpath = "(//a[@ui-sref='app.dashboard'])[4]")
 	WebElement dashBoardButton;
 
 	@FindBy(xpath = "ng-if='!isNewUser'")
@@ -125,6 +128,9 @@ public class Dashboard {
 
 	@FindBy(xpath = ".//*[@data-toggle='dropdown']/span[contains(.,'Hi')]")
 	WebElement welcomeMessage;
+
+	@FindBys(value = { @FindBy(xpath = "//button[@ng-click='challengeMode(challenge)'']") })
+	List<WebElement> acceptChallenges;
 
 	public Dashboard(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
@@ -204,6 +210,10 @@ public class Dashboard {
 
 	public WebElement getDashBoardButton() {
 		return dashBoardButton;
+	}
+
+	public List<WebElement> getAcceptChallenges() {
+		return acceptChallenges;
 	}
 
 	public WebElement getPerformanceSection() {
