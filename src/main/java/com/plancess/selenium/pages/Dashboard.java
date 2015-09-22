@@ -129,8 +129,11 @@ public class Dashboard {
 	@FindBy(xpath = ".//*[@data-toggle='dropdown']/span[contains(.,'Hi')]")
 	WebElement welcomeMessage;
 
-	@FindBys(value = { @FindBy(xpath = "//button[@ng-click='challengeMode(challenge)'']") })
+	@FindBys(value = { @FindBy(xpath = "//button[@ng-click='challengeMode(challenge)']") })
 	List<WebElement> acceptChallenges;
+
+	@FindBy(xpath = ".//*[.='Create Your Own Test']")
+	WebElement createCustomTestButton;
 
 	public Dashboard(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
@@ -322,6 +325,10 @@ public class Dashboard {
 
 	public WebElement getWelcomeMessage() {
 		return welcomeMessage;
+	}
+
+	public WebElement getCreateCustomTestButton() {
+		return createCustomTestButton;
 	}
 
 	public LoginPage logoutUser() {
