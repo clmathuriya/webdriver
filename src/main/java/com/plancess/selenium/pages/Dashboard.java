@@ -15,6 +15,7 @@ public class Dashboard {
 	private final WebDriver driver;
 	private WebDriverWait wait;
 	private Actions actions;
+	private String performanceSummarySectionXpath = "//*[@ng-if='!isNewUser']";
 
 	@FindBy(css = "header img[title='Preplane Logo']") // there are two elements
 														// with css but selenium
@@ -117,7 +118,7 @@ public class Dashboard {
 	@FindBy(xpath = "(//a[@ui-sref='app.dashboard'])[4]")
 	WebElement dashBoardButton;
 
-	@FindBy(xpath = "ng-if='!isNewUser'")
+	@FindBy(xpath = "//*[@ng-if='!isNewUser']")
 	WebElement performanceSection;
 
 	@FindBy(xpath = "//*[@ng-show='bell']")
@@ -329,6 +330,10 @@ public class Dashboard {
 
 	public WebElement getCreateCustomTestButton() {
 		return createCustomTestButton;
+	}
+
+	public String getPerformanceSummarySectionXpath() {
+		return performanceSummarySectionXpath;
 	}
 
 	public LoginPage logoutUser() {

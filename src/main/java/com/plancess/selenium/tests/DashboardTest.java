@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -120,7 +121,7 @@ public class DashboardTest extends BaseTest {
 		verifications.verifyTrue(dashboard.getCreateCustomTestButton().isDisplayed(),
 				util.takeScreenshot(driver, "verify create your own test link  displayed"));
 
-		verifications.verifyTrue(!dashboard.getPerformanceSection().isDisplayed(),
+		verifications.verifyTrue(!executor.isElementExist(By.xpath(dashboard.getPerformanceSummarySectionXpath())),
 				util.takeScreenshot(driver, "verify performance summary section not displayed"));
 		// more verifications to be added
 
@@ -160,7 +161,7 @@ public class DashboardTest extends BaseTest {
 		verifications.verifyTrue(dashboard.getCreateCustomTestButton().isDisplayed(),
 				util.takeScreenshot(driver, "verify create your own test link  displayed"));
 
-		verifications.verifyTrue(dashboard.getPerformanceSection().isDisplayed(),
+		verifications.verifyTrue(executor.isElementExist(By.xpath(dashboard.getPerformanceSummarySectionXpath())),
 				util.takeScreenshot(driver, "verify performance summary section displayed"));
 
 		// more verifications to be added

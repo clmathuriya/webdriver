@@ -80,4 +80,14 @@ public class Executioner {
 		new Actions(driver).click(e).build().perform();
 	}
 
+	public boolean isElementExist(WebElement e) {
+		try {
+
+			return e.getTagName() != null;
+		} catch (Exception exception) {
+			return false;
+		}
+
+	}
+
 }

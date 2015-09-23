@@ -21,6 +21,8 @@ import org.testng.annotations.Test;
 
 import com.plancess.selenium.executor.Executioner;
 import com.plancess.selenium.pages.Dashboard;
+import com.plancess.selenium.pages.FacebookLoginDialogPage;
+import com.plancess.selenium.pages.GoogleSignInDialogPage;
 import com.plancess.selenium.pages.LandingPage;
 import com.plancess.selenium.pages.LoginDialogPage;
 import com.plancess.selenium.utils.ExcelReader;
@@ -35,6 +37,8 @@ public class LoginFromLandingPageTest extends BaseTest {
 	private String pageTitle = "Plancess";
 	private WebDriverWait wait;
 	private Executioner executor;
+	private FacebookLoginDialogPage facebookLoginDialog;
+	private GoogleSignInDialogPage googleLoginDialog;
 
 	@Parameters({ "host_ip", "port", "os", "browser", "browserVersion" })
 	@BeforeMethod
@@ -154,6 +158,44 @@ public class LoginFromLandingPageTest extends BaseTest {
 				util.takeScreenshot(driver, "assert user login succefull and welcome message displayed"));
 	}
 
+	@Test(groups = { "regression" })
+	public void loginWithFacebookFailureTest() {
+
+		facebookLoginDialog = loginDialogPage.navigateToFacebookLoginDialog();
+		facebookLoginDialog.cancelLogin();
+		verifications.verifyTrue(loginDialogPage.getFbBtn().isDisplayed(), "Verify facebook login button displayed");
+	}
+
+	@Test(dataProvider = "loginWithFacebook", groups = { "smoke", "regression" })
+	public void loginWithFacebookSuccessTest(Map<String, String> user) {
+
+		facebookLoginDialog = loginDialogPage.navigateToFacebookLoginDialog();
+		Dashboard dashboard = facebookLoginDialog.doLogin(user);
+		executor.softWaitForWebElement(dashboard.getWelcomeMessage());
+
+		Assert.assertTrue(dashboard.getWelcomeMessage().isDisplayed(),
+				util.takeScreenshot(driver, "assert user login succefull and welcome message displayed"));
+	}
+
+	@Test(groups = { "regression" })
+	public void loginWithGoogleFailureTest() {
+
+		googleLoginDialog = loginDialogPage.navigateToGoogleLoginDialog();
+		facebookLoginDialog.cancelLogin();
+		verifications.verifyTrue(loginDialogPage.getFbBtn().isDisplayed(), "Verify facebook login button displayed");
+	}
+
+	@Test(dataProvider = "loginWithGoogle", groups = { "smoke", "regression" })
+	public void loginWithGoogleSuccessTest(Map<String, String> user) {
+
+		googleLoginDialog = loginDialogPage.navigateToGoogleLoginDialog();
+		Dashboard dashboard = googleLoginDialog.doLogin(user);
+		executor.softWaitForWebElement(dashboard.getWelcomeMessage());
+
+		Assert.assertTrue(dashboard.getWelcomeMessage().isDisplayed(),
+				util.takeScreenshot(driver, "assert user login succefull and welcome message displayed"));
+	}
+
 	// login data providers section
 
 	@DataProvider(name = "loginWithNonExistingEmail")
@@ -173,6 +215,16 @@ public class LoginFromLandingPageTest extends BaseTest {
 	public static Object[][] loginDataProviderWithValidEmailPassword() {
 
 		return new ExcelReader().getUserDataFromExcel("testData.xlsx", "loginWithValidEmailPassword");
+	}
+
+	@DataProvider(name = "loginWithFacebook")
+	public static Object[][] loginWithFacebookDataProvider() {
+		return new ExcelReader().getUserDataFromExcel("testData.xlsx", "loginWithFacebook");
+	}
+
+	@DataProvider(name = "loginWithGoogle")
+	public static Object[][] loginWithGoogleDataProvider() {
+		return new ExcelReader().getUserDataFromExcel("testData.xlsx", "loginWithGoogle");
 	}
 
 }
