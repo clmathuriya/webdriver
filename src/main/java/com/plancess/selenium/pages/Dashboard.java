@@ -116,6 +116,9 @@ public class Dashboard {
 
 	@FindBy(xpath = "(//a[@ui-sref='app.dashboard'])[4]")
 	WebElement dashBoardButton;
+	
+	@FindBy(xpath = "(//*[@ui-sref='usertest.customize-test'])[2]")
+	WebElement createAccessmentButton;
 
 	@FindBy(xpath = "ng-if='!isNewUser'")
 	WebElement performanceSection;
@@ -213,6 +216,10 @@ public class Dashboard {
 
 	public WebElement getDashBoardButton() {
 		return dashBoardButton;
+	}
+	
+	public WebElement getCreateAssessmentButton() {
+		return createAccessmentButton;
 	}
 
 	public List<WebElement> getAcceptChallenges() {
@@ -356,6 +363,13 @@ public class Dashboard {
 
 		return new SecurityPage(driver, wait);
 
+	}
+
+	public CreateAccessment navigateToCreateAccessment() {
+		// TODO Auto-generated method stub
+		getCreateAssessmentButton().click();
+
+		return new CreateAccessment(driver, wait);
 	}
 
 }

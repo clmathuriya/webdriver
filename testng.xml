@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite name="Plancess Web APP Suite" parallel="false">
-	<listeners>
+	<!-- <listeners>
 		<listener class-name="com.plancess.selenium.reporter.PlancessReporter" />
-	</listeners>
+	</listeners> -->
 
 
 	<!-- <parameter name="browser" value="iPad" /> <parameter name="os" value="MAC" 
@@ -12,15 +12,16 @@
 
 	<parameter name="browser" value="firefox" />
 	<!-- <parameter name="browser" value="chrome" /> -->
-	<parameter name="os" value="WINDOWS" />
+	<!-- <parameter name="os" value="WINDOWS" /> -->
+	<parameter name="os" value="LINUX" />
 	<test name="WebApp Test">
 		<!-- <groups> <run> <include name="smoke" /> </run> </groups> -->
 		<classes>
-			<class name="com.plancess.selenium.tests.SignUpTest" />
-			<class name="com.plancess.selenium.tests.LoginTest" />
-			<class name="com.plancess.selenium.tests.UserSecurityTest" />
-			<class name="com.plancess.selenium.tests.UserProfileTest" />
-			<class name="com.plancess.selenium.tests.AssessmentTest" />
+			<!-- <class name="com.plancess.selenium.tests.SignUpTest" /> <class name="com.plancess.selenium.tests.LoginTest" 
+				/> <class name="com.plancess.selenium.tests.UserSecurityTest" /> <class name="com.plancess.selenium.tests.UserProfileTest" 
+				/> <class name="com.plancess.selenium.tests.AssessmentTest" /> -->
+
+			<class name="com.plancess.selenium.tests.CreateAssessmentTest" />
 		</classes>
 	</test>
 
