@@ -38,6 +38,8 @@ public class SignUpFromLandingPageTest extends BaseTest {
 	private WebDriverWait wait;
 	private Executioner executor;
 	private Dashboard dashboard;
+	private String emailError = "Enter a valid email";
+	private String passwordError = "Password must be atleast 6 characters";
 
 	@Parameters({ "host_ip", "port", "os", "browser", "browserVersion" })
 	@BeforeMethod(alwaysRun = true)
@@ -131,8 +133,7 @@ public class SignUpFromLandingPageTest extends BaseTest {
 
 		Assert.assertEquals(signUpDialogPage.getSubmit().getAttribute("disabled"), "true",
 				util.takeScreenshot(driver, "assert submit button disabled for invalid email ids"));
-		verifications.verifyEquals(signUpDialogPage.getEmailErrorMessage().getText(),
-				"Please enter correct email address",
+		verifications.verifyEquals(signUpDialogPage.getEmailErrorMessage().getText(), emailError,
 				util.takeScreenshot(driver, "assert error message for invalid email ids"));
 	}
 
@@ -144,8 +145,7 @@ public class SignUpFromLandingPageTest extends BaseTest {
 
 		Assert.assertEquals(signUpDialogPage.getSubmit().getAttribute("disabled"), "true",
 				util.takeScreenshot(driver, "assert submit button disabled for invalid email ids"));
-		verifications.verifyEquals(signUpDialogPage.getEmailErrorMessage().getText(),
-				"Please enter correct email address",
+		verifications.verifyEquals(signUpDialogPage.getEmailErrorMessage().getText(), emailError,
 				util.takeScreenshot(driver, "assert error message for invalid email ids"));
 	}
 
@@ -156,7 +156,7 @@ public class SignUpFromLandingPageTest extends BaseTest {
 		signUpDialogPage.fillSignUpForm(user);
 		Assert.assertEquals(signUpDialogPage.getSubmit().getAttribute("disabled"), "true",
 				util.takeScreenshot(driver, "assert submit button disabled for invalid password values"));
-		verifications.verifyEquals(signUpDialogPage.getPasswordErrorMessage().getText(), "Password is too short",
+		verifications.verifyEquals(signUpDialogPage.getPasswordErrorMessage().getText(), passwordError,
 				util.takeScreenshot(driver, "assert password error message for invalid password values"));
 	}
 

@@ -7,6 +7,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -44,6 +45,10 @@ public class LoginDialogPage {
 
 	@FindBy(xpath = "//div[@class='error-message' and @id='loginError']")
 	WebElement failureMessage;
+
+	WebElement FbBtn;
+
+	WebElement GBtn;
 
 	public LoginDialogPage(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
@@ -101,6 +106,14 @@ public class LoginDialogPage {
 		return failureMessage;
 	}
 
+	public WebElement getFbBtn() {
+		return FbBtn;
+	}
+
+	public WebElement getGBtn() {
+		return GBtn;
+	}
+
 	public Dashboard doLogin(Map<String, String> user) {
 		wait.until(ExpectedConditions.visibilityOf(email));
 		email.clear();
@@ -119,6 +132,46 @@ public class LoginDialogPage {
 
 	public String getTitle() {
 		return driver.getTitle();
+	}
+
+	public FacebookLoginDialogPage navigateToFacebookLoginDialog() {
+		String currentWindowHandle = driver.getWindowHandle();
+		wait.until(ExpectedConditions.visibilityOf(FbBtn));
+		actions.click(FbBtn).build().perform();
+		wait.until(new ExpectedCondition<Boolean>() {
+
+			@Override
+			public Boolean apply(WebDriver driver) {
+
+				return driver.getWindowHandles().size() >= 2;
+			}
+		});
+		for (String handle : driver.getWindowHandles()) {
+
+			if (!handle.equals(currentWindowHandle))
+				driver.switchTo().window(handle);
+		}
+		return new FacebookLoginDialogPage(driver, wait);
+	}
+
+	public GoogleSignInDialogPage navigateToGoogleLoginDialog() {
+		String currentWindowHandle = driver.getWindowHandle();
+		wait.until(ExpectedConditions.visibilityOf(GBtn));
+		actions.click(GBtn).build().perform();
+		wait.until(new ExpectedCondition<Boolean>() {
+
+			@Override
+			public Boolean apply(WebDriver driver) {
+
+				return driver.getWindowHandles().size() >= 2;
+			}
+		});
+		for (String handle : driver.getWindowHandles()) {
+
+			if (!handle.equals(currentWindowHandle))
+				driver.switchTo().window(handle);
+		}
+		return new GoogleSignInDialogPage(driver, wait);
 	}
 
 }
