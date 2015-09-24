@@ -82,8 +82,6 @@ public class ExcelReader {
 
 	public Object[][] getUserDataFromExcel(String fileName, String sheetName) {
 
-		Map<String, String> user = new HashMap<String, String>();
-
 		ClassLoader classLoader = getClass().getClassLoader();
 		File file = new File(classLoader.getResource(fileName).getFile());
 
@@ -103,6 +101,7 @@ public class ExcelReader {
 		int index = 0;
 
 		for (int i = 0; i < excelData.length; i++) {
+			Map<String, String> user = new HashMap<String, String>();
 
 			if (excelData[i][0].equalsIgnoreCase("Yes")) {
 
@@ -113,7 +112,8 @@ public class ExcelReader {
 						user.put(excelData[0][j], excelData[i][j]);
 
 				}
-				dataSet[index++][0] = user;
+				Map<String, String> temp = user;
+				dataSet[index++][0] = temp;
 
 			}
 
