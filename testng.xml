@@ -12,17 +12,21 @@
 	<parameter name="browser" value="firefox" />
 	<!-- <parameter name="browser" value="chrome" /> -->
 	<parameter name="os" value="WINDOWS" />
+	<!-- <parameter name="os" value="LINUX" /> -->
 	<test name="WebApp Test">
 		<!-- <groups> <run> <include name="smoke" /> </run> </groups> -->
 		<classes>
-			<class name="com.plancess.selenium.tests.SignUpTest" />
+
+			<!-- <class name="com.plancess.selenium.tests.SignUpTest" />
 			<class name="com.plancess.selenium.tests.LoginTest" />
 			<class name="com.plancess.selenium.tests.UserSecurityTest" />
 			<class name="com.plancess.selenium.tests.UserProfileTest" />
 			<class name="com.plancess.selenium.tests.AssessmentTest" />
+			<class name="com.plancess.selenium.tests.CreateAssessmentTest" /> -->
 			<class name="com.plancess.selenium.tests.LoginFromLandingPageTest" />
 			<class name="com.plancess.selenium.tests.SignUpFromLandingPageTest" />
 			<class name="com.plancess.selenium.tests.DashboardTest" />
+
 
 		</classes>
 	</test>
