@@ -15,9 +15,11 @@
 	<test name="WebApp Test">
 		<!-- <groups> <run> <include name="smoke" /> </run> </groups> -->
 		<classes>
-			<!-- <class name="com.plancess.selenium.tests.SignUpTest" /> <class name="com.plancess.selenium.tests.LoginTest" 
-				/> <class name="com.plancess.selenium.tests.UserSecurityTest" /> <class name="com.plancess.selenium.tests.UserProfileTest" 
-				/> <class name="com.plancess.selenium.tests.AssessmentTest" /> -->
+			<class name="com.plancess.selenium.tests.SignUpTest" />
+			<class name="com.plancess.selenium.tests.LoginTest" />
+			<class name="com.plancess.selenium.tests.UserSecurityTest" />
+			<class name="com.plancess.selenium.tests.UserProfileTest" />
+			<class name="com.plancess.selenium.tests.AssessmentTest" />
 			<class name="com.plancess.selenium.tests.LoginFromLandingPageTest" />
 			<class name="com.plancess.selenium.tests.SignUpFromLandingPageTest" />
 			<class name="com.plancess.selenium.tests.DashboardTest" />

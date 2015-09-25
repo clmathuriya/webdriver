@@ -143,7 +143,7 @@ public class Dashboard {
 		// new Executioner(driver).navigateToURL(url);
 		PageFactory.initElements(driver, this);
 		wait.until(ExpectedConditions.titleIs("Plancess Dashboard"));
-		if (!"Plancess Dashboard".equals(driver.getTitle())) {
+		if (!"Plancess Dashboard".equals(driver.getTitle().trim())) {
 			throw new IllegalStateException("This is not  the Plancess Dashboard page");
 		}
 

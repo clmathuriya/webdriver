@@ -181,7 +181,7 @@ public class LoginFromLandingPageTest extends BaseTest {
 	public void loginWithGoogleFailureTest() {
 
 		googleLoginDialog = loginDialogPage.navigateToGoogleLoginDialog();
-		facebookLoginDialog.cancelLogin();
+		googleLoginDialog.cancelLogin();
 		verifications.verifyTrue(loginDialogPage.getFbBtn().isDisplayed(), "Verify facebook login button displayed");
 	}
 
