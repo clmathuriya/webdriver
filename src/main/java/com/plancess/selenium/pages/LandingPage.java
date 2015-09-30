@@ -12,7 +12,7 @@ import com.plancess.selenium.executor.Executioner;
 public class LandingPage {
 	private final WebDriver driver;
 	private WebDriverWait wait;
-	private String url = "http://dev.plancess.com/ui/";
+	private String url = "http://dev.preplane.com";
 
 	@FindBy(css = "header img[title='Preplane Logo']")
 	WebElement plancessHeaderLogo;

@@ -211,7 +211,7 @@ public class CreateAssessmentTest extends BaseTest {
 
 		}
 		
-/*
+
 		reportPage = new ReportPage(driver, wait);
 		executor.softWaitForWebElement(reportPage.getTopicTitle());
 		verifications.verifyTrue(reportPage.getTopicTitle().isDisplayed(),
@@ -233,7 +233,7 @@ public class CreateAssessmentTest extends BaseTest {
 						"verify notification item contains test completed for subject" + user.get("subject")));
 
 		dashboard.logoutUser();
-*/
+
 		
 	}
 
@@ -248,7 +248,9 @@ public class CreateAssessmentTest extends BaseTest {
 			String[] topicList = topics[i].split(">");
 			String subject = topicList[0];
 			String module = topicList[1];
-			String sub_Module = topicList[2];
+			String sub_Module ="";
+			if(topicList.length>2)
+			 sub_Module = topicList[2];
 
 			switch (subject.toLowerCase()) {
 
@@ -283,9 +285,9 @@ public class CreateAssessmentTest extends BaseTest {
 				// "']")).click();
 				// executor.getElement(By.xpath("//span[.='" + module +
 				// "']")).click();
-				executor.getElement(By.xpath("//span[.='" + sub_Module + "']")).click();
+				executor.getElement(By.xpath("//span[normalize-space(.)='" + sub_Module + "']")).click();
 			} else {
-				executor.getElement(By.xpath("//span[.='" + module + "']")).click();
+				executor.getElement(By.xpath("//span[normalize-space(.)='" + module + "']")).click();
 			}
 
 			String selectedTopics = "";
