@@ -38,7 +38,7 @@ public class LandingPage {
 		this.driver = driver;
 		this.wait = wait;
 		new Executioner(driver, wait).navigateToURL(url);
-		if (!"Plancess".equals(driver.getTitle())) {
+		if (!"Preplane".equals(driver.getTitle().trim())) {
 			throw new IllegalStateException("This is not  the Plancess Landing page");
 		}
 		PageFactory.initElements(driver, this);

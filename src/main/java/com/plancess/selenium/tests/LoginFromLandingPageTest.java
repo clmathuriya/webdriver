@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -34,7 +35,7 @@ public class LoginFromLandingPageTest extends BaseTest {
 	private WebDriver driver;
 	private LandingPage landingPage;
 	private LoginDialogPage loginDialogPage;
-	private String pageTitle = "Plancess";
+	private String pageTitle = "Preplane";
 	private WebDriverWait wait;
 	private Executioner executor;
 	private FacebookLoginDialogPage facebookLoginDialog;
@@ -45,29 +46,32 @@ public class LoginFromLandingPageTest extends BaseTest {
 	public void setUp(@Optional("localhost") String host, @Optional("4444") String port, @Optional("WINDOWS") String os,
 			@Optional("firefox") String browser, @Optional("40.0") String browserVersion) {
 
-		try {
+		String PROXY = "192.168.1.124:8090";
 
-			DesiredCapabilities capabilities = new DesiredCapabilities();
-			capabilities.setBrowserName(browser);
-			// capabilities.setCapability("version", browserVersion);
-			capabilities.setCapability("platform", Platform.valueOf(os));
+		org.openqa.selenium.Proxy proxy = new org.openqa.selenium.Proxy();
+		proxy.setHttpProxy(PROXY).setFtpProxy(PROXY).setSslProxy(PROXY);
+		DesiredCapabilities capabilities = new DesiredCapabilities();
+		capabilities.setCapability(CapabilityType.PROXY, proxy);
 
-			this.driver = new RemoteWebDriver(new URL("http://" + host + ":" + port + "/wd/hub"), capabilities);
+		capabilities.setBrowserName(browser);
+		// capabilities.setCapability("version", browserVersion);
+		capabilities.setCapability("platform", Platform.valueOf(os));
 
-			// driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-			wait = new WebDriverWait(driver, 30);
-			executor = new Executioner(driver, wait);
-			landingPage = new LandingPage(driver, wait);
+		// this.driver = new RemoteWebDriver(new URL("http://" + host + ":"
+		// + port + "/wd/hub"), capabilities);
+		executor = new Executioner();
 
-			loginDialogPage = landingPage.openLoginDialogPage();
-			util = Util.getInstance();
-			verifications = Verifications.getInstance();
+		this.driver = executor.openBrowser(host, port, capabilities);
 
-		} catch (MalformedURLException e) {
-			Assert.fail("Unable to start selenium session make sure Grid hub is running on url :" + "http://" + host
-					+ ":" + port + "/wd/hub");
+		// driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		wait = new WebDriverWait(driver, 30);
+		executor = new Executioner(driver, wait);
+		landingPage = new LandingPage(driver, wait);
 
-		}
+		loginDialogPage = landingPage.openLoginDialogPage();
+		util = Util.getInstance();
+		verifications = Verifications.getInstance();
+
 	}
 
 	@AfterMethod

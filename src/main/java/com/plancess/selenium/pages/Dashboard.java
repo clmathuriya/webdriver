@@ -117,7 +117,7 @@ public class Dashboard {
 
 	@FindBy(xpath = "(//a[@ui-sref='app.dashboard'])[4]")
 	WebElement dashBoardButton;
-	
+
 	@FindBy(xpath = "(//*[@ui-sref='usertest.customize-test'])[2]")
 	WebElement createAccessmentButton;
 
@@ -146,7 +146,7 @@ public class Dashboard {
 		// new Executioner(driver).navigateToURL(url);
 		PageFactory.initElements(driver, this);
 		wait.until(ExpectedConditions.titleIs("Plancess Dashboard"));
-		if (!"Plancess Dashboard".equals(driver.getTitle().trim())) {
+		if (!"Preplane Dashboard".equals(driver.getTitle().trim())) {
 			throw new IllegalStateException("This is not  the Plancess Dashboard page");
 		}
 
@@ -218,7 +218,7 @@ public class Dashboard {
 	public WebElement getDashBoardButton() {
 		return dashBoardButton;
 	}
-	
+
 	public WebElement getCreateAssessmentButton() {
 		return createAccessmentButton;
 	}
