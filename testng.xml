@@ -11,8 +11,8 @@
 
 	<parameter name="browser" value="firefox" />
 	<!-- <parameter name="browser" value="chrome" /> -->
-	<parameter name="os" value="WINDOWS" />
-	<!-- <parameter name="os" value="LINUX" /> -->
+	<!-- <parameter name="os" value="WINDOWS" /> -->
+	<parameter name="os" value="LINUX" />
 	<test name="WebApp Test">
 		<!-- <groups> <run> <include name="smoke" /> </run> </groups> -->
 		<classes>
