@@ -65,7 +65,7 @@ public class Util {
 		} catch (Exception e) {
 			// Reporter.log("Exception in taking screenshot");
 		}
-		return null;
+		return "NA";
 	}
 
 	public boolean addAttachmentToIssue(String issueKey, String fullfilename) throws IOException {

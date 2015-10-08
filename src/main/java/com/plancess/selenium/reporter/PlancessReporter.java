@@ -48,7 +48,7 @@ public class PlancessReporter implements IReporter {
 	private static PlancessReporter instance;
 	private StopWatch stopWatch;
 
-	private PlancessReporter() {
+	public PlancessReporter() {
 		new File("./test-output/custom-reports").mkdirs();
 		String reportPath = "./test-output/custom-reports/custom-report" + System.currentTimeMillis() + ".html";
 		stopWatch = new StopWatch();
@@ -57,6 +57,7 @@ public class PlancessReporter implements IReporter {
 			File reportFile = new File(reportPath);
 			mOut = new PrintWriter(new BufferedWriter(new FileWriter(reportFile)), true);
 			Reporter.log("<h1><a href='" + reportFile.getAbsolutePath() + "'>Custom Report</a></h1>");
+			instance = this;
 		} catch (IOException e) {
 			System.out.println("Error in creating writer: " + e);
 		}

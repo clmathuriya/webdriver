@@ -48,16 +48,17 @@ public class LoginDialogPage {
 	@FindBy(xpath = "//div[@class='error-message' and @id='loginError']")
 	WebElement failureMessage;
 
-	@FindBys(value = { @FindBy(id = "FbBtn") })
-	List<WebElement> FbBtn;
+	@FindBy(xpath = "(//*[@id='FbBtn'])[2]")
+	WebElement FbBtn;
 
-	@FindBys(value = { @FindBy(id = "GBtn") })
-	List<WebElement> GBtn;
+	@FindBy(xpath = "(//*[@id='GBtn'])[2]")
+	WebElement GBtn;
 
 	public LoginDialogPage(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
 		this.wait = wait;
 		this.actions = new Actions(driver);
+		this.executor = new Executioner(driver, wait);
 
 		if (!"Preplane".equals(driver.getTitle())) {
 			throw new IllegalStateException("This is not  the Plancess Home page");
@@ -111,46 +112,38 @@ public class LoginDialogPage {
 	}
 
 	public WebElement getFbBtn() {
-		for (WebElement e : FbBtn) {
-			if (e.isDisplayed())
-				return e;
-		}
-		return null;
+		return FbBtn;
 	}
 
 	public WebElement getGBtn() {
-		for (WebElement e : GBtn) {
-			if (e.isDisplayed())
-				return e;
-		}
-		return null;
+		return GBtn;
 	}
 
 	public Dashboard doLogin(Map<String, String> user) {
-		wait.until(ExpectedConditions.visibilityOf(email));
-		email.clear();
-		email.sendKeys(user.get("email"));
-		password.clear();
-		password.sendKeys(user.get("password"));
-		actions.click(loginButton).build().perform();
+		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(email), "wait for email field to be displayed");
+		executor.clear(email, "email");
+		executor.sendKeys(email, user.get("email"), "email");
+		executor.clear(password, "Password");
+		executor.sendKeys(password, user.get("password"), "Password");
+		executor.click(loginButton, "login button");
 
 		return new Dashboard(driver, wait);
 	}
 
 	public SignUpPage navigateToSignUpPage() {
-		actions.click(signupButton).build().perform();
+		executor.click(signupButton, "signup button");
 		return new SignUpPage(driver, wait);
 	}
 
 	public String getTitle() {
-		return driver.getTitle();
+		return executor.getTitle();
 	}
 
 	public FacebookLoginDialogPage navigateToFacebookLoginDialog() {
 		String currentWindowHandle = driver.getWindowHandle();
-		wait.until(ExpectedConditions.visibilityOf(getFbBtn()));
-		actions.click(getFbBtn()).build().perform();
-		wait.until(new ExpectedCondition<Boolean>() {
+		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(getFbBtn()), "wait for Facebook button");
+		executor.click(getFbBtn(), "Facebook button");
+		executor.softWaitForCondition(new ExpectedCondition<Boolean>() {
 
 			@Override
 			public Boolean apply(WebDriver driver) {
@@ -168,9 +161,9 @@ public class LoginDialogPage {
 
 	public GoogleSignInDialogPage navigateToGoogleLoginDialog() {
 		String currentWindowHandle = driver.getWindowHandle();
-		wait.until(ExpectedConditions.visibilityOf(getGBtn()));
-		actions.click(getGBtn()).build().perform();
-		wait.until(new ExpectedCondition<Boolean>() {
+		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(getGBtn()), "wait for google plus button");
+		executor.click(getGBtn(), "Google plus button");
+		executor.softWaitForCondition(new ExpectedCondition<Boolean>() {
 
 			@Override
 			public Boolean apply(WebDriver driver) {

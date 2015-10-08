@@ -5,29 +5,19 @@ import java.util.Map;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.plancess.selenium.executor.Executioner;
-
-public class FacebookLoginDialogPage {
-	private final WebDriver driver;
-	private WebDriverWait wait;
-	private Executioner executor;
-	private Actions actions;
-
+public class FacebookLoginDialogPage extends BasePage {
 	WebElement email;
 	WebElement pass;
 	WebElement login;
 	WebElement cancel;
 
 	public FacebookLoginDialogPage(WebDriver driver, WebDriverWait wait) {
-		this.driver = driver;
-		this.wait = wait;
-		this.actions = new Actions(driver);
+		super(driver, wait);
 		PageFactory.initElements(driver, this);
 		if (!"Facebook".equals(driver.getTitle().trim())) {
 			throw new IllegalStateException("This is not  Facebook login page");
@@ -56,15 +46,15 @@ public class FacebookLoginDialogPage {
 	}
 
 	public Dashboard doLogin(Map<String, String> user) {
-		wait.until(ExpectedConditions.visibilityOf(email));
-		email.clear();
-		email.sendKeys(user.get("fbEmail"));
-		pass.clear();
-		pass.sendKeys(user.get("fbPassword"));
+		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(email));
+		executor.clear(email, "email ");
+		executor.sendKeys(email, user.get("fbEmail"), "email");
+		executor.clear(pass, "password");
+		executor.sendKeys(pass, user.get("fbPassword"), "Password");
 
 		String currentWindowHandle = driver.getWindowHandle();
-		actions.click(login).build().perform();
-		wait.until(new ExpectedCondition<Boolean>() {
+		executor.click(login, "login button");
+		executor.softWaitForCondition(new ExpectedCondition<Boolean>() {
 
 			@Override
 			public Boolean apply(WebDriver driver) {
@@ -82,11 +72,12 @@ public class FacebookLoginDialogPage {
 	}
 
 	public LoginDialogPage cancelLogin() {
-		wait.until(ExpectedConditions.visibilityOf(email));
+		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(email));
 
 		String currentWindowHandle = driver.getWindowHandle();
-		actions.click(cancel).build().perform();
-		wait.until(new ExpectedCondition<Boolean>() {
+		// click without taking screenshot as window will be closed.
+		executor.click(cancel, "cancel button", false);
+		executor.softWaitForCondition(new ExpectedCondition<Boolean>() {
 
 			@Override
 			public Boolean apply(WebDriver driver) {
@@ -104,7 +95,7 @@ public class FacebookLoginDialogPage {
 	}
 
 	public String getTitle() {
-		return driver.getTitle();
+		return executor.getTitle();
 	}
 
 }

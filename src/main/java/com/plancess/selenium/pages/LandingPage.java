@@ -88,8 +88,7 @@ public class LandingPage {
 	}
 
 	public LoginDialogPage openLoginDialogPage() {
-		// toggleDropDown.click();
-		// tryLogout();
+
 		wait.until(ExpectedConditions.visibilityOf(loginLink));
 		loginLink.click();
 
