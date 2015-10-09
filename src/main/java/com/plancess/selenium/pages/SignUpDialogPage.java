@@ -65,7 +65,7 @@ public class SignUpDialogPage {
 		this.driver = driver;
 		this.wait = wait;
 		this.actions = new Actions(driver);
-		if (!"Plancess".equals(driver.getTitle())) {
+		if (!"Preplane".equals(driver.getTitle())) {
 			throw new IllegalStateException("This is not  the Plancess SignUp page");
 		}
 		PageFactory.initElements(driver, this);

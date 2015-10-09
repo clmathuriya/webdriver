@@ -1,53 +1,322 @@
 package com.plancess.selenium.executor;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.apache.commons.lang3.time.StopWatch;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import org.testng.Reporter;
+import org.testng.annotations.Optional;
 
+import com.plancess.selenium.reporter.PlancessReporter;
 import com.plancess.selenium.utils.Util;
 
 public class Executioner {
-	private final WebDriver driver;
+	private WebDriver driver;
 	private Util util;
 	private WebDriverWait wait;
+	private long startTime;
+	private long duration;
+	public StopWatch stopWatch;
+	public PlancessReporter reporter;
 
 	public Executioner(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
-		util = Util.getInstance();
 		this.wait = wait;
-	}
-
-	public void navigateToURL(String url) {
-		Reporter.log("Navigating to URL:" + url, 0, true);
-		driver.navigate().to(url);
-		driver.manage().window().maximize();
-		util.takeScreenshot(driver, "Navigated to URL :" + url);
+		util = Util.getInstance();
+		reporter = PlancessReporter.getInstance();
+		stopWatch = reporter.getStopWatch();
 
 	}
 
-	public void softWaitForCondition(ExpectedCondition<Boolean> expectedCondition) {
+	public Executioner() {
+		util = Util.getInstance();
+		reporter = PlancessReporter.getInstance();
+		stopWatch = reporter.getStopWatch();
+	}
+
+	public PlancessReporter getReporter() {
+		return reporter;
+	}
+
+	private void addStep(long start, long duration, String step, String status, String screenShot) {
+
+		if (screenShot.length() > 4) {
+			reporter.log("<tr> <td>" + start + "</td> <td>" + duration + "</td> <td>" + step + " </td> <td>" + status
+					+ "</td> <td><a href='" + screenShot + "' > screenshot </a></td></tr>");
+		} else {
+			reporter.log("<tr> <td>" + start + "</td> <td>" + duration + "</td> <td>" + step + " </td> <td>" + status
+					+ "</td> <td>" + screenShot + "</td></tr>");
+		}
+	}
+
+	public WebDriver openBrowser(String host, String port, DesiredCapabilities capabilities) {
 		try {
+
+			startTime = stopWatch.getTime();
+			WebDriver driver = new RemoteWebDriver(new URL("http://" + host + ":" + port + "/wd/hub"), capabilities);
+			duration = stopWatch.getTime() - startTime;
+			addStep(startTime, duration, "Open browser", "Pass", "NA");
+
+			return driver;
+		} catch (MalformedURLException e) {
+			addStep(startTime, stopWatch.getTime() - startTime, "Open browser", "Failed", util.takeScreenshot(driver));
+			Assert.fail("Unable to start selenium session make sure Grid hub is running on url :" + "http://" + host
+					+ ":" + port + "/wd/hub");
+			return null;
+
+		}
+
+	}
+
+	public void closeBrowser() {
+		try {
+
+			startTime = stopWatch.getTime();
+			driver.quit();
+			duration = stopWatch.getTime() - startTime;
+			addStep(startTime, duration, "Close browser", "Pass", "NA");
+
+		} catch (Exception e) {
+			addStep(startTime, stopWatch.getTime() - startTime, "Close browser", "Failed", "NA");
+			Assert.fail("Unable to close browser. it may have died");
+
+		}
+
+	}
+
+	public Executioner navigateToURL(String url) {
+		startTime = stopWatch.getTime();
+		driver.navigate().to(url);
+		addStep(startTime, stopWatch.getTime() - startTime, "Open URL " + url, "Pass", util.takeScreenshot(driver));
+		driver.manage().window().maximize();
+		return this;
+
+	}
+
+	public Executioner click(WebElement e, String elementName, boolean takeScreenshot) {
+
+		try {
+			startTime = stopWatch.getTime();
+			e.click();
+			if (takeScreenshot) {
+				addStep(startTime, stopWatch.getTime() - startTime, "Click on " + elementName, "Pass",
+						util.takeScreenshot(driver));
+			} else {
+				addStep(startTime, stopWatch.getTime() - startTime, "Click on " + elementName, "Pass", "NA");
+			}
+			return this;
+		} catch (Exception exception) {
+			if (takeScreenshot) {
+				addStep(startTime, stopWatch.getTime() - startTime, "Click on " + elementName, "Failed",
+						util.takeScreenshot(driver));
+			} else {
+				addStep(startTime, stopWatch.getTime() - startTime, "Click on " + elementName, "Failed", "NA");
+			}
+			Assert.fail("unable to click on " + elementName);
+			return this;
+
+		}
+
+	}
+
+	public Executioner click(WebElement e, String elementName) {
+
+		try {
+			startTime = stopWatch.getTime();
+			e.click();
+			addStep(startTime, stopWatch.getTime() - startTime, "Click on " + elementName, "Pass",
+					util.takeScreenshot(driver));
+			return this;
+		} catch (Exception exception) {
+			addStep(startTime, stopWatch.getTime() - startTime, "Click on " + elementName, "Failed",
+					util.takeScreenshot(driver));
+			Assert.fail("unable to click on " + elementName);
+			return this;
+
+		}
+
+	}
+
+	public Executioner sendKeys(WebElement e, String text, String elementName) {
+
+		try {
+			startTime = stopWatch.getTime();
+			e.sendKeys(text);
+			addStep(startTime, stopWatch.getTime() - startTime,
+					"enter text : " + text + " in text field : " + elementName, "Pass", util.takeScreenshot(driver));
+			return this;
+		} catch (Exception exception) {
+			addStep(startTime, stopWatch.getTime() - startTime,
+					"enter text : " + text + " in text field : " + elementName, "Failed", util.takeScreenshot(driver));
+			Assert.fail("unable to enter text : " + text + " in text field : " + elementName);
+			return this;
+
+		}
+
+	}
+
+	public Executioner clear(WebElement e, String elementName) {
+
+		try {
+			startTime = stopWatch.getTime();
+			e.clear();
+			addStep(startTime, stopWatch.getTime() - startTime, "clear text of element :" + elementName, "Pass",
+					util.takeScreenshot(driver));
+			return this;
+		} catch (Exception exception) {
+			addStep(startTime, stopWatch.getTime() - startTime, "clear text of element :" + elementName, "Failed",
+					util.takeScreenshot(driver));
+			Assert.fail("unable to clear text of element : " + elementName);
+			return this;
+
+		}
+	}
+
+	public void assertTrue(boolean flag, String step) {
+
+		try {
+			startTime = stopWatch.getTime();
+			Assert.assertTrue(flag);
+			addStep(startTime, stopWatch.getTime() - startTime, step, "Pass", util.takeScreenshot(driver));
+
+		} catch (Exception exception) {
+			addStep(startTime, stopWatch.getTime() - startTime, step, "Failed", util.takeScreenshot(driver));
+			Assert.fail("expected true found :" + flag);
+
+			throw exception;
+
+		}
+	}
+
+	public void assertEquals(Object actual, Object expected, String message) {
+
+		try {
+			startTime = stopWatch.getTime();
+			Assert.assertEquals(actual, expected, message);
+			addStep(startTime, stopWatch.getTime() - startTime,
+					message + " actual : " + actual + " expected :" + expected, "Pass", util.takeScreenshot(driver));
+		} catch (Exception exception) {
+			addStep(startTime, stopWatch.getTime() - startTime, message, "Failed", util.takeScreenshot(driver));
+			Assert.fail("Assertion failed " + actual + " is not equals " + expected);
+			throw exception;
+
+		}
+	}
+
+	public Executioner verifyTrue(boolean flag, String step) {
+
+		try {
+			startTime = stopWatch.getTime();
+			Assert.assertTrue(flag);
+			addStep(startTime, stopWatch.getTime() - startTime, step, "Pass", util.takeScreenshot(driver));
+			return this;
+		} catch (Exception exception) {
+			addStep(startTime, stopWatch.getTime() - startTime, step, "Failed", util.takeScreenshot(driver));
+			Assert.fail("expected true found :" + flag);
+			return this;
+
+		}
+	}
+
+	public Executioner verifyEquals(Object actual, Object expected, String message) {
+
+		try {
+			startTime = stopWatch.getTime();
+			Assert.assertEquals(actual, expected, message);
+			addStep(startTime, stopWatch.getTime() - startTime,
+					message + " actual : " + actual + " expected : " + expected, "Pass", util.takeScreenshot(driver));
+			return this;
+		} catch (Exception exception) {
+			addStep(startTime, stopWatch.getTime() - startTime, message, "Failed", util.takeScreenshot(driver));
+			Assert.fail("verification failed " + actual + " is not equals " + expected);
+			return this;
+
+		}
+	}
+
+	public Executioner softWaitForCondition(ExpectedCondition<Boolean> expectedCondition, String step) {
+		try {
+			startTime = stopWatch.getTime();
 			wait.until(expectedCondition);
+			addStep(startTime, stopWatch.getTime() - startTime, step, "Pass", util.takeScreenshot(driver));
+			return this;
 		} catch (Exception e) {
 			Reporter.log("wait timeout for condition", 0, true);
+			return this;
 
 		}
 
 	}
 
-	public void softWaitForWebElement(ExpectedCondition<WebElement> visibilityOf) {
+	public Executioner softWaitForCondition(ExpectedCondition<Boolean> expectedCondition) {
 		try {
-			wait.until(visibilityOf);
+			startTime = stopWatch.getTime();
+			wait.until(expectedCondition);
+//			addStep(startTime, stopWatch.getTime() - startTime, "Wait for condition", "Pass",
+//					util.takeScreenshot(driver));
+			return this;
 		} catch (Exception e) {
-			Reporter.log("wait timeout for web element", 0, true);
+			Reporter.log("wait timeout for condition", 0, true);
+			return this;
 
 		}
 
+	}
+
+	public Executioner softWaitForWebElement(ExpectedCondition<WebElement> visibilityOf, String step) {
+		try {
+			startTime = stopWatch.getTime();
+
+			wait.until(visibilityOf);
+			addStep(startTime, stopWatch.getTime() - startTime, step, "Pass", util.takeScreenshot(driver));
+			return this;
+		} catch (Exception e) {
+			Reporter.log("wait timeout for web element", 0, true);
+			return this;
+
+		}
+
+	}
+
+	public Executioner softWaitForWebElement(ExpectedCondition<WebElement> visibilityOf) {
+		try {
+			startTime = stopWatch.getTime();
+
+			wait.until(visibilityOf);
+			addStep(startTime, stopWatch.getTime() - startTime, "wait for element", "Pass",
+					util.takeScreenshot(driver));
+			return this;
+		} catch (Exception e) {
+			Reporter.log("wait timeout for web element", 0, true);
+			return this;
+
+		}
+
+	}
+
+	public String getTitle() {
+
+		try {
+			startTime = stopWatch.getTime();
+			String title = driver.getTitle();
+			addStep(startTime, stopWatch.getTime() - startTime, "get title", "Pass", util.takeScreenshot(driver));
+			return title;
+		} catch (Exception exception) {
+			addStep(startTime, stopWatch.getTime() - startTime, "get title", "Failed", util.takeScreenshot(driver));
+			Assert.fail("uanble to get page title");
+			return null;
+
+		}
 	}
 
 	public void softWaitForWebElement(WebElement element) {
@@ -56,6 +325,19 @@ public class Executioner {
 		} catch (Exception e) {
 			Reporter.log("wait timeout for web element", 0, true);
 			System.out.println("time out for web element");
+		}
+	}
+
+	public void softWaitForWebElement(WebElement element, String step) {
+		try {
+			startTime = stopWatch.getTime();
+
+			wait.until(ExpectedConditions.visibilityOf(element));
+			addStep(startTime, stopWatch.getTime() - startTime, step, "Pass", util.takeScreenshot(driver));
+
+		} catch (Exception e) {
+
+			addStep(startTime, stopWatch.getTime() - startTime, step, "Fail", util.takeScreenshot(driver));
 		}
 	}
 

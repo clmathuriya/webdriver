@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -44,6 +45,39 @@ public class PlancessReporter implements IReporter {
 
 	private Date date;
 	private PrintWriter mOut;
+	private static PlancessReporter instance;
+	private StopWatch stopWatch;
+
+	public PlancessReporter() {
+		new File("./test-output/custom-reports").mkdirs();
+		String reportPath = "./test-output/custom-reports/custom-report" + System.currentTimeMillis() + ".html";
+		stopWatch = new StopWatch();
+		stopWatch.start();
+		try {
+			File reportFile = new File(reportPath);
+			mOut = new PrintWriter(new BufferedWriter(new FileWriter(reportFile)), true);
+			Reporter.log("<h1><a href='" + reportFile.getAbsolutePath() + "'>Custom Report</a></h1>");
+			instance = this;
+		} catch (IOException e) {
+			System.out.println("Error in creating writer: " + e);
+		}
+
+	}
+
+	public static PlancessReporter getInstance() {
+		if (instance == null) {
+			instance = new PlancessReporter();
+		}
+		return instance;
+	}
+
+	public StopWatch getStopWatch() {
+		return stopWatch;
+	}
+
+	public void log(String s) {
+		mOut.print(s);
+	}
 
 	@Override
 	public void generateReport(List xmlSuites, List suites, String outputDirectory) {
@@ -109,50 +143,40 @@ public class PlancessReporter implements IReporter {
 				}
 			}
 
-			new File(outputDirectory).mkdirs();
-			try {
-				mOut = new PrintWriter(
-						new BufferedWriter(new FileWriter(new File(outputDirectory, "custom-report.html"))));
-			} catch (IOException e) {
-				System.out.println("Error in creating writer: " + e);
-			}
-			startHtml();
-			print("Suites run: " + suites.size() + "<br>");
-			for (Object suite : suites) {
-				print("Suite>" + ((ISuite) suite).getName() + "<br>");
-				Map<String, ISuiteResult> suiteResults = ((ISuite) suite).getResults();
-				for (String testName : suiteResults.keySet()) {
-					print("    Test>" + testName + "<br>");
-					ISuiteResult suiteResult = suiteResults.get(testName);
-					ITestContext testContext = suiteResult.getTestContext();
-					print("        Failed>" + testContext.getFailedTests().size() + "<br>");
-					IResultMap failedResult = testContext.getFailedTests();
-					Set testsFailed = failedResult.getAllResults();
-					for (Object testResult : testsFailed) {
-						print("            " + ((ITestResult) testResult).getName() + "<br>");
-						print("                " + ((ITestResult) testResult).getThrowable() + "<br>");
-					}
-					IResultMap passResult = testContext.getPassedTests();
-					Set testsPassed = passResult.getAllResults();
-					print("        Passed>" + testsPassed.size() + "<br>");
-					for (Object testResult : testsPassed) {
-						print("            " + ((ITestResult) testResult).getName() + ">took "
-								+ (((ITestResult) testResult).getEndMillis()
-										- ((ITestResult) testResult).getStartMillis())
-								+ "ms" + "<br>");
-					}
-					IResultMap skippedResult = testContext.getSkippedTests();
-					Set testsSkipped = skippedResult.getAllResults();
-					print("        Skipped>" + testsSkipped.size() + "<br>");
-					for (Object testResult : testsSkipped) {
-						print("            " + ((ITestResult) testResult).getName() + "<br>");
-					}
-
-				}
-			}
-			endHtml();
-			mOut.flush();
-			mOut.close();
+			// print("Suites run: " + suites.size() + "<br>");
+			// for (Object suite : suites) {
+			// print("Suite>" + ((ISuite) suite).getName() + "<br>");
+			// Map<String, ISuiteResult> suiteResults = ((ISuite)
+			// suite).getResults();
+			// for (String testName : suiteResults.keySet()) {
+			// print(" Test>" + testName + "<br>");
+			// ISuiteResult suiteResult = suiteResults.get(testName);
+			// ITestContext testContext = suiteResult.getTestContext();
+			// print(" Failed>" + testContext.getFailedTests().size() + "<br>");
+			// IResultMap failedResult = testContext.getFailedTests();
+			// Set testsFailed = failedResult.getAllResults();
+			// for (Object testResult : testsFailed) {
+			// print(" " + ((ITestResult) testResult).getName() + "<br>");
+			// print(" " + ((ITestResult) testResult).getThrowable() + "<br>");
+			// }
+			// IResultMap passResult = testContext.getPassedTests();
+			// Set testsPassed = passResult.getAllResults();
+			// print(" Passed>" + testsPassed.size() + "<br>");
+			// for (Object testResult : testsPassed) {
+			// print(" " + ((ITestResult) testResult).getName() + ">took "
+			// + (((ITestResult) testResult).getEndMillis()
+			// - ((ITestResult) testResult).getStartMillis())
+			// + "ms" + "<br>");
+			// }
+			// IResultMap skippedResult = testContext.getSkippedTests();
+			// Set testsSkipped = skippedResult.getAllResults();
+			// print(" Skipped>" + testsSkipped.size() + "<br>");
+			// for (Object testResult : testsSkipped) {
+			// print(" " + ((ITestResult) testResult).getName() + "<br>");
+			// }
+			//
+			// }
+			// }
 
 		} catch (Exception e) {
 			Reporter.log("Exception in updating status on confluence", true);
@@ -161,21 +185,15 @@ public class PlancessReporter implements IReporter {
 
 	}
 
-	private void print(String text) {
-		System.out.println(text);
-		mOut.println(text + "");
-	}
+	// private void print(String text) {
+	// System.out.println(text);
+	// mOut.println(text + "");
+	// }
 
-	private void startHtml() {
-		mOut.println("<html>");
-		mOut.println("<body>");
-		mOut.println("<h1>TestNG Custom Html Report</h1>");
-		mOut.println("<br>");
-		mOut.println("");
-	}
+	public void killReporter() {
 
-	private void endHtml() {
-		mOut.println("</body></html>");
+		mOut.flush();
+		mOut.close();
 	}
 
 }

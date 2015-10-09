@@ -89,6 +89,7 @@ public class GoogleSignInDialogPage {
 
 		String currentWindowHandle = driver.getWindowHandle();
 		actions.click(signIn).build().perform();
+		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(allowButton), "wait for allow button");
 		if (executor.isElementExist(allowButton)) {
 			allowButton.click();
 		}

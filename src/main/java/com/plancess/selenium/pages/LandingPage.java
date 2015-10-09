@@ -12,6 +12,7 @@ import com.plancess.selenium.executor.Executioner;
 public class LandingPage {
 	private final WebDriver driver;
 	private WebDriverWait wait;
+
 	private String url = "http://dev.preplane.com";
 
 	@FindBy(css = "header img[title='Preplane Logo']")
@@ -38,7 +39,7 @@ public class LandingPage {
 		this.driver = driver;
 		this.wait = wait;
 		new Executioner(driver, wait).navigateToURL(url);
-		if (!"Plancess".equals(driver.getTitle())) {
+		if (!"Preplane".equals(driver.getTitle().trim())) {
 			throw new IllegalStateException("This is not  the Plancess Landing page");
 		}
 		PageFactory.initElements(driver, this);
@@ -88,8 +89,7 @@ public class LandingPage {
 	}
 
 	public LoginDialogPage openLoginDialogPage() {
-		// toggleDropDown.click();
-		// tryLogout();
+
 		wait.until(ExpectedConditions.visibilityOf(loginLink));
 		loginLink.click();
 

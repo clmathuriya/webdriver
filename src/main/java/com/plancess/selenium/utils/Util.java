@@ -17,7 +17,6 @@ import org.apache.http.util.EntityUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
-import org.testng.Reporter;
 
 public class Util {
 	private static Util instance;
@@ -41,11 +40,12 @@ public class Util {
 			String filename = "./screenshots/screenshot" + System.currentTimeMillis() + ".png";
 			File file = new File(filename);
 			FileUtils.copyFile(scrFile, file);
-			Reporter.log("<br> Screenshot for " + step + " captured as <a href='" + file.getAbsolutePath()
-					+ "' target='_blank'> screenshot </a> <br>", true);
+			// Reporter.log("<br> Screenshot for " + step + " captured as <a
+			// href='" + file.getAbsolutePath()
+			// + "' target='_blank'> screenshot </a> <br>", true);
 			return "Screenshot for " + step + " is :" + file.getName() + "\n";
 		} catch (Exception e) {
-			Reporter.log("Exception in taking screenshot");
+			// Reporter.log("Exception in taking screenshot");
 		}
 		return null;
 	}
@@ -58,13 +58,14 @@ public class Util {
 			String filename = "./screenshots/screenshot" + System.currentTimeMillis() + ".png";
 			File file = new File(filename);
 			FileUtils.copyFile(scrFile, file);
-			Reporter.log("Screenshot captured as <a href='" + file.getAbsolutePath()
-					+ "' target='_blank'> screenshot </a> <br>");
-			return "Screenshot : " + file.getName() + "\n";
+			// Reporter.log("Screenshot captured as <a href='" +
+			// file.getAbsolutePath()
+			// + "' target='_blank'> screenshot </a> <br>");
+			return file.getAbsolutePath();
 		} catch (Exception e) {
-			Reporter.log("Exception in taking screenshot");
+			// Reporter.log("Exception in taking screenshot");
 		}
-		return null;
+		return "NA";
 	}
 
 	public boolean addAttachmentToIssue(String issueKey, String fullfilename) throws IOException {
