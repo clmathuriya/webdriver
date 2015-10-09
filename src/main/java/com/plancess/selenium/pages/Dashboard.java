@@ -11,11 +11,14 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.plancess.selenium.executor.Executioner;
+
 public class Dashboard {
 	private final WebDriver driver;
 	private WebDriverWait wait;
 	private Actions actions;
 	private String performanceSummarySectionXpath = "//*[@ng-if='!isNewUser']";
+	private Executioner executor;
 
 	@FindBy(css = "header img[title='Preplane Logo']") // there are two elements
 														// with css but selenium
@@ -143,9 +146,10 @@ public class Dashboard {
 		this.driver = driver;
 		this.wait = wait;
 		this.actions = new Actions(driver);
+		executor = new Executioner(driver, wait);
 		// new Executioner(driver).navigateToURL(url);
 		PageFactory.initElements(driver, this);
-		wait.until(ExpectedConditions.titleIs("Preplane Dashboard"));
+
 		if (!"Preplane Dashboard".equals(driver.getTitle().trim())) {
 			throw new IllegalStateException("This is not  the Plancess Dashboard page");
 		}
