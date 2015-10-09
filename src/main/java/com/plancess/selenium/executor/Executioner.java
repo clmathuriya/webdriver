@@ -262,8 +262,8 @@ public class Executioner {
 		try {
 			startTime = stopWatch.getTime();
 			wait.until(expectedCondition);
-			addStep(startTime, stopWatch.getTime() - startTime, "Wait for condition", "Pass",
-					util.takeScreenshot(driver));
+//			addStep(startTime, stopWatch.getTime() - startTime, "Wait for condition", "Pass",
+//					util.takeScreenshot(driver));
 			return this;
 		} catch (Exception e) {
 			Reporter.log("wait timeout for condition", 0, true);
