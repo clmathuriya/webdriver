@@ -3,6 +3,7 @@ package com.plancess.selenium.tests;
 import java.io.File;
 import java.lang.reflect.Method;
 
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxBinary;
@@ -78,6 +79,9 @@ public class BaseTest {
 		executor = new Executioner(driver, wait);
 		landingPage = new LandingPage(driver, wait);
 		util = Util.getInstance();
+
+		driver.manage().window().setSize(new Dimension(1920, 1080));
+
 	}
 
 	private WebDriver getHeadLessFireFox() {
