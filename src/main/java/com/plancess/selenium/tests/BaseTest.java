@@ -8,6 +8,7 @@ import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -67,6 +68,7 @@ public class BaseTest {
 		capabilities.setBrowserName(browser);
 		// capabilities.setCapability("version", browserVersion);
 		capabilities.setCapability("platform", Platform.valueOf(os));
+		capabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
 		executor = new Executioner();
 		if (browser.equalsIgnoreCase("headlessfirefox")) {
 			this.driver = getHeadLessFireFox();

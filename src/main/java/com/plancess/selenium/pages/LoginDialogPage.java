@@ -161,8 +161,9 @@ public class LoginDialogPage {
 
 	public GoogleSignInDialogPage navigateToGoogleLoginDialog() {
 		String currentWindowHandle = driver.getWindowHandle();
-		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(getGBtn()), "wait for google plus button");
-		executor.click(getGBtn(), "Google plus button");
+		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(getGBtn()),
+				"wait for google plus button");
+		executor.mouseClick(getGBtn());
 		executor.softWaitForCondition(new ExpectedCondition<Boolean>() {
 
 			@Override

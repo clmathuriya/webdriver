@@ -17,7 +17,7 @@ public class LoginFromLandingPageTest extends BaseTest {
 	private FacebookLoginDialogPage facebookLoginDialog;
 	private GoogleSignInDialogPage googleLoginDialog;
 
-	@Test(groups = { "smoke", "regression" })
+	@Test(alwaysRun = true, groups = { "smoke", "regression" })
 	public void loginContentTest() {
 		loginDialogPage = landingPage.openLoginDialogPage();
 		executor.assertEquals(loginDialogPage.getTitle(), pageTitle, "assert title");
@@ -31,7 +31,7 @@ public class LoginFromLandingPageTest extends BaseTest {
 
 	}
 
-	@Test(groups = { "regression" })
+	@Test(alwaysRun = true, groups = { "regression" })
 	public void loginWithEmptyFieldsTest() {
 		loginDialogPage = landingPage.openLoginDialogPage();
 		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(loginDialogPage.getLoginButton()));
@@ -39,7 +39,7 @@ public class LoginFromLandingPageTest extends BaseTest {
 				"assert submit button disabled for empty field values");
 	}
 
-	@Test(dataProvider = "loginWithNonExistingEmail", groups = { "regression" })
+	@Test(alwaysRun = true, dataProvider = "loginWithNonExistingEmail", groups = { "regression" })
 	public void loginWithNonExistingEmailsTest(Map<String, String> user) {
 		loginDialogPage = landingPage.openLoginDialogPage();
 
@@ -57,7 +57,7 @@ public class LoginFromLandingPageTest extends BaseTest {
 				"assert error message for invalid credentials");
 	}
 
-	@Test(dataProvider = "loginWithInvalidPassword", groups = { "regression" })
+	@Test(alwaysRun = true, dataProvider = "loginWithInvalidPassword", groups = { "regression" })
 	public void loginWithInvalidPasswordTest(Map<String, String> user) {
 		loginDialogPage = landingPage.openLoginDialogPage();
 
@@ -75,7 +75,7 @@ public class LoginFromLandingPageTest extends BaseTest {
 				"assert error message for invalid credentials");
 	}
 
-	@Test(dataProvider = "loginWithValidEmailPassword", groups = { "smoke", "regression" })
+	@Test(alwaysRun = true, dataProvider = "loginWithValidEmailPassword", groups = { "smoke", "regression" })
 	public void loginWithValidEmailPasswordTest(Map<String, String> user) {
 		loginDialogPage = landingPage.openLoginDialogPage();
 
@@ -86,7 +86,7 @@ public class LoginFromLandingPageTest extends BaseTest {
 		// "assert user login succefull and welcome message displayed");
 	}
 
-	@Test(groups = { "regression" })
+	@Test(alwaysRun = true, groups = { "regression" })
 	public void loginWithFacebookFailureTest() {
 		loginDialogPage = landingPage.openLoginDialogPage();
 
@@ -95,7 +95,7 @@ public class LoginFromLandingPageTest extends BaseTest {
 		executor.verifyTrue(loginDialogPage.getFbBtn().isDisplayed(), "Verify facebook login button displayed");
 	}
 
-	@Test(dataProvider = "loginWithFacebook", groups = { "smoke", "regression" })
+	@Test(alwaysRun = true, dataProvider = "loginWithFacebook", groups = { "smoke", "regression" })
 	public void loginWithFacebookSuccessTest(Map<String, String> user) {
 		loginDialogPage = landingPage.openLoginDialogPage();
 
@@ -107,7 +107,7 @@ public class LoginFromLandingPageTest extends BaseTest {
 		// "assert user login succefull and welcome message displayed");
 	}
 
-	@Test(groups = { "regression" })
+	@Test(alwaysRun = true, groups = { "regression" })
 	public void loginWithGoogleFailureTest() {
 		loginDialogPage = landingPage.openLoginDialogPage();
 
@@ -116,7 +116,7 @@ public class LoginFromLandingPageTest extends BaseTest {
 		executor.verifyTrue(loginDialogPage.getFbBtn().isDisplayed(), "Verify facebook login button displayed");
 	}
 
-	@Test(dataProvider = "loginWithGoogle", groups = { "smoke", "regression" })
+	@Test(alwaysRun = true, dataProvider = "loginWithGoogle", groups = { "smoke", "regression" })
 	public void loginWithGoogleSuccessTest(Map<String, String> user) {
 		loginDialogPage = landingPage.openLoginDialogPage();
 

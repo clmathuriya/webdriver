@@ -222,7 +222,7 @@ public class Executioner {
 			return this;
 		} catch (Exception exception) {
 			addStep(startTime, stopWatch.getTime() - startTime, step, "Failed", util.takeScreenshot(driver));
-			Assert.fail("expected true found :" + flag);
+			// Assert.fail("expected true found :" + flag);
 			return this;
 
 		}
@@ -238,7 +238,8 @@ public class Executioner {
 			return this;
 		} catch (Exception exception) {
 			addStep(startTime, stopWatch.getTime() - startTime, message, "Failed", util.takeScreenshot(driver));
-			Assert.fail("verification failed " + actual + " is not equals " + expected);
+			// Assert.fail("verification failed " + actual + " is not equals " +
+			// expected);
 			return this;
 
 		}
@@ -262,8 +263,9 @@ public class Executioner {
 		try {
 			startTime = stopWatch.getTime();
 			wait.until(expectedCondition);
-//			addStep(startTime, stopWatch.getTime() - startTime, "Wait for condition", "Pass",
-//					util.takeScreenshot(driver));
+			// addStep(startTime, stopWatch.getTime() - startTime, "Wait for
+			// condition", "Pass",
+			// util.takeScreenshot(driver));
 			return this;
 		} catch (Exception e) {
 			Reporter.log("wait timeout for condition", 0, true);

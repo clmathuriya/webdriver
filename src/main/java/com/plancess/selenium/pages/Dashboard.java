@@ -149,7 +149,7 @@ public class Dashboard {
 		executor = new Executioner(driver, wait);
 		// new Executioner(driver).navigateToURL(url);
 		PageFactory.initElements(driver, this);
-
+		executor.softWaitForCondition(ExpectedConditions.titleIs("Preplane Dashboard"));
 		if (!"Preplane Dashboard".equals(driver.getTitle().trim())) {
 			throw new IllegalStateException("This is not  the Plancess Dashboard page");
 		}
