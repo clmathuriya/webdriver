@@ -94,13 +94,9 @@ public class BaseTest {
 		return new FirefoxDriver(firefoxBinary, null);
 	}
 
-	@AfterMethod
+	@AfterMethod(alwaysRun = true)
 	public void tearDown(ITestResult testResult) {
 
-		if (testResult.getStatus() == ITestResult.FAILURE) {
-			executor.verifyTrue(testResult.getStatus() != ITestResult.FAILURE,
-					"verify test status for :" + testResult.getTestName());
-		}
 		executor.closeBrowser();
 		endTable();
 	}

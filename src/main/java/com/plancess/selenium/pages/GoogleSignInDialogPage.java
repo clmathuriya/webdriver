@@ -28,6 +28,11 @@ public class GoogleSignInDialogPage {
 	WebElement next;
 	WebElement cancel;
 
+	WebElement PhoneVerificationChallenge;
+
+	WebElement phoneNumber;
+	WebElement submitChallenge;
+
 	@FindBy(xpath = "//button[@id='submit_approve_access']")
 	WebElement allowButton;
 
@@ -89,11 +94,16 @@ public class GoogleSignInDialogPage {
 
 		String currentWindowHandle = driver.getWindowHandle();
 		actions.click(signIn).build().perform();
+		if (executor.isElementExist(PhoneVerificationChallenge)) {
+			executor.click(PhoneVerificationChallenge, "Phone verification radio");
+			executor.sendKeys(phoneNumber, user.get("mobile"), "enter mobile number");
+			executor.click(submitChallenge, "verify mobile challenge");
+		}
 		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(allowButton), "wait for allow button");
 		if (executor.isElementExist(allowButton)) {
 			allowButton.click();
 		}
-		wait.until(new ExpectedCondition<Boolean>() {
+		executor.softWaitForCondition(new ExpectedCondition<Boolean>() {
 
 			@Override
 			public Boolean apply(WebDriver driver) {
