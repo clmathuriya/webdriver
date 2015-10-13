@@ -8,7 +8,7 @@
 
 	<parameter name="browser" value="firefox" />
 	<parameter name="os" value="LINUX" />
-	<parameter name="host_ip" value="phabricator.plancess.com" />
+	<!-- <parameter name="host_ip" value="phabricator.plancess.com" /> -->
 	<test name="WebApp Test with Firefox on Linux">
 		<classes>
 			<class name="com.plancess.selenium.tests.BaseTest" />
