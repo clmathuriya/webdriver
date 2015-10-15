@@ -3,13 +3,10 @@ package com.plancess.selenium.tests;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import com.plancess.selenium.pages.Dashboard;
 import com.plancess.selenium.pages.SignUpDialogPage;
 import com.plancess.selenium.utils.DataProviderClass;
 import com.plancess.selenium.utils.ExcelReader;
@@ -17,8 +14,6 @@ import com.plancess.selenium.utils.ExcelReader;
 public class SignUpFromLandingPageTest extends BaseTest {
 
 	private SignUpDialogPage signUpDialogPage;
-
-	private Dashboard dashboard;
 	private String emailError = "Enter a valid email";
 	private String passwordError = "Password must be atleast 6 characters";
 
@@ -26,7 +21,7 @@ public class SignUpFromLandingPageTest extends BaseTest {
 	public void signUpContentTest() {
 		signUpDialogPage = landingPage.openSignUpDialogPage();
 
-		Assert.assertEquals(signUpDialogPage.getTitle(), pageTitle, "assert title");
+		executor.assertEquals(signUpDialogPage.getTitle(), pageTitle, "assert title");
 		executor.verifyTrue(signUpDialogPage.getFirstName().isDisplayed(), "verify firstname field displayed");
 		executor.verifyTrue(signUpDialogPage.getLastName().isDisplayed(), "verify lastname field displayed");
 		executor.verifyTrue(signUpDialogPage.getEmail().isDisplayed(), "verify email field displayed");
@@ -46,15 +41,10 @@ public class SignUpFromLandingPageTest extends BaseTest {
 	@Test(alwaysRun = true, dataProvider = "mandatoryData", groups = { "smoke", "regression" })
 	public void signUpWithMandatoryFieldsTest(Map<String, String> user) {
 		signUpDialogPage = landingPage.openSignUpDialogPage();
-		dashboard = signUpDialogPage.signUpWithMandatoryFiels(user);
-		// executor.softWaitForWebElement(ExpectedConditions.visibilityOf(signUpDialogPage.getSuccessMessage()));
-		// Assert.assertEquals(signUpDialogPage.getSuccessMessage().getText(),
-		// "Account created successfully!",
-		// util.takeScreenshot(driver, "assert create user success message"));
-		executor.softWaitForWebElement(dashboard.getWelcomeMessage());
-
-		Assert.assertTrue(dashboard.getWelcomeMessage().isDisplayed(),
-				util.takeScreenshot(driver, "assert user login succefull and welcome message displayed"));
+		signUpDialogPage.signUpWithMandatoryFiels(user);
+		executor.softWaitForWebElement(signUpDialogPage.getSuccessMessage());
+		executor.assertTrue(signUpDialogPage.getSuccessMessage().isDisplayed(), "assert user created succefully");
+		signUpDialogPage.verifyEmail(user);
 
 	}
 
@@ -65,10 +55,10 @@ public class SignUpFromLandingPageTest extends BaseTest {
 
 		signUpDialogPage.fillSignUpForm(user);
 
-		Assert.assertEquals(signUpDialogPage.getSubmit().getAttribute("disabled"), "true",
-				util.takeScreenshot(driver, "assert submit button disabled for invalid email ids"));
+		executor.assertEquals(signUpDialogPage.getSubmit().getAttribute("disabled"), "true",
+				"assert submit button disabled for invalid email ids");
 		executor.verifyEquals(signUpDialogPage.getEmailErrorMessage().getText(), emailError,
-				util.takeScreenshot(driver, "assert error message for invalid email ids"));
+				"assert error message for invalid email ids");
 	}
 
 	@Test(alwaysRun = true, dataProvider = "invalidEmails", dataProviderClass = DataProviderClass.class, groups = {
@@ -78,10 +68,10 @@ public class SignUpFromLandingPageTest extends BaseTest {
 
 		signUpDialogPage.fillSignUpForm(user);
 
-		Assert.assertEquals(signUpDialogPage.getSubmit().getAttribute("disabled"), "true",
-				util.takeScreenshot(driver, "assert submit button disabled for invalid email ids"));
+		executor.assertEquals(signUpDialogPage.getSubmit().getAttribute("disabled"), "true",
+				"assert submit button disabled for invalid email ids");
 		executor.verifyEquals(signUpDialogPage.getEmailErrorMessage().getText(), emailError,
-				util.takeScreenshot(driver, "assert error message for invalid email ids"));
+				"assert error message for invalid email ids");
 	}
 
 	@Test(alwaysRun = true, dataProvider = "invalidPassword", dataProviderClass = DataProviderClass.class, groups = {
@@ -90,7 +80,7 @@ public class SignUpFromLandingPageTest extends BaseTest {
 		signUpDialogPage = landingPage.openSignUpDialogPage();
 
 		signUpDialogPage.fillSignUpForm(user);
-		Assert.assertEquals(signUpDialogPage.getSubmit().getAttribute("disabled"), "true",
+		executor.assertEquals(signUpDialogPage.getSubmit().getAttribute("disabled"), "true",
 				util.takeScreenshot(driver, "assert submit button disabled for invalid password values"));
 		executor.verifyEquals(signUpDialogPage.getPasswordErrorMessage().getText(), passwordError,
 				util.takeScreenshot(driver, "assert password error message for invalid password values"));
@@ -101,19 +91,19 @@ public class SignUpFromLandingPageTest extends BaseTest {
 	public void signUpWithExistingEmailTest(Map<String, String> user) {
 		signUpDialogPage = landingPage.openSignUpDialogPage();
 		user.put("email", "testuser@gmail.com");
-		wait.until(ExpectedConditions.visibilityOf(signUpDialogPage.getEmail()));
-		signUpDialogPage.getEmail().clear();
-		signUpDialogPage.getEmail().sendKeys(user.get("email"));
-		signUpDialogPage.getPassword().clear();
-		signUpDialogPage.getPassword().sendKeys(user.get("password"));
+		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(signUpDialogPage.getEmail()));
+		executor.clear(signUpDialogPage.getEmail(), "email");
+		executor.sendKeys(signUpDialogPage.getEmail(), user.get("email"), "email");
+		executor.clear(signUpDialogPage.getPassword(), "Password");
+		executor.sendKeys(signUpDialogPage.getPassword(), user.get("password"), "password");
 
-		new Actions(driver).click(signUpDialogPage.getSubmit()).build().perform();
+		executor.mouseClick(signUpDialogPage.getSubmit());
 
 		executor.softWaitForCondition(ExpectedConditions.textToBePresentInElement(signUpDialogPage.getFailureMessage(),
 				"This field must be unique."));
 
-		Assert.assertEquals(signUpDialogPage.getFailureMessage().getText(), "This field must be unique.",
-				util.takeScreenshot(driver, "assert failure message for existing email"));
+		executor.assertEquals(signUpDialogPage.getFailureMessage().getText(), "This field must be unique.",
+				"assert failure message for existing email");
 	}
 
 	@Test(alwaysRun = true, dataProvider = "validEmailPassword", dataProviderClass = DataProviderClass.class, groups = {
@@ -121,11 +111,9 @@ public class SignUpFromLandingPageTest extends BaseTest {
 	public void signUpWithValidEmailPasswordTest(Map<String, String> user) {
 		signUpDialogPage = landingPage.openSignUpDialogPage();
 
-		dashboard = signUpDialogPage.signUp(user);
-		executor.softWaitForWebElement(dashboard.getWelcomeMessage());
-
-		Assert.assertTrue(dashboard.getWelcomeMessage().isDisplayed(),
-				util.takeScreenshot(driver, "assert user login succefull and welcome message displayed"));
+		signUpDialogPage.signUp(user);
+		executor.assertTrue(signUpDialogPage.getSuccessMessage().isDisplayed(), "assert user created succefully");
+		signUpDialogPage.verifyEmail(user);
 
 	}
 
@@ -136,11 +124,9 @@ public class SignUpFromLandingPageTest extends BaseTest {
 
 		user.put("email", user.get("username") + timestamp + user.get("domain"));
 
-		dashboard = signUpDialogPage.signUp(user);
-		executor.softWaitForWebElement(dashboard.getWelcomeMessage());
-
-		Assert.assertTrue(dashboard.getWelcomeMessage().isDisplayed(),
-				util.takeScreenshot(driver, "assert user login succefull and welcome message displayed"));
+		signUpDialogPage.signUp(user);
+		executor.assertTrue(signUpDialogPage.getSuccessMessage().isDisplayed(), "assert user created succefully");
+		signUpDialogPage.verifyEmail(user);
 
 	}
 
@@ -154,7 +140,7 @@ public class SignUpFromLandingPageTest extends BaseTest {
 
 		user.put("password", "P@ssw0rd");
 		user.put("confirm_password", "P@ssw0rd");
-		user.put("email", "webuser" + timestamp + "@plancess.com");
+		user.put("email", "webuser" + timestamp + "@mailinator.com");
 		dataSet[0][0] = user;
 
 		return dataSet;

@@ -82,8 +82,7 @@ public class LandingPage {
 
 	// user operations
 	public SignUpDialogPage openSignUpDialogPage() {
-		// toggleDropDown.click();
-		signupLink.click();
+		executor.click(signupLink, "Signup Link");
 
 		return new SignUpDialogPage(driver, wait);
 

@@ -81,9 +81,6 @@ public class LoginFromLandingPageTest extends BaseTest {
 
 		Dashboard dashboard = loginDialogPage.doLogin(user);
 		executor.softWaitForWebElement(dashboard.getWelcomeMessage());
-
-		// executor.assertTrue(dashboard.getWelcomeMessage().isDisplayed(),
-		// "assert user login succefull and welcome message displayed");
 	}
 
 	@Test(alwaysRun = true, groups = { "regression" })
@@ -102,9 +99,6 @@ public class LoginFromLandingPageTest extends BaseTest {
 		facebookLoginDialog = loginDialogPage.navigateToFacebookLoginDialog();
 		Dashboard dashboard = facebookLoginDialog.doLogin(user);
 		executor.softWaitForWebElement(dashboard.getWelcomeMessage());
-
-		// executor.assertTrue(dashboard.getWelcomeMessage().isDisplayed(),
-		// "assert user login succefull and welcome message displayed");
 	}
 
 	@Test(alwaysRun = true, groups = { "regression" })
