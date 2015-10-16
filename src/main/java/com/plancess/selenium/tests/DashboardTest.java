@@ -21,47 +21,31 @@ public class DashboardTest extends BaseTest {
 
 	@Test(dataProvider = "dashboardNewUserDataProvider", groups = { "smoke", "regression" })
 	public void dashboardNewUserContentTest(Map<String, String> user) {
-		// signUpDialogPage = landingPage.openSignUpDialogPage();
-		// signUpDialogPage.signUp(user);
-		landingPage.openLoginDialogPage().doLogin(user);
-
-		executor.softWaitForWebElement(dashboard.getWelcomeMessage());
-
-		executor.assertTrue(dashboard.getWelcomeMessage().isDisplayed(),
-				"assert user login succefull and welcome message displayed");
-
-		// dashboard = loginDialogPage.doLogin(user);
-
-		executor.softWaitForWebElement(dashboard.getWelcomeMessage());
+		signUpDialogPage = landingPage.openSignUpDialogPage();
+		signUpDialogPage.signUp(user);
+		dashboard = signUpDialogPage.verifyEmail(user).doLogin(user);
+		executor.softWaitForWebElement(dashboard.getDashBoardButton());
 		executor.click(dashboard.getDashBoardButton(), "Dashboard button");
-
-		executor.assertTrue(dashboard.getWelcomeMessage().isDisplayed(),
-				"assert user login succefull and welcome message displayed");
-
 		executor.verifyTrue(dashboard.getNotificationsButton().isDisplayed(), "verify notifications button displayed");
 
 		executor.verifyTrue(dashboard.getToggleDropDown().isDisplayed(), "verify toggle dropdown displayed");
 
-		executor.verifyTrue(dashboard.getPlancessHeaderLogo().isDisplayed(),
-				"verify toggle dropdown displayed");
-		verifications.verifyTrue(dashboard.getAcceptChallenges().size() >= 2,
-				util.takeScreenshot(driver, "verify accept challenges displayed"));
-		executor.softWaitForWebElement(dashboard.getPhysicsTakeTest());
+		executor.verifyTrue(dashboard.getPlancessHeaderLogo().isDisplayed(), "verify toggle dropdown displayed");
+		executor.verifyTrue(dashboard.getAcceptChallenges().size() >= 2, "verify accept challenges displayed");
+		executor.softWaitForWebElement(dashboard.getTakeSubjectTest());
+		executor.verifyTrue(dashboard.getPhysicsSubjectSection().isDisplayed(),
+				"verify physics take test button displayed");
 
-		verifications.verifyTrue(dashboard.getPhysicsTakeTest().isDisplayed(),
-				util.takeScreenshot(driver, "verify physics take test button displayed"));
+		executor.verifyTrue(dashboard.getChemistrySubjectSection().isDisplayed(),
+				"verify chemistry take test button displayed");
+		executor.verifyTrue(dashboard.getMathsSubjectSection().isDisplayed(),
+				"verify maths take test button  displayed");
 
-		verifications.verifyTrue(dashboard.getChemistryTakeTest().isDisplayed(),
-				util.takeScreenshot(driver, "verify chemistry take test button displayed"));
-		verifications.verifyTrue(dashboard.getMathsTakeTest().isDisplayed(),
-				util.takeScreenshot(driver, "verify maths take test button  displayed"));
+		executor.verifyTrue(dashboard.getCreateCustomTestButton().isDisplayed(),
+				"verify create your own test link  displayed");
 
-		verifications.verifyTrue(dashboard.getCreateCustomTestButton().isDisplayed(),
-				util.takeScreenshot(driver, "verify create your own test link  displayed"));
-
-		verifications.verifyTrue(!executor.isElementExist(By.xpath(dashboard.getPerformanceSummarySectionXpath())),
-				util.takeScreenshot(driver, "verify performance summary section not displayed"));
-		// more verifications to be added
+		executor.verifyTrue(!executor.isElementExist(By.xpath(dashboard.getPerformanceSummarySectionXpath())),
+				"verify performance summary section not displayed");
 
 	}
 
@@ -86,14 +70,14 @@ public class DashboardTest extends BaseTest {
 				util.takeScreenshot(driver, "verify toggle dropdown displayed"));
 		verifications.verifyTrue(dashboard.getAcceptChallenges().size() >= 2,
 				util.takeScreenshot(driver, "verify accept challenges displayed"));
-		executor.softWaitForWebElement(dashboard.getPhysicsTakeTest());
+		executor.softWaitForWebElement(dashboard.getPhysicsSubjectSection());
 
-		verifications.verifyTrue(dashboard.getPhysicsTakeTest().isDisplayed(),
+		verifications.verifyTrue(dashboard.getPhysicsSubjectSection().isDisplayed(),
 				util.takeScreenshot(driver, "verify physics take test button displayed"));
 
-		verifications.verifyTrue(dashboard.getChemistryTakeTest().isDisplayed(),
+		verifications.verifyTrue(dashboard.getChemistrySubjectSection().isDisplayed(),
 				util.takeScreenshot(driver, "verify chemistry take test button displayed"));
-		verifications.verifyTrue(dashboard.getMathsTakeTest().isDisplayed(),
+		verifications.verifyTrue(dashboard.getMathsSubjectSection().isDisplayed(),
 				util.takeScreenshot(driver, "verify maths take test button  displayed"));
 
 		verifications.verifyTrue(dashboard.getCreateCustomTestButton().isDisplayed(),
@@ -125,7 +109,7 @@ public class DashboardTest extends BaseTest {
 
 		user.put("password", "P@ssw0rd");
 		user.put("confirm_password", "P@ssw0rd");
-		user.put("email", "webuser" + timestamp + "@plancess.com");
+		user.put("email", "webuser" + timestamp + "@mailinator.com");
 		dataSet[0][0] = user;
 
 		return dataSet;

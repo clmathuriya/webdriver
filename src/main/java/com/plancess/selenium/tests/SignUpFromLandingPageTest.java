@@ -80,17 +80,18 @@ public class SignUpFromLandingPageTest extends BaseTest {
 		signUpDialogPage = landingPage.openSignUpDialogPage();
 
 		signUpDialogPage.fillSignUpForm(user);
-		executor.assertEquals(signUpDialogPage.getSubmit().getAttribute("disabled"), "true",
-				util.takeScreenshot(driver, "assert submit button disabled for invalid password values"));
 		executor.verifyEquals(signUpDialogPage.getPasswordErrorMessage().getText(), passwordError,
 				util.takeScreenshot(driver, "assert password error message for invalid password values"));
+		executor.assertEquals(signUpDialogPage.getSubmit().getAttribute("disabled"), "true",
+				util.takeScreenshot(driver, "assert submit button disabled for invalid password values"));
+
 	}
 
 	@Test(alwaysRun = true, dataProvider = "mandatoryData", dataProviderClass = DataProviderClass.class, groups = {
 			"regression" })
 	public void signUpWithExistingEmailTest(Map<String, String> user) {
 		signUpDialogPage = landingPage.openSignUpDialogPage();
-		user.put("email", "testuser@gmail.com");
+		user.put("email", "cl100@mailinator.com");
 		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(signUpDialogPage.getEmail()));
 		executor.clear(signUpDialogPage.getEmail(), "email");
 		executor.sendKeys(signUpDialogPage.getEmail(), user.get("email"), "email");

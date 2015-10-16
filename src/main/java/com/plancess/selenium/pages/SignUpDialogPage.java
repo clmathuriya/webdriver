@@ -180,10 +180,11 @@ public class SignUpDialogPage {
 
 	public void fillSignUpForm(Map<String, String> user) {
 		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(fname));
+		executor.clear(fname, "first name");
 		executor.sendKeys(fname, user.get("firstName"), "first name");
 		executor.sendKeys(lname, user.get("lastName"), "last name");
 		executor.sendKeys(email, user.get("email"), "email");
-		executor.sendKeys(password, user.get("password"), "password");
+		executor.sendKeys(password, user.get("password") + "\t", "password");
 	}
 
 	public void signUp(Map<String, String> user) {
@@ -192,7 +193,7 @@ public class SignUpDialogPage {
 		// return new Dashboard(driver, wait);
 	}
 
-	public void verifyEmail(Map<String, String> user) {
+	public LoginDialogPage verifyEmail(Map<String, String> user) {
 		// to verify email address
 		executor.navigateToURL("http://mailinator.com/inbox.jsp?to=" + user.get("email"));
 		executor.softWaitForWebElement(inboxField);
@@ -218,6 +219,7 @@ public class SignUpDialogPage {
 		}
 		executor.softWaitForWebElement(activationMessage);
 		executor.verifyTrue(activationMessage.isDisplayed(), "verify activation success message displayed");
+		return new LoginDialogPage(driver, wait);
 
 	}
 
