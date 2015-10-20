@@ -7,31 +7,15 @@
 
 
 	<parameter name="browser" value="firefox" />
-	<parameter name="os" value="WINDOWS" />
+	<parameter name="os" value="LINUX" />
 	<!-- <parameter name="host_ip" value="phabricator.plancess.com" /> -->
 	<test name="WebApp Test with Firefox on Linux">
 		<classes>
 			<class name="com.plancess.selenium.tests.BaseTest" />
 			<class name="com.plancess.selenium.tests.LoginFromLandingPageTest" />
 			<class name="com.plancess.selenium.tests.SignUpFromLandingPageTest" />
+			<class name="com.plancess.selenium.tests.DashboardTest" />
 		</classes>
 	</test>
-
-
-	<!-- <parameter name="browser" value="chrome" /> <parameter name="os" value="LINUX" 
-		/> <parameter name="host_ip" value="phabricator.plancess.com" /> <test name="WebApp 
-		Test with Chrome on linux"> <classes> <class name="com.plancess.selenium.tests.BaseTest" 
-		/> <class name="com.plancess.selenium.tests.LoginFromLandingPageTest" /> 
-		</classes> </test> -->
-	<!-- <parameter name="browser" value="internet explorer" /> <parameter name="os" 
-		value="WINDOWS" /> <test name="WebApp Test with internet explorer on Windows"> 
-		<groups> <run> <include name="smoke" /> </run> </groups> <classes> <class 
-		name="com.plancess.selenium.tests.BaseTest" /> <class name="com.plancess.selenium.tests.SignUpTest" 
-		/> <class name="com.plancess.selenium.tests.LoginTest" /> <class name="com.plancess.selenium.tests.UserSecurityTest" 
-		/> <class name="com.plancess.selenium.tests.UserProfileTest" /> <class name="com.plancess.selenium.tests.AssessmentTest" 
-		/> <class name="com.plancess.selenium.tests.CreateAssessmentTest" /> <class 
-		name="com.plancess.selenium.tests.LoginFromLandingPageTest" /> <class name="com.plancess.selenium.tests.SignUpFromLandingPageTest" 
-		/> <class name="com.plancess.selenium.tests.DashboardTest" /> </classes> 
-		</test> -->
 
 </suite> <!-- Suite -->
