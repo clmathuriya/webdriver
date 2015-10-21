@@ -1,86 +1,26 @@
 package com.plancess.selenium.tests;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Map;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Platform;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-import org.testng.ITestResult;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
-import org.testng.annotations.Optional;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.plancess.selenium.executor.Executioner;
 import com.plancess.selenium.pages.CreateAccessment;
 import com.plancess.selenium.pages.Dashboard;
-import com.plancess.selenium.pages.LandingPage;
 import com.plancess.selenium.pages.LoginDialogPage;
 import com.plancess.selenium.pages.ReportPage;
 import com.plancess.selenium.utils.ExcelReader;
-import com.plancess.selenium.utils.Util;
-import com.plancess.selenium.utils.Verifications;
 
 public class CreateAssessmentTest extends BaseTest {
 
-	private WebDriver driver;
 	private LoginDialogPage loginDialogPage;
-	private LandingPage landingPage;
-	private String pageTitle = "Plancess Dashboard";
-	private WebDriverWait wait;
-	private Executioner executor;
 	private CreateAccessment createAssessment;
 	private ReportPage reportPage;
-
-	@Parameters({ "host_ip", "port", "os", "browser", "browserVersion" })
-	@BeforeMethod
-	public void setUp(@Optional("localhost") String host, @Optional("4444") String port, @Optional("LINUX") String os,
-			@Optional("firefox") String browser, @Optional("40.0") String browserVersion) {
-
-		try {
-
-			DesiredCapabilities capabilities = new DesiredCapabilities();
-			capabilities.setBrowserName(browser);
-			// capabilities.setCapability("version", browserVersion);
-			capabilities.setCapability("platform", Platform.valueOf(os));
-
-			this.driver = new RemoteWebDriver(new URL("http://" + host + ":" + port + "/wd/hub"), capabilities);
-
-			// driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-			wait = new WebDriverWait(driver, 30);
-			executor = new Executioner(driver, wait);
-			landingPage = new LandingPage(driver, wait);
-
-			util = Util.getInstance();
-			verifications = Verifications.getInstance();
-
-		} catch (MalformedURLException e) {
-			Assert.fail("Unable to start selenium session make sure Grid hub is running on url :" + "http://" + host
-					+ ":" + port + "/wd/hub");
-
-		}
-	}
-
-	@AfterMethod
-	public void tearDown(ITestResult testResult) {
-
-		if (testResult.getStatus() == ITestResult.FAILURE) {
-			verifications.verifyEquals(testResult.getStatus(), ITestResult.SUCCESS,
-					util.takeScreenshot(driver, "verify test status for :" + testResult.getTestName()));
-		}
-		driver.quit();
-	}
 
 	@Test(dataProvider = "createAssessmentDataProvider", groups = { "smoke", "regression" })
 	public void CreateAssessmentWithValidDataTest(Map<String, String> user) {
@@ -88,20 +28,21 @@ public class CreateAssessmentTest extends BaseTest {
 		Dashboard dashboard = loginDialogPage.doLogin(user);
 		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(dashboard.getCreateAssessmentButton()));
 
-		Assert.assertTrue(dashboard.getCreateAssessmentButton().isDisplayed(),
+		executor.assertTrue(dashboard.getCreateAssessmentButton().isDisplayed(),
 				util.takeScreenshot(driver, "assert user login succefull and start assessment section displayed"));
 		// executor.softWaitForWebElement(ExpectedConditions.visibilityOf(dashboard.getToggleDropDown()));
 		createAssessment = dashboard.navigateToCreateAccessment();
 		executor.softWaitForWebElement(createAssessment.getCustomTestLink());
 		selectCustomTest(user);
 
-		createAssessment.getCreateTest().click();
-		//-------------
-		
+		executor.click(createAssessment.getCreateTest(), "Begin Test");
+		// createAssessment.getCreateTest().click();
+		// -------------
+
 		executor.softWaitForWebElement(dashboard.getStartTest());
-		verifications.verifyEquals(dashboard.getTimeRequired().getText().trim(), user.get("timeRequired").trim(),
+		executor.verifyEquals(dashboard.getTimeRequired().getText().trim(), user.get("timeRequired").trim(),
 				util.takeScreenshot(driver, "verify time required"));
-		verifications.verifyEquals(dashboard.getTotalQuestions().getText().trim(), user.get("totalQuestions"),
+		executor.verifyEquals(dashboard.getTotalQuestions().getText().trim(), user.get("totalQuestions"),
 				util.takeScreenshot(driver, "verify number of total questions"));
 
 		dashboard.getStartTest().click();
@@ -113,17 +54,18 @@ public class CreateAssessmentTest extends BaseTest {
 		executor.softWaitForWebElement(dashboard.getRemainingTime());
 		String remainingTime = dashboard.getRemainingTime().getText().trim();
 		executor.softWaitForWebElement(dashboard.getResumeTest());
-		verifications.verifyTrue(dashboard.getResumeTest().isDisplayed(),
+		executor.verifyTrue(dashboard.getResumeTest().isDisplayed(),
 				util.takeScreenshot(driver, "verify resume test button displayed"));
-		verifications.verifyEquals(dashboard.getRemainingTime().getText().trim(), remainingTime, util.takeScreenshot(
-				driver, "verify remaining time not changing for paused test expected=" + remainingTime));
+		executor.verifyEquals(dashboard.getRemainingTime().getText().trim(), remainingTime, util.takeScreenshot(driver,
+				"verify remaining time not changing for paused test expected=" + remainingTime));
 		dashboard.getResumeTest().click();
 
 		// to test hint button and hint text
-		
-		//dashboard.getHintButton().click();
-		//executor.softWaitForWebElement(dashboard.getHintText());
-		//verifications.verifyTrue(dashboard.getHintText().isDisplayed(),util.takeScreenshot(driver, "verify hint text displayed"));
+
+		// dashboard.getHintButton().click();
+		// executor.softWaitForWebElement(dashboard.getHintText());
+		// executor.verifyTrue(dashboard.getHintText().isDisplayed(),util.takeScreenshot(driver,
+		// "verify hint text displayed"));
 
 		// to test mark for review option
 
@@ -210,31 +152,29 @@ public class CreateAssessmentTest extends BaseTest {
 			Assert.fail("invalid answer choic option.");
 
 		}
-		
 
 		reportPage = new ReportPage(driver, wait);
 		executor.softWaitForWebElement(reportPage.getTopicTitle());
-		verifications.verifyTrue(reportPage.getTopicTitle().isDisplayed(),
+		executor.verifyTrue(reportPage.getTopicTitle().isDisplayed(),
 				util.takeScreenshot(driver, "verify topic title displayed"));
-		verifications.verifyTrue(reportPage.getRecomendationsSection().isDisplayed(),
+		executor.verifyTrue(reportPage.getRecomendationsSection().isDisplayed(),
 				util.takeScreenshot(driver, "verify recommendations section displayed"));
-		verifications.verifyTrue(reportPage.getQuestionsWisePerformance().isDisplayed(),
+		executor.verifyTrue(reportPage.getQuestionsWisePerformance().isDisplayed(),
 				util.takeScreenshot(driver, "verify questions wise performance displayed"));
 		createAssessment.getActions().click(dashboard.getDashBoardButton()).build().perform();
 		executor.softWaitForWebElement(dashboard.getPerformanceSection());
-		verifications.verifyTrue(dashboard.getPerformanceSection().isDisplayed(),
+		executor.verifyTrue(dashboard.getPerformanceSection().isDisplayed(),
 				util.takeScreenshot(driver, "verify performance section displayed on report page"));
 		// to verify notification displayed for test completion
 		dashboard.getNotificationsButton().click();
 		String notificationItemText = dashboard.getNotificationItem().getText().toLowerCase();
-		verifications.verifyTrue(
+		executor.verifyTrue(
 				notificationItemText.contains(user.get("subject")) && notificationItemText.contains("completed"),
 				util.takeScreenshot(driver,
 						"verify notification item contains test completed for subject" + user.get("subject")));
 
 		dashboard.logoutUser();
 
-		
 	}
 
 	public CreateAccessment selectCustomTest(Map<String, String> user) {
@@ -248,15 +188,17 @@ public class CreateAssessmentTest extends BaseTest {
 			String[] topicList = topics[i].split(">");
 			String subject = topicList[0];
 			String module = topicList[1];
-			String sub_Module ="";
-			if(topicList.length>2)
-			 sub_Module = topicList[2];
+			String sub_Module = "";
+			if (topicList.length > 2)
+				sub_Module = topicList[2];
 
 			switch (subject.toLowerCase()) {
 
 			case "physics":
-				wait.until(ExpectedConditions.visibilityOf(createAssessment.getsubjectPhysicsLink()));
-				createAssessment.getsubjectPhysicsLink().click();
+				executor.softWaitForWebElement(createAssessment.getsubjectPhysicsLink(), "wait for physics link");
+				// wait.until(ExpectedConditions.visibilityOf(createAssessment.getsubjectPhysicsLink()));
+				executor.click(createAssessment.getsubjectPhysicsLink(), "Physics Link");
+				// createAssessment.getsubjectPhysicsLink().click();
 				break;
 			case "chemistry":
 				wait.until(ExpectedConditions.visibilityOf(createAssessment.getsubjectChemistryLink()));
@@ -265,8 +207,10 @@ public class CreateAssessmentTest extends BaseTest {
 			case "math":
 			case "maths":
 			case "mathematics":
-				wait.until(ExpectedConditions.visibilityOf(createAssessment.getsubjectMathematicsLink()));
-				createAssessment.getsubjectMathematicsLink().click();
+				executor.softWaitForWebElement(createAssessment.getsubjectMathematicsLink());
+				// wait.until(ExpectedConditions.visibilityOf(createAssessment.getsubjectMathematicsLink()));
+				executor.click(createAssessment.getsubjectMathematicsLink(), "Subject Mathematics Link");
+				// createAssessment.getsubjectMathematicsLink().click();
 				break;
 			default:
 				Assert.fail("Subject :" + user.get("subject") + "not found");
@@ -285,14 +229,19 @@ public class CreateAssessmentTest extends BaseTest {
 				// "']")).click();
 				// executor.getElement(By.xpath("//span[.='" + module +
 				// "']")).click();
-				executor.getElement(By.xpath("//span[normalize-space(.)='" + sub_Module + "']")).click();
+				// executor.getElement(By.xpath("//span[normalize-space(.)='" +
+				// sub_Module + "']")).click();
+				executor.getElement(By.xpath("//input[@name='" + sub_Module + "']")).click();
 			} else {
-				executor.getElement(By.xpath("//span[normalize-space(.)='" + module + "']")).click();
+				// executor.getElement(By.xpath("//span[normalize-space(.)='" +
+				// module + "']")).click();
+				executor.getElement(By.xpath("//input[@name='" + module + "']")).click();
 			}
 
 			String selectedTopics = "";
 			for (WebElement e : createAssessment.getTopicsSelected()) {
-				selectedTopics += e.getText();
+				// selectedTopics += e.getText();
+				selectedTopics += e.getAttribute("innerHTML");
 			}
 
 			Assert.assertTrue(selectedTopics.contains(sub_Module) && selectedTopics.contains(module),

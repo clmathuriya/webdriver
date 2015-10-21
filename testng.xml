@@ -3,7 +3,7 @@
 
 	<listeners>
 		<listener class-name="com.plancess.selenium.reporter.PlancessReporter" />
-	</listeners>
+	</listeners> 
 
 
 	<parameter name="browser" value="firefox" />
