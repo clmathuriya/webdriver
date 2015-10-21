@@ -66,7 +66,7 @@ public class SignUpDialogPage {
 	@FindBy(partialLinkText = "Verify your email for PrepLane")
 	WebElement plancessMail;
 
-	@FindBy(partialLinkText = "VERIFY MY EMAIL")
+	@FindBy(xpath = "//*[@title='VERIFY MY EMAIL ID']")
 	WebElement activationLink;
 
 	@FindBy(xpath = "//*[@id='myModalLabel' and contains(text(),'activated')]")

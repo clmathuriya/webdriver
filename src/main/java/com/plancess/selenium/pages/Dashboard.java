@@ -17,7 +17,7 @@ public class Dashboard {
 	private final WebDriver driver;
 	private WebDriverWait wait;
 	private Actions actions;
-	private String performanceSummarySectionXpath = "//*[@ng-if='!isNewUser']";
+	private String performanceSummarySectionXpath = "//*[@ng-if='isNewUser']";
 	private Executioner executor;
 
 	@FindBy(css = "header img[title='Preplane Logo']")
@@ -146,6 +146,9 @@ public class Dashboard {
 	@FindBy(xpath = ".//*[.='Create Your Own Test']")
 	WebElement createCustomTestButton;
 
+	@FindBy(xpath = "//*[.='UPCOMING TESTS']")
+	WebElement upcomingTests;
+
 	public Dashboard(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
 		this.wait = wait;
@@ -257,6 +260,10 @@ public class Dashboard {
 
 	public WebElement getStartTest() {
 		return startTest;
+	}
+
+	public WebElement getUpcomingTests() {
+		return upcomingTests;
 	}
 
 	public WebElement getCancelButton() {
