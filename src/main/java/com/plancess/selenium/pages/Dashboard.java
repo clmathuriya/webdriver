@@ -76,16 +76,24 @@ public class Dashboard {
 	@FindBy(xpath = ".//button[.='Resume Test']")
 	WebElement resumeTest;
 
-	@FindBys(value = { @FindBy(xpath = "//*[normalize-space(.)='Option A']") })
+	// @FindBys(value = { @FindBy(xpath = "//*[normalize-space(.)='Option A']")
+	// })
+	@FindBys(value = { @FindBy(xpath = "//*[normalize-space(.)='A']") })
 	List<WebElement> answerChoicesA;
 
-	@FindBys(value = { @FindBy(xpath = "//*[normalize-space(.)='Option B']") })
+	@FindBys(value = { @FindBy(xpath = "//*[normalize-space(.)='B']") })
+	// @FindBys(value = { @FindBy(xpath = "//*[normalize-space(.)='Option B']")
+	// })
 	List<WebElement> answerChoicesB;
 
-	@FindBys(value = { @FindBy(xpath = "//*[normalize-space(.)='Option C']") })
+	@FindBys(value = { @FindBy(xpath = "//*[normalize-space(.)='C']") })
+	// @FindBys(value = { @FindBy(xpath = "//*[normalize-space(.)='Option C']")
+	// })
 	List<WebElement> answerChoicesC;
 
-	@FindBys(value = { @FindBy(xpath = "//*[normalize-space(.)='Option D']") })
+	@FindBys(value = { @FindBy(xpath = "//*[normalize-space(.)='D']") })
+	// @FindBys(value = { @FindBy(xpath = "//*[normalize-space(.)='Option D']")
+	// })
 	List<WebElement> answerChoicesD;
 
 	@FindBy(xpath = "//*[@ng-click='nextQues(true)']")
@@ -392,8 +400,7 @@ public class Dashboard {
 	}
 
 	public CreateAccessment navigateToCreateAccessment() {
-		// TODO Auto-generated method stub
-		getCreateAssessmentButton().click();
+		executor.click(createAccessmentButton, "Create assessment button");
 
 		return new CreateAccessment(driver, wait);
 	}

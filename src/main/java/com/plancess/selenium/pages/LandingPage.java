@@ -12,6 +12,7 @@ import com.plancess.selenium.executor.Executioner;
 public class LandingPage {
 	private final WebDriver driver;
 	private WebDriverWait wait;
+
 	private Executioner executor;
 	private String url = "http://dev.preplane.com/";
 

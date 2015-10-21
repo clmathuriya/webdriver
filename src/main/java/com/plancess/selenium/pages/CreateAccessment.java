@@ -62,8 +62,8 @@ public class CreateAccessment {
 		this.actions = new Actions(driver);
 
 		PageFactory.initElements(driver, this);
-		wait.until(ExpectedConditions.titleIs("Plancess Dashboard"));
-		if (!"Plancess Dashboard".equals(driver.getTitle())) {
+		wait.until(ExpectedConditions.titleIs("Preplane Dashboard"));
+		if (!"Preplane Dashboard".equals(driver.getTitle())) {
 			throw new IllegalStateException("This is not  the Plancess Dashboard page");
 		}
 

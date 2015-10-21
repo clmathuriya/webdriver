@@ -64,7 +64,7 @@ public class ReportPage {
 		this.executor = new Executioner(driver, wait);
 		PageFactory.initElements(driver, this);
 		// new Executioner(driver).navigateToURL(url);
-		if (!"Plancess Dashboard".equals(driver.getTitle())) {
+		if (!"Preplane Dashboard".equals(driver.getTitle())) {
 			throw new IllegalStateException("This is not  the Plancess Dashboard page");
 		}
 
