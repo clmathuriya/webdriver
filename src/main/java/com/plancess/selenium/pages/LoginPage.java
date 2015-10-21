@@ -48,7 +48,7 @@ public class LoginPage {
 		this.wait = wait;
 		this.actions = new Actions(driver);
 
-		if (!"Plancess Dashboard".equals(driver.getTitle())) {
+		if (!"Preplane".equals(driver.getTitle())) {
 			throw new IllegalStateException("This is not  the Plancess Home page");
 		}
 		PageFactory.initElements(driver, this);
