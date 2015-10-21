@@ -13,7 +13,8 @@ public class LandingPage {
 	private final WebDriver driver;
 	private WebDriverWait wait;
 
-	private String url = "http://dev.preplane.com";
+	private Executioner executor;
+	private String url = "http://dev.preplane.com/";
 
 	@FindBy(css = "header img[title='Preplane Logo']")
 	WebElement plancessHeaderLogo;
@@ -21,7 +22,7 @@ public class LandingPage {
 	@FindBy(css = "footer img[title='Plancess Logo']")
 	WebElement plancessFooterLogo;
 
-	@FindBy(xpath = "//a[.='Login']")
+	@FindBy(xpath = "//a[normalize-space(.)='Login']")
 	WebElement loginLink;
 
 	@FindBy(xpath = "//a[.='Sign Up']")
@@ -38,7 +39,8 @@ public class LandingPage {
 	public LandingPage(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
 		this.wait = wait;
-		new Executioner(driver, wait).navigateToURL(url);
+		executor = new Executioner(driver, wait);
+		executor.navigateToURL(url);
 		if (!"Preplane".equals(driver.getTitle().trim())) {
 			throw new IllegalStateException("This is not  the Plancess Landing page");
 		}
@@ -81,8 +83,7 @@ public class LandingPage {
 
 	// user operations
 	public SignUpDialogPage openSignUpDialogPage() {
-		// toggleDropDown.click();
-		signupLink.click();
+		executor.click(signupLink, "Signup Link");
 
 		return new SignUpDialogPage(driver, wait);
 
@@ -90,8 +91,8 @@ public class LandingPage {
 
 	public LoginDialogPage openLoginDialogPage() {
 
-		wait.until(ExpectedConditions.visibilityOf(loginLink));
-		loginLink.click();
+		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(loginLink));
+		executor.mouseClick(loginLink);
 
 		return new LoginDialogPage(driver, wait);
 

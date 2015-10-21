@@ -12,12 +12,6 @@
           "seleniumProtocol": "WebDriver"
         },
         {
-          "platform": "WINDOWS",
-          "browserName": "internet explorer",
-          "maxInstances": 1,
-          "seleniumProtocol": "WebDriver"
-        },
-        {
           "platform": "MAC",
           "browserName": "iPad",
           "maxInstances": 1,

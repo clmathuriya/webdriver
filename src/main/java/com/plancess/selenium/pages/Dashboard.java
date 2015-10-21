@@ -11,16 +11,16 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.plancess.selenium.executor.Executioner;
+
 public class Dashboard {
 	private final WebDriver driver;
 	private WebDriverWait wait;
 	private Actions actions;
 	private String performanceSummarySectionXpath = "//*[@ng-if='!isNewUser']";
+	private Executioner executor;
 
-	@FindBy(css = "header img[title='Preplane Logo']") // there are two elements
-														// with css but selenium
-														// will pick 1st one
-														// which we want
+	@FindBy(css = "header img[title='Preplane Logo']")
 	WebElement plancessHeaderLogo;
 
 	@FindBy(css = "footer img[title='Plancess Logo']")
@@ -46,14 +46,17 @@ public class Dashboard {
 
 	WebElement dashboard;
 
-	@FindBy(xpath = "//div[@id='PHYSICS']/descendant::a[.='Take Test']")
-	WebElement physicsTakeTest;
+	@FindBy(xpath = "//div[@id='PHYSICS']")
+	WebElement physicsSubjectSection;
 
-	@FindBy(xpath = "//div[@id='CHEMISTRY']/descendant::a[.='Take Test']")
-	WebElement chemistryTakeTest;
+	@FindBy(xpath = "//div[@id='CHEMISTRY']")
+	WebElement chemistrySubjectSection;
 
-	@FindBy(xpath = "//div[@id='MATHEMATICS']/descendant::a[.='Take Test']")
-	WebElement mathsTakeTest;
+	@FindBy(xpath = "//div[@id='MATHEMATICS']")
+	WebElement mathsSubjectSection;
+
+	@FindBy(xpath = "//a[.='Take Subject Test']")
+	WebElement takeSubjectTest;
 
 	@FindBy(xpath = ".//button[.='Start Test']")
 	WebElement startTest;
@@ -119,7 +122,7 @@ public class Dashboard {
 	@FindBy(xpath = "//*[@ng-if='showHint']")
 	WebElement hintText;
 
-	@FindBy(xpath = "(//a[@ui-sref='app.dashboard'])[4]")
+	@FindBy(xpath = "(//a[@ui-sref='app.dashboard'])[2]")
 	WebElement dashBoardButton;
 
 	@FindBy(xpath = "(//*[@ui-sref='usertest.customize-test'])[2]")
@@ -137,7 +140,7 @@ public class Dashboard {
 	@FindBy(xpath = ".//*[@data-toggle='dropdown']/span[contains(.,'Hi')]")
 	WebElement welcomeMessage;
 
-	@FindBys(value = { @FindBy(xpath = "//button[@ng-click='challengeMode(challenge)']") })
+	@FindBys(value = { @FindBy(xpath = "//button[@ng-click='takeTest(recommentation)']") })
 	List<WebElement> acceptChallenges;
 
 	@FindBy(xpath = ".//*[.='Create Your Own Test']")
@@ -147,9 +150,10 @@ public class Dashboard {
 		this.driver = driver;
 		this.wait = wait;
 		this.actions = new Actions(driver);
+		executor = new Executioner(driver, wait);
 		// new Executioner(driver).navigateToURL(url);
 		PageFactory.initElements(driver, this);
-		wait.until(ExpectedConditions.titleIs("Preplane Dashboard"));
+		executor.softWaitForCondition(ExpectedConditions.titleIs("Preplane Dashboard"));
 		if (!"Preplane Dashboard".equals(driver.getTitle().trim())) {
 			throw new IllegalStateException("This is not  the Plancess Dashboard page");
 		}
@@ -235,16 +239,20 @@ public class Dashboard {
 		return performanceSection;
 	}
 
-	public WebElement getPhysicsTakeTest() {
-		return physicsTakeTest;
+	public WebElement getPhysicsSubjectSection() {
+		return physicsSubjectSection;
 	}
 
-	public WebElement getChemistryTakeTest() {
-		return chemistryTakeTest;
+	public WebElement getChemistrySubjectSection() {
+		return chemistrySubjectSection;
 	}
 
-	public WebElement getMathsTakeTest() {
-		return mathsTakeTest;
+	public WebElement getMathsSubjectSection() {
+		return mathsSubjectSection;
+	}
+
+	public WebElement getTakeSubjectTest() {
+		return takeSubjectTest;
 	}
 
 	public WebElement getStartTest() {

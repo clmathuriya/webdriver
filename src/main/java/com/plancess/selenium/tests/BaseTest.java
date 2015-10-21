@@ -8,6 +8,7 @@ import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -51,7 +52,7 @@ public class BaseTest {
 
 	@Parameters({ "host_ip", "port", "os", "browser", "browserVersion", "useProxy" })
 	@BeforeMethod
-	public void setUp(@Optional("localhost") String host, @Optional("4444") String port, @Optional("LINUX") String os,
+	public void setUp(@Optional("localhost") String host, @Optional("4444") String port, @Optional("WINDOWS") String os,
 			@Optional("firefox") String browser, @Optional("40.0") String browserVersion,
 			@Optional("false") String useProxy, @Optional Method method) {
 
@@ -67,6 +68,7 @@ public class BaseTest {
 		capabilities.setBrowserName(browser);
 		// capabilities.setCapability("version", browserVersion);
 		capabilities.setCapability("platform", Platform.valueOf(os));
+		capabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
 		executor = new Executioner();
 		if (browser.equalsIgnoreCase("headlessfirefox")) {
 			this.driver = getHeadLessFireFox();
@@ -92,13 +94,9 @@ public class BaseTest {
 		return new FirefoxDriver(firefoxBinary, null);
 	}
 
-	@AfterMethod
+	@AfterMethod(alwaysRun = true)
 	public void tearDown(ITestResult testResult) {
 
-		if (testResult.getStatus() == ITestResult.FAILURE) {
-			executor.verifyTrue(testResult.getStatus() != ITestResult.FAILURE,
-					"verify test status for :" + testResult.getTestName());
-		}
 		executor.closeBrowser();
 		endTable();
 	}

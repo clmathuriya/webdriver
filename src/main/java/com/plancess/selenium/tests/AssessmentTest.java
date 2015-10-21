@@ -94,18 +94,18 @@ public class AssessmentTest extends BaseTest {
 		switch (user.get("subject").toLowerCase()) {
 
 		case "physics":
-			executor.softWaitForWebElement(dashboard.getPhysicsTakeTest());
-			dashboard.getPhysicsTakeTest().click();
+			executor.softWaitForWebElement(dashboard.getPhysicsSubjectSection());
+			dashboard.getPhysicsSubjectSection().click();
 			break;
 		case "chemistry":
-			executor.softWaitForWebElement(dashboard.getChemistryTakeTest());
-			dashboard.getChemistryTakeTest().click();
+			executor.softWaitForWebElement(dashboard.getChemistrySubjectSection());
+			dashboard.getChemistrySubjectSection().click();
 			break;
 		case "math":
 		case "maths":
 		case "mathematics":
-			executor.softWaitForWebElement(dashboard.getMathsTakeTest());
-			dashboard.getMathsTakeTest().click();
+			executor.softWaitForWebElement(dashboard.getMathsSubjectSection());
+			dashboard.getMathsSubjectSection().click();
 			break;
 		default:
 			Assert.fail("Subject :" + user.get("subject") + "not found");
@@ -131,40 +131,40 @@ public class AssessmentTest extends BaseTest {
 		switch (user.get("subject").toLowerCase()) {
 
 		case "physics":
-			executor.softWaitForWebElement(dashboard.getPhysicsTakeTest());
-			dashboard.getPhysicsTakeTest().click();
+			executor.softWaitForWebElement(dashboard.getPhysicsSubjectSection());
+			dashboard.getPhysicsSubjectSection().click();
 			// to test cancel button
 
 			executor.softWaitForWebElement(dashboard.getStartTest());
 			// dashboard.getStartTest().click();
 			dashboard.getCancelButton().click();
-			dashboard.getPhysicsTakeTest().click();
+			dashboard.getPhysicsSubjectSection().click();
 			executor.softWaitForWebElement(dashboard.getStartTest());
 
 			break;
 		case "chemistry":
-			executor.softWaitForWebElement(dashboard.getChemistryTakeTest());
-			dashboard.getChemistryTakeTest().click();
+			executor.softWaitForWebElement(dashboard.getChemistrySubjectSection());
+			dashboard.getChemistrySubjectSection().click();
 			// to test cancel button
 
 			executor.softWaitForWebElement(dashboard.getStartTest());
 			// dashboard.getStartTest().click();
 			dashboard.getCancelButton().click();
-			dashboard.getChemistryTakeTest().click();
+			dashboard.getChemistrySubjectSection().click();
 			executor.softWaitForWebElement(dashboard.getStartTest());
 
 			break;
 		case "math":
 		case "maths":
 		case "mathematics":
-			executor.softWaitForWebElement(dashboard.getMathsTakeTest());
-			dashboard.getMathsTakeTest().click();
+			executor.softWaitForWebElement(dashboard.getMathsSubjectSection());
+			dashboard.getMathsSubjectSection().click();
 			// to test cancel button
 
 			executor.softWaitForWebElement(dashboard.getStartTest());
 			// dashboard.getStartTest().click();
 			dashboard.getCancelButton().click();
-			dashboard.getMathsTakeTest().click();
+			dashboard.getMathsSubjectSection().click();
 			executor.softWaitForWebElement(dashboard.getStartTest());
 
 			break;

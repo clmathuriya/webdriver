@@ -2,7 +2,6 @@ package com.plancess.selenium.pages;
 
 import java.util.Map;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -11,10 +10,13 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.plancess.selenium.executor.Executioner;
+
 public class SignUpDialogPage {
 	private final WebDriver driver;
 	private WebDriverWait wait;
-	private Actions actions;;
+	private Actions actions;
+	private Executioner executor;
 	private final String agreeCheckBoxXpath = "//input[@type='checkbox']";
 	WebElement fname;
 	@FindBy(xpath = "//*[@id='regFnameError']")
@@ -55,16 +57,35 @@ public class SignUpDialogPage {
 	// @FindBy(css = "a[data-toggle='dropdown'] img")
 	// WebElement toggleDropDown;
 
-	@FindBy(xpath = "//div[.='Account created successfully!']")
+	@FindBy(xpath = "//*[@id='myModalLabel' and contains(text(),'Thank You')]")
 	WebElement successMessage;
 
 	@FindBy(xpath = "//*[@id='regEmailError']")
 	WebElement failureMessage;
 
+	@FindBy(partialLinkText = "Verify your email for PrepLane")
+	WebElement plancessMail;
+
+	@FindBy(partialLinkText = "VERIFY MY EMAIL")
+	WebElement activationLink;
+
+	@FindBy(xpath = "//*[@id='myModalLabel' and contains(text(),'activated')]")
+	WebElement activationMessage;
+
+	@FindBy(id = "inboxfield")
+	WebElement inboxField;
+
+	@FindBy(xpath = "//*[@onclick='changeInbox();']")
+	WebElement checkInbox;
+
+	@FindBy(xpath = "//*[@name='rendermail']")
+	WebElement renderemail;
+
 	public SignUpDialogPage(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
 		this.wait = wait;
 		this.actions = new Actions(driver);
+		this.executor = new Executioner(driver, wait);
 		if (!"Preplane".equals(driver.getTitle())) {
 			throw new IllegalStateException("This is not  the Plancess SignUp page");
 		}
@@ -143,57 +164,63 @@ public class SignUpDialogPage {
 		return driver.getTitle();
 	}
 
-	public Dashboard signUpWithMandatoryFiels(Map<String, String> user) {
-		wait.until(ExpectedConditions.visibilityOf(email));
-		email.clear();
-		email.sendKeys(user.get("email"));
-		password.clear();
-		password.sendKeys(user.get("password"));
-		// confirmPassword.sendKeys(user.get("confirm_password"));
-		// actions.click(agreeCheckbox).build().perform();
-		// int trycount = 1;
-		// while (!agreeCheckbox.isSelected() && trycount <= 5) {
-		// actions.click(agreeCheckbox).build().perform();
-		//
-		// trycount++;
-		// }
-		actions.click(submit).build().perform();
+	public void signUpWithMandatoryFiels(Map<String, String> user) {
+		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(fname));
+		executor.clear(email, "email");
+		executor.sendKeys(email, user.get("email"), "email");
 
-		return new Dashboard(driver, wait);
+		executor.clear(password, "password");
+
+		executor.sendKeys(password, user.get("password"), "password");
+		executor.click(submit, "Submit button");
+
+		// return new Dashboard(driver, wait);
 
 	}
 
 	public void fillSignUpForm(Map<String, String> user) {
-		wait.until(ExpectedConditions.visibilityOf(fname));
-		fname.sendKeys(user.get("firstName"));
-		lname.sendKeys(user.get("lastName"));
-
-		email.sendKeys(user.get("email"));
-		password.sendKeys(user.get("password"));
-
-		// mobile.sendKeys(user.get("mobile"));
-		// confirmPassword.sendKeys(user.get("confirm_password"));
-
+		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(fname));
+		executor.clear(fname, "first name");
+		executor.sendKeys(fname, user.get("firstName"), "first name");
+		executor.sendKeys(lname, user.get("lastName"), "last name");
+		executor.sendKeys(email, user.get("email"), "email");
+		executor.sendKeys(password, user.get("password") + "\t", "password");
 	}
 
-	public Dashboard signUp(Map<String, String> user) {
+	public void signUp(Map<String, String> user) {
 		fillSignUpForm(user);
+		executor.click(submit, "Submit button");
+		// return new Dashboard(driver, wait);
+	}
 
-		// int trycount = 0;
-		// while (!agreeCheckbox.isSelected() && trycount <= 5) {
-		//
-		// try {
-		// //
-		// wait.until(ExpectedConditions.elementToBeClickable(agreeCheckbox));
-		// actions.click(agreeCheckbox).build().perform();
-		//
-		// trycount++;
-		// } catch (Exception e) {
-		// trycount++;
-		// }
-		// }
-		actions.click(submit).build().perform();
-		return new Dashboard(driver, wait);
+	public LoginDialogPage verifyEmail(Map<String, String> user) {
+		// to verify email address
+		executor.navigateToURL("http://mailinator.com/inbox.jsp?to=" + user.get("email"));
+		executor.softWaitForWebElement(inboxField);
+		if (executor.isElementExist(inboxField)) {
+			executor.sendKeys(inboxField, user.get("email"), "email inbox");
+			executor.click(checkInbox, "Check inbox button");
+		}
+		int count = 0;
+		while (!executor.isElementExist(plancessMail) && count++ <= 10) {
+			driver.navigate().refresh();
+		}
+		executor.click(plancessMail, "plancess verification mail");
+
+		executor.switchToFrame(renderemail);
+		executor.softWaitForWebElement(activationLink);
+		String windowHandle = driver.getWindowHandle();
+		executor.click(activationLink, "activation link");
+		driver.switchTo().defaultContent();
+		for (String handle : driver.getWindowHandles()) {
+			if (!handle.equals(windowHandle)) {
+				driver.switchTo().window(handle);
+			}
+		}
+		executor.softWaitForWebElement(activationMessage);
+		executor.verifyTrue(activationMessage.isDisplayed(), "verify activation success message displayed");
+		return new LoginDialogPage(driver, wait);
+
 	}
 
 }
