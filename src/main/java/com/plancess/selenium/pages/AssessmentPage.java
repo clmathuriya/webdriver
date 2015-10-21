@@ -78,19 +78,27 @@ public class AssessmentPage {
 	@FindBy(xpath = ".//button[.='Resume Test']")
 	WebElement resumeTest;
 
-	@FindBys(value = { @FindBy(xpath = "//*[normalize-space(.)='Option A']") })
-	List<WebElement> answerChoicesA;
+	@FindBy(xpath = "//*[normalize-space(.)='A' and @class='option-indicator']")
+	WebElement answerChoicesA;
 
-	@FindBys(value = { @FindBy(xpath = "//*[normalize-space(.)='Option B']") })
-	List<WebElement> answerChoicesB;
+	@FindBy(xpath = "//*[normalize-space(.)='B' and @class='option-indicator']")
+	WebElement answerChoicesB;
 
-	@FindBys(value = { @FindBy(xpath = "//*[normalize-space(.)='Option C']") })
-	List<WebElement> answerChoicesC;
+	@FindBy(xpath = "//*[normalize-space(.)='C' and @class='option-indicator']")
+	WebElement answerChoicesC;
 
-	@FindBys(value = { @FindBy(xpath = "//*[normalize-space(.)='Option D']") })
-	List<WebElement> answerChoicesD;
+	/*
+	 * //@FindBys(value = { @FindBy(xpath = "//*[normalize-space(.)='Option C']"
+	 * ) })
+	 * 
+	 * @FindBys(value = { @FindBy(xpath = "//*[normalize-space(.)='C']") })
+	 * List<WebElement> answerChoicesC;
+	 */
 
-	@FindBy(xpath = "//*[@ng-click='nextQues(true)']")
+	@FindBy(xpath = "//*[normalize-space(.)='D' and @class='option-indicator']")
+	WebElement answerChoicesD;
+
+	@FindBy(xpath = "//*[@ng-click=\"goToQuestion(quesIndex, 'next'); index=quesIndex\"]")
 	WebElement nextButton;
 
 	@FindBy(xpath = "//*[@ng-click='nextQues(false)']")
@@ -102,7 +110,7 @@ public class AssessmentPage {
 	@FindBy(xpath = "//button[@ng-click='pauseTest(false)']")
 	WebElement submitTestButton;
 
-	@FindBy(xpath = "//button[@ng-click='markForReview()']")
+	@FindBy(xpath = "//button[@ng-click='markreview(question)']")
 	WebElement markForReview;
 
 	@FindBy(xpath = "//button[@ng-click='submit()']")
@@ -287,19 +295,22 @@ public class AssessmentPage {
 		return remainingTime;
 	}
 
-	public List<WebElement> getAnswerChoicesA() {
+	/*
+	 * public List<WebElement> getAnswerChoicesA() { return answerChoicesA; }
+	 */
+	public WebElement getAnswerChoicesA() {
 		return answerChoicesA;
 	}
 
-	public List<WebElement> getAnswerChoicesB() {
+	public WebElement getAnswerChoicesB() {
 		return answerChoicesB;
 	}
 
-	public List<WebElement> getAnswerChoicesC() {
+	public WebElement getAnswerChoicesC() {
 		return answerChoicesC;
 	}
 
-	public List<WebElement> getAnswerChoicesD() {
+	public WebElement getAnswerChoicesD() {
 		return answerChoicesD;
 	}
 
@@ -414,10 +425,12 @@ public class AssessmentPage {
 
 		// to test hint button and hint text
 
-		getHintButton().click();
-		executor.softWaitForWebElement(getHintText());
-		executor.verifyTrue(getHintText().isDisplayed(), "verify hint text displayed");
-
+		/*
+		 * getHintButton().click();
+		 * executor.softWaitForWebElement(getHintText());
+		 * executor.verifyTrue(getHintText().isDisplayed(),
+		 * "verify hint text displayed");
+		 */
 		// to test mark for review option
 
 		getMarkForReview().click();
@@ -426,12 +439,16 @@ public class AssessmentPage {
 		switch (user.get("answerChoices").toLowerCase()) {
 
 		case "a":
+
 			while (getNextButton().isEnabled() && count++ <= 90) {
-				for (WebElement choice : getAnswerChoicesA()) {
-					if (choice.isDisplayed()) {
-						choice.click();
-					}
+				if (getAnswerChoicesA().isDisplayed()) {
+					executor.click(getAnswerChoicesA(), "Answer choice 'A'");
 				}
+
+				/*
+				 * for (WebElement choice : getAnswerChoicesA()) { if
+				 * (choice.isDisplayed()) { choice.click(); } }
+				 */
 				if (getNextButton().isEnabled() && getNextButton().getAttribute("aria-disabled").equals("false")) {
 					getNextButton().click();
 				} else {
@@ -445,11 +462,14 @@ public class AssessmentPage {
 			break;
 
 		case "b":
+
 			while (getNextButton().isEnabled() && count++ <= 90) {
-				for (WebElement choice : getAnswerChoicesB()) {
-					if (choice.isDisplayed()) {
-						choice.click();
-					}
+				/*
+				 * for (WebElement choice : getAnswerChoicesB()) { if
+				 * (choice.isDisplayed()) { choice.click(); } }
+				 */
+				if (getAnswerChoicesB().isDisplayed()) {
+					executor.click(getAnswerChoicesB(), "Answer choice 'B'");
 				}
 				if (getNextButton().isEnabled() && getNextButton().getAttribute("aria-disabled").equals("false")) {
 					getNextButton().click();
@@ -463,13 +483,19 @@ public class AssessmentPage {
 			break;
 		case "c":
 			while (getNextButton().isEnabled() && count++ <= 90) {
-				for (WebElement choice : getAnswerChoicesC()) {
-					if (choice.isDisplayed()) {
-						choice.click();
-					}
+				/*
+				 * for (WebElement choice : getAnswerChoicesC()) { if
+				 * (choice.isDisplayed()) { choice.click(); } }
+				 */
+				executor.softWaitForWebElement(getAnswerChoicesC());
+				if (getAnswerChoicesC().isDisplayed()) {
+
+					executor.click(getAnswerChoicesC(), "Answer choice 'C'");
 				}
+
 				if (getNextButton().isEnabled() && getNextButton().getAttribute("aria-disabled").equals("false")) {
-					getNextButton().click();
+					executor.click(getNextButton(), "next button");
+
 				} else {
 					getSubmitTestButton().click();
 					getConfirmSubmitTestButton().click();
@@ -479,11 +505,14 @@ public class AssessmentPage {
 			getConfirmSubmitTestButton().click();
 			break;
 		case "d":
+
 			while (getNextButton().isEnabled() && count++ <= 90) {
-				for (WebElement choice : getAnswerChoicesD()) {
-					if (choice.isDisplayed()) {
-						choice.click();
-					}
+				/*
+				 * for (WebElement choice : getAnswerChoicesD()) { if
+				 * (choice.isDisplayed()) { choice.click(); } }
+				 */
+				if (getAnswerChoicesD().isDisplayed()) {
+					executor.click(getAnswerChoicesD(), "Answer choice 'D'");
 				}
 				if (getNextButton().isEnabled() && getNextButton().getAttribute("aria-disabled").equals("false")) {
 					getNextButton().click();
@@ -501,7 +530,5 @@ public class AssessmentPage {
 		}
 		return new ReportPage(driver, wait);
 	}
-	
-	
 
 }

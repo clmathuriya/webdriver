@@ -10,6 +10,7 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import com.plancess.selenium.pages.AssessmentPage;
 import com.plancess.selenium.pages.CreateAccessment;
 import com.plancess.selenium.pages.Dashboard;
 import com.plancess.selenium.pages.LoginDialogPage;
@@ -21,6 +22,7 @@ public class CreateAssessmentTest extends BaseTest {
 	private LoginDialogPage loginDialogPage;
 	private CreateAccessment createAssessment;
 	private ReportPage reportPage;
+	private AssessmentPage assessmentPage;
 
 	@Test(dataProvider = "createAssessmentDataProvider", groups = { "smoke", "regression" })
 	public void CreateAssessmentWithValidDataTest(Map<String, String> user) {
@@ -47,9 +49,16 @@ public class CreateAssessmentTest extends BaseTest {
 
 		dashboard.getStartTest().click();
 		executor.softWaitForWebElement(dashboard.getNextButton());
+		
+		assessmentPage = new AssessmentPage(driver, wait);
+		assessmentPage.takeAssessment(user);
+
+		reportPage = new ReportPage(driver, wait);
+		reportPage.verifyReport(user);
+		dashboard.logoutUser();
 
 		// to test pause/resume button
-
+/*
 		dashboard.getPauseTestButton().click();
 		executor.softWaitForWebElement(dashboard.getRemainingTime());
 		String remainingTime = dashboard.getRemainingTime().getText().trim();
@@ -173,7 +182,7 @@ public class CreateAssessmentTest extends BaseTest {
 				util.takeScreenshot(driver,
 						"verify notification item contains test completed for subject" + user.get("subject")));
 
-		dashboard.logoutUser();
+		dashboard.logoutUser();*/
 
 	}
 
