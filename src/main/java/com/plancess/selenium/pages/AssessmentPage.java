@@ -1,6 +1,7 @@
 package com.plancess.selenium.pages;
 
 import java.util.List;
+import java.util.Map;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -10,10 +11,11 @@ import org.openqa.selenium.support.FindBys;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 
 import com.plancess.selenium.executor.Executioner;
 
-public class Dashboard {
+public class AssessmentPage {
 	private final WebDriver driver;
 	private WebDriverWait wait;
 	private Actions actions;
@@ -76,24 +78,16 @@ public class Dashboard {
 	@FindBy(xpath = ".//button[.='Resume Test']")
 	WebElement resumeTest;
 
-	// @FindBys(value = { @FindBy(xpath = "//*[normalize-space(.)='Option A']")
-	// })
-	@FindBys(value = { @FindBy(xpath = "//*[normalize-space(.)='A']") })
+	@FindBys(value = { @FindBy(xpath = "//*[normalize-space(.)='Option A']") })
 	List<WebElement> answerChoicesA;
 
-	@FindBys(value = { @FindBy(xpath = "//*[normalize-space(.)='B']") })
-	// @FindBys(value = { @FindBy(xpath = "//*[normalize-space(.)='Option B']")
-	// })
+	@FindBys(value = { @FindBy(xpath = "//*[normalize-space(.)='Option B']") })
 	List<WebElement> answerChoicesB;
 
-	@FindBys(value = { @FindBy(xpath = "//*[normalize-space(.)='C']") })
-	// @FindBys(value = { @FindBy(xpath = "//*[normalize-space(.)='Option C']")
-	// })
+	@FindBys(value = { @FindBy(xpath = "//*[normalize-space(.)='Option C']") })
 	List<WebElement> answerChoicesC;
 
-	@FindBys(value = { @FindBy(xpath = "//*[normalize-space(.)='D']") })
-	// @FindBys(value = { @FindBy(xpath = "//*[normalize-space(.)='Option D']")
-	// })
+	@FindBys(value = { @FindBy(xpath = "//*[normalize-space(.)='Option D']") })
 	List<WebElement> answerChoicesD;
 
 	@FindBy(xpath = "//*[@ng-click='nextQues(true)']")
@@ -156,7 +150,7 @@ public class Dashboard {
 	@FindBy(xpath = "//*[.='UPCOMING TESTS']")
 	WebElement upcomingTests;
 
-	public Dashboard(WebDriver driver, WebDriverWait wait) {
+	public AssessmentPage(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
 		this.wait = wait;
 		this.actions = new Actions(driver);
@@ -400,9 +394,114 @@ public class Dashboard {
 	}
 
 	public CreateAccessment navigateToCreateAccessment() {
-		executor.click(createAccessmentButton, "Create assessment button");
+		// TODO Auto-generated method stub
+		getCreateAssessmentButton().click();
 
 		return new CreateAccessment(driver, wait);
 	}
+
+	public ReportPage takeAssessment(Map<String, String> user) {
+		// to test pause/resume button
+
+		getPauseTestButton().click();
+		executor.softWaitForWebElement(getRemainingTime());
+		String remainingTime = getRemainingTime().getText().trim();
+		executor.softWaitForWebElement(getResumeTest());
+		executor.verifyTrue(getResumeTest().isDisplayed(), "verify resume test button displayed");
+		executor.verifyEquals(getRemainingTime().getText().trim(), remainingTime,
+				"verify remaining time not changing for paused test expected=" + remainingTime);
+		getResumeTest().click();
+
+		// to test hint button and hint text
+
+		getHintButton().click();
+		executor.softWaitForWebElement(getHintText());
+		executor.verifyTrue(getHintText().isDisplayed(), "verify hint text displayed");
+
+		// to test mark for review option
+
+		getMarkForReview().click();
+
+		int count = 0;
+		switch (user.get("answerChoices").toLowerCase()) {
+
+		case "a":
+			while (getNextButton().isEnabled() && count++ <= 90) {
+				for (WebElement choice : getAnswerChoicesA()) {
+					if (choice.isDisplayed()) {
+						choice.click();
+					}
+				}
+				if (getNextButton().isEnabled() && getNextButton().getAttribute("aria-disabled").equals("false")) {
+					getNextButton().click();
+				} else {
+					getSubmitTestButton().click();
+					getConfirmSubmitTestButton().click();
+					break;
+				}
+			}
+			getSubmitTestButton().click();
+			getConfirmSubmitTestButton().click();
+			break;
+
+		case "b":
+			while (getNextButton().isEnabled() && count++ <= 90) {
+				for (WebElement choice : getAnswerChoicesB()) {
+					if (choice.isDisplayed()) {
+						choice.click();
+					}
+				}
+				if (getNextButton().isEnabled() && getNextButton().getAttribute("aria-disabled").equals("false")) {
+					getNextButton().click();
+				} else {
+					getSubmitTestButton().click();
+					getConfirmSubmitTestButton().click();
+				}
+			}
+			getSubmitTestButton().click();
+			getConfirmSubmitTestButton().click();
+			break;
+		case "c":
+			while (getNextButton().isEnabled() && count++ <= 90) {
+				for (WebElement choice : getAnswerChoicesC()) {
+					if (choice.isDisplayed()) {
+						choice.click();
+					}
+				}
+				if (getNextButton().isEnabled() && getNextButton().getAttribute("aria-disabled").equals("false")) {
+					getNextButton().click();
+				} else {
+					getSubmitTestButton().click();
+					getConfirmSubmitTestButton().click();
+				}
+			}
+			getSubmitTestButton().click();
+			getConfirmSubmitTestButton().click();
+			break;
+		case "d":
+			while (getNextButton().isEnabled() && count++ <= 90) {
+				for (WebElement choice : getAnswerChoicesD()) {
+					if (choice.isDisplayed()) {
+						choice.click();
+					}
+				}
+				if (getNextButton().isEnabled() && getNextButton().getAttribute("aria-disabled").equals("false")) {
+					getNextButton().click();
+				} else {
+					getSubmitTestButton().click();
+					getConfirmSubmitTestButton().click();
+				}
+			}
+			getSubmitTestButton().click();
+			getConfirmSubmitTestButton().click();
+			break;
+		default:
+			Assert.fail("invalid answer choic option.");
+
+		}
+		return new ReportPage(driver, wait);
+	}
+	
+	
 
 }
