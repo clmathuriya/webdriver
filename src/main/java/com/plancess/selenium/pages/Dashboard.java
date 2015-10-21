@@ -46,13 +46,13 @@ public class Dashboard {
 
 	WebElement dashboard;
 
-	@FindBy(xpath = "//div[@id='PHYSICS']")
+	@FindBy(xpath = "//div[@id='PHYSICS']/a")
 	WebElement physicsSubjectSection;
 
-	@FindBy(xpath = "//div[@id='CHEMISTRY']")
+	@FindBy(xpath = "//div[@id='CHEMISTRY']/a")
 	WebElement chemistrySubjectSection;
 
-	@FindBy(xpath = "//div[@id='MATHEMATICS']")
+	@FindBy(xpath = "//div[@id='MATHEMATICS']/a")
 	WebElement mathsSubjectSection;
 
 	@FindBy(xpath = "//a[.='Take Subject Test']")

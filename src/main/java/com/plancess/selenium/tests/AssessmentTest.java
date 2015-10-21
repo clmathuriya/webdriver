@@ -3,7 +3,6 @@ package com.plancess.selenium.tests;
 import java.util.Map;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -64,48 +63,57 @@ public class AssessmentTest extends BaseTest {
 	public void takeTestWithValidDataTest(Map<String, String> user) {
 
 		dashboard = landingPage.openLoginDialogPage().doLogin(user);
-		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//button[@type='submit']")));
 
-		Assert.assertTrue(dashboard.getStartAssessmentSection().isDisplayed(),
-				util.takeScreenshot(driver, "assert user login succefull and start assessment section displayed"));
+		executor.assertTrue(dashboard.getStartAssessmentSection().isDisplayed(),
+				"assert user login succefull and start assessment section displayed");
 
 		switch (user.get("subject").toLowerCase()) {
 
 		case "physics":
 			executor.softWaitForWebElement(dashboard.getPhysicsSubjectSection());
-			dashboard.getPhysicsSubjectSection().click();
+			executor.click(dashboard.getPhysicsSubjectSection(), "Physics subject section");
+			executor.click(dashboard.getTakeSubjectTest(), "take subject test");
 			// to test cancel button
 
 			executor.softWaitForWebElement(dashboard.getStartTest());
 			// dashboard.getStartTest().click();
-			dashboard.getCancelButton().click();
-			dashboard.getPhysicsSubjectSection().click();
-			executor.softWaitForWebElement(dashboard.getStartTest());
+			executor.click(dashboard.getCancelButton(), "Cancel button");
+
+			executor.softWaitForWebElement(dashboard.getPhysicsSubjectSection());
+			executor.click(dashboard.getPhysicsSubjectSection(), "Physics subject section");
+			executor.click(dashboard.getTakeSubjectTest(), "take subject test");
 
 			break;
 		case "chemistry":
 			executor.softWaitForWebElement(dashboard.getChemistrySubjectSection());
-			dashboard.getChemistrySubjectSection().click();
+			executor.mouseClick(dashboard.getChemistrySubjectSection());
+			executor.click(dashboard.getTakeSubjectTest(), "take subject test");
 			// to test cancel button
 
 			executor.softWaitForWebElement(dashboard.getStartTest());
 			// dashboard.getStartTest().click();
-			dashboard.getCancelButton().click();
-			dashboard.getChemistrySubjectSection().click();
-			executor.softWaitForWebElement(dashboard.getStartTest());
+			executor.click(dashboard.getCancelButton(), "Cancel button");
+
+			executor.softWaitForWebElement(dashboard.getChemistrySubjectSection());
+			executor.click(dashboard.getChemistrySubjectSection(), "Chemistry subject section");
+			executor.click(dashboard.getTakeSubjectTest(), "take subject test");
 
 			break;
 		case "math":
 		case "maths":
 		case "mathematics":
 			executor.softWaitForWebElement(dashboard.getMathsSubjectSection());
-			dashboard.getMathsSubjectSection().click();
+			executor.click(dashboard.getMathsSubjectSection(), "Maths subject section");
+			executor.click(dashboard.getTakeSubjectTest(), "take subject test");
 			// to test cancel button
 
 			executor.softWaitForWebElement(dashboard.getStartTest());
 			// dashboard.getStartTest().click();
-			dashboard.getCancelButton().click();
-			dashboard.getMathsSubjectSection().click();
+			executor.click(dashboard.getCancelButton(), "Cancel button");
+
+			executor.softWaitForWebElement(dashboard.getMathsSubjectSection());
+			executor.click(dashboard.getMathsSubjectSection(), "Maths subject section");
+			executor.click(dashboard.getTakeSubjectTest(), "take subject test");
 			executor.softWaitForWebElement(dashboard.getStartTest());
 
 			break;
@@ -113,15 +121,13 @@ public class AssessmentTest extends BaseTest {
 			Assert.fail("Subject :" + user.get("subject") + "not found");
 
 		}
-		Assert.assertTrue(!executor.isElementExist(By.cssSelector("div.toast-title")),
-				util.takeScreenshot(driver, "Verify if no more tests error does not exist for this subject"));
-		verifications.verifyEquals(dashboard.getTimeRequired().getText().trim(), user.get("timeRequired").trim(),
-				util.takeScreenshot(driver, "verify time required"));
-		verifications.verifyEquals(dashboard.getTotalQuestions().getText().trim(), user.get("totalQuestions"),
-				util.takeScreenshot(driver, "verify number of total questions"));
-
-		dashboard.getStartTest().click();
-		executor.softWaitForWebElement(dashboard.getNextButton());
+		executor.assertTrue(!executor.isElementExist(By.xpath("//*[@ng-if='noTopic']")),
+				"Verify if no more tests error does not exist for this subject");
+		executor.verifyEquals(dashboard.getTimeRequired().getText().trim(), user.get("timeRequired").trim(),
+				"verify time required");
+		executor.verifyEquals(dashboard.getTotalQuestions().getText().trim(), user.get("totalQuestions"),
+				"verify number of total questions");
+		executor.click(dashboard.getStartTest(), "start test button");
 
 		assessmentPage = new AssessmentPage(driver, wait);
 		assessmentPage.takeAssessment(user);
