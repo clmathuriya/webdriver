@@ -43,7 +43,7 @@ public class LoginDialogPage {
 	WebElement toggleDropDown;
 
 	@FindBy(linkText = "Reset")
-	WebElement forgotPasswordLink;
+	WebElement resetPasswordLink;
 
 	@FindBy(xpath = "//div[@class='error-message' and @id='loginError']")
 	WebElement failureMessage;
@@ -103,8 +103,8 @@ public class LoginDialogPage {
 		return toggleDropDown;
 	}
 
-	public WebElement getForgotPasswordLink() {
-		return forgotPasswordLink;
+	public WebElement getResetPasswordLink() {
+		return resetPasswordLink;
 	}
 
 	public WebElement getFailureMessage() {

@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.openqa.selenium.By;
-import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -25,7 +24,7 @@ public class DashboardTest extends BaseTest {
 		signUpDialogPage.signUp(user);
 		dashboard = signUpDialogPage.verifyEmail(user).doLogin(user);
 		executor.softWaitForWebElement(dashboard.getDashBoardButton());
-		executor.click(dashboard.getDashBoardButton(), "Dashboard button");
+		executor.mouseClick(dashboard.getDashBoardButton());
 		executor.verifyTrue(dashboard.getNotificationsButton().isDisplayed(), "verify notifications button displayed");
 
 		executor.verifyTrue(dashboard.getToggleDropDown().isDisplayed(), "verify toggle dropdown displayed");

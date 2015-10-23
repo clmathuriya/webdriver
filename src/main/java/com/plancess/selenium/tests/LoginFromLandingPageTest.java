@@ -26,7 +26,7 @@ public class LoginFromLandingPageTest extends BaseTest {
 		executor.verifyTrue(loginDialogPage.getEmail().isDisplayed(), "verify email field displayed");
 		executor.verifyTrue(loginDialogPage.getPassword().isDisplayed(), "verify password field displayed");
 		executor.verifyTrue(loginDialogPage.getLoginButton().isDisplayed(), "verify login button displayed");
-		executor.verifyTrue(loginDialogPage.getForgotPasswordLink().isDisplayed(),
+		executor.verifyTrue(loginDialogPage.getResetPasswordLink().isDisplayed(),
 				"verify forgot password  link displayed");
 
 	}
