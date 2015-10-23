@@ -1,12 +1,15 @@
 package com.plancess.selenium.pages;
 
+import java.io.File;
 import java.util.Map;
 
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -16,10 +19,17 @@ public class ProfilePage {
 	private final WebDriver driver;
 	private WebDriverWait wait;
 	private Actions actions;
+	private Executioner executor;
 
 	WebElement firstName;
 	WebElement lastName;
 	WebElement email;
+	// WebElement emailNotification;
+	// WebElement myImg;
+	WebElement fileInput;
+
+	@FindBy(css = "input[name='tel']")
+	WebElement mobileCountryCode;
 
 	@FindBy(css = "input[name='tel']")
 	WebElement mobile;
@@ -36,6 +46,9 @@ public class ProfilePage {
 	@FindBy(xpath = "//input[@ng-model='profile.notify_by_email']")
 	WebElement notify_by_email_switch;
 
+	@FindBy(xpath = "//*[@class='onoffswitch-label']")
+	WebElement notify_by_email;
+
 	@FindBy(xpath = "//button[text()='SAVE DETAILS']")
 	WebElement save_details_button;
 
@@ -44,6 +57,9 @@ public class ProfilePage {
 
 	@FindBy(css = "div.toast-message")
 	WebElement toastMessage;
+	
+	@FindBy(xpath = "//*[@ng-show='alertShow']")
+	WebElement alertMessage;
 
 	@FindBy(css = "header img[title='Plancess Logo']")
 	WebElement plancessHeaderLogo;
@@ -66,12 +82,20 @@ public class ProfilePage {
 	@FindBy(css = "a[data-toggle='dropdown'] img")
 	WebElement toggleDropDown;
 
+	@FindBy(xpath = "//*[@ng-click='croppedImg(myCroppedImage)']")
+	WebElement profileCroppedImage;
+
+	/*
+	 * @FindBy(xpath = "a[data-toggle='dropdown'] img") WebElement fileInput;
+	 */
+
 	public ProfilePage(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
 		this.wait = wait;
 		this.actions = new Actions(driver);
+		executor = new Executioner(driver, wait);
 
-		if (!"Plancess Dashboard".equals(driver.getTitle())) {
+		if (!"Preplane Dashboard".equals(driver.getTitle())) {
 			throw new IllegalStateException("This is not  the user profile page");
 		}
 		PageFactory.initElements(driver, this);
@@ -112,8 +136,28 @@ public class ProfilePage {
 		return securityLink;
 	}
 
+	/*
+	 * public WebElement getMyImg() { return myImg; }
+	 */
+
+	public WebElement getFileInput() {
+		return fileInput;
+	}
+
+	public WebElement getMobileCountryCode() {
+		return mobileCountryCode;
+	}
+
+	public WebElement getNotify_by_email_switch() {
+		return notify_by_email_switch;
+	}
+
 	public WebElement getFirstName() {
 		return firstName;
+	}
+	
+	public WebElement getAlertMessage() {
+		return alertMessage;
 	}
 
 	public WebElement getLastName() {
@@ -141,7 +185,7 @@ public class ProfilePage {
 	}
 
 	public WebElement getNotify_by_email() {
-		return notify_by_email_switch;
+		return notify_by_email;
 	}
 
 	public WebElement getSave_details_button() {
@@ -156,6 +200,10 @@ public class ProfilePage {
 		return toastTitle;
 	}
 
+	public WebElement getProfileCroppedImage() {
+		return profileCroppedImage;
+	}
+
 	// user operations
 
 	public LoginPage logoutUser() {
@@ -167,32 +215,69 @@ public class ProfilePage {
 	}
 
 	public ProfilePage updateUserProfile(Map<String, String> user) {
-		firstName.clear();
-		firstName.sendKeys(user.get("firstName"));
-		lastName.clear();
-		lastName.sendKeys(user.get("lastName"));
-		mobile.clear();
-		mobile.sendKeys(user.get("mobile"));
-		//dob.clear();
-		dob.sendKeys(user.get("dob"));
+		executor.clear(firstName, "firstName");
+		// firstName.clear();
+		executor.sendKeys(firstName, user.get("firstName"), "firstName");
+
+		// firstName.clear();
+		// firstName.sendKeys(user.get("firstName"));
+
+		executor.clear(lastName, "lastName");
+		executor.sendKeys(lastName, user.get("lastName"), "lastName");
+
+		// lastName.clear();
+		// lastName.sendKeys(user.get("lastName"));
+
+		/*
+		 * executor.clear(mobile, "mobile"); executor.sendKeys(mobile,
+		 * user.get("mobile"), "mobile");
+		 */
+		// mobile.clear();
+		// mobile.sendKeys(user.get("mobile"));
+
+		// dob.clear();
+		// temporary commented
+		// dob.sendKeys(user.get("dob"));
+
 		new Select(exam_target_year).selectByVisibleText(user.get("target_year"));
+
 		int trycount = 0;
 		while (!notify_exam_prep_checkbox.isSelected() && trycount <= 5) {
 
 			try {
-
+				
 				actions.click(notify_exam_prep_checkbox).build().perform();
-
 				trycount++;
+				
 			} catch (Exception e) {
 				trycount++;
 			}
 		}
-		if (notify_by_email_switch.getAttribute("aria-checked").equals("false")) {
+		if (user.get("profilePic").equalsIgnoreCase("Yes")) {
 
-			notify_by_email_switch.click();
+			ClassLoader classLoader = getClass().getClassLoader();
+			File file = new File(classLoader.getResource(user.get("filePath")).getFile());
+			String js = "arguments[0].style.visibility = 'visible';arguments[0].style.display = 'block'; arguments[0].style.height = '1px'; arguments[0].style.width = '1px'; arguments[0].style.opacity = 1";
+
+			((JavascriptExecutor) driver).executeScript(js, getFileInput());
+
+			getFileInput().sendKeys(file.getAbsolutePath());
+			executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(getProfileCroppedImage()));
+
+			executor.click(getProfileCroppedImage(), "Profile Cropped Image");
 		}
-		save_details_button.click();
+
+		if (getNotify_by_email_switch().getAttribute("aria-checked").equals("false")
+				^ (user.get("emailNotification").equalsIgnoreCase("No"))) {
+
+			executor.click(getNotify_by_email(),"Email Notification");
+		}
+
+		// notify_by_email_switch.click();
+		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(save_details_button));
+
+		executor.mouseClick(save_details_button);// , "save user details
+													// button");
 
 		return new ProfilePage(driver, wait);
 

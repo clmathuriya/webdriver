@@ -41,7 +41,7 @@ public class ReportPage {
 	WebElement dashboard;
 	@FindBy(xpath = "(//a[@ui-sref='app.dashboard'])[2]")
 	WebElement dashBoardButton;
-	@FindBy(xpath = "//*[@ng-if='!isNewUser']")
+	@FindBy(xpath = "//*[@ng-if='isNewUser']")
 	WebElement performanceSection;
 	@FindBy(xpath = "//div[@class='topic-title']")
 	WebElement topicTitle;

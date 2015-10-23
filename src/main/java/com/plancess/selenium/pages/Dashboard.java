@@ -29,7 +29,8 @@ public class Dashboard {
 	@FindBy(css = "a[ng-click='logoutUser()']")
 	WebElement logoutLink;
 
-	@FindBy(xpath = "//a[contains(.,'Profile')]")
+	//@FindBy(xpath = "//a[contains(.,'Profile')]")
+	@FindBy(css = "a[ui-sref='profile.main']")
 	WebElement profileLink;
 
 	@FindBy(css = "a[ui-sref='profile.security']")
@@ -382,9 +383,10 @@ public class Dashboard {
 	}
 
 	public ProfilePage navigateToUserProfile() {
-
-		toggleDropDown.click();
-		profileLink.click();
+		executor.click(toggleDropDown, "toggleDropDown");
+		
+		executor.click(profileLink, "profileLink");
+		
 
 		return new ProfilePage(driver, wait);
 

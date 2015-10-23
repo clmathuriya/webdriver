@@ -413,15 +413,16 @@ public class AssessmentPage {
 
 	public ReportPage takeAssessment(Map<String, String> user) {
 		// to test pause/resume button
-
-		getPauseTestButton().click();
+		executor.click(getPauseTestButton(), "Pause Button");
+		//getPauseTestButton().click();
 		executor.softWaitForWebElement(getRemainingTime());
 		String remainingTime = getRemainingTime().getText().trim();
 		executor.softWaitForWebElement(getResumeTest());
 		executor.verifyTrue(getResumeTest().isDisplayed(), "verify resume test button displayed");
 		executor.verifyEquals(getRemainingTime().getText().trim(), remainingTime,
 				"verify remaining time not changing for paused test expected=" + remainingTime);
-		getResumeTest().click();
+		executor.click(getResumeTest(), "Resume Button");
+		//getResumeTest().click();
 
 		// to test hint button and hint text
 
@@ -432,8 +433,8 @@ public class AssessmentPage {
 		 * "verify hint text displayed");
 		 */
 		// to test mark for review option
-
-		getMarkForReview().click();
+		executor.click(getMarkForReview(), "Mark For Review Button");
+		//getMarkForReview().click();
 
 		int count = 0;
 		switch (user.get("answerChoices").toLowerCase()) {
