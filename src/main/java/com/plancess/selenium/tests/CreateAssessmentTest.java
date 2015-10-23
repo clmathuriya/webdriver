@@ -47,7 +47,8 @@ public class CreateAssessmentTest extends BaseTest {
 		executor.verifyEquals(dashboard.getTotalQuestions().getText().trim(), user.get("totalQuestions"),
 				util.takeScreenshot(driver, "verify number of total questions"));
 
-		dashboard.getStartTest().click();
+		executor.click(dashboard.getStartTest(), "Start The Test");
+		//dashboard.getStartTest().click();
 		executor.softWaitForWebElement(dashboard.getNextButton());
 		
 		assessmentPage = new AssessmentPage(driver, wait);
@@ -56,133 +57,6 @@ public class CreateAssessmentTest extends BaseTest {
 		reportPage = new ReportPage(driver, wait);
 		reportPage.verifyReport(user);
 		dashboard.logoutUser();
-
-		// to test pause/resume button
-/*
-		dashboard.getPauseTestButton().click();
-		executor.softWaitForWebElement(dashboard.getRemainingTime());
-		String remainingTime = dashboard.getRemainingTime().getText().trim();
-		executor.softWaitForWebElement(dashboard.getResumeTest());
-		executor.verifyTrue(dashboard.getResumeTest().isDisplayed(),
-				util.takeScreenshot(driver, "verify resume test button displayed"));
-		executor.verifyEquals(dashboard.getRemainingTime().getText().trim(), remainingTime, util.takeScreenshot(driver,
-				"verify remaining time not changing for paused test expected=" + remainingTime));
-		dashboard.getResumeTest().click();
-
-		// to test hint button and hint text
-
-		// dashboard.getHintButton().click();
-		// executor.softWaitForWebElement(dashboard.getHintText());
-		// executor.verifyTrue(dashboard.getHintText().isDisplayed(),util.takeScreenshot(driver,
-		// "verify hint text displayed"));
-
-		// to test mark for review option
-
-		dashboard.getMarkForReview().click();
-
-		int count = 0;
-		switch (user.get("answerChoices").toLowerCase()) {
-
-		case "a":
-			while (dashboard.getNextButton().isEnabled() && count++ <= 90) {
-				for (WebElement choice : dashboard.getAnswerChoicesA()) {
-					if (choice.isDisplayed()) {
-						choice.click();
-					}
-				}
-				if (dashboard.getNextButton().isEnabled()
-						&& dashboard.getNextButton().getAttribute("aria-disabled").equals("false")) {
-					dashboard.getNextButton().click();
-				} else {
-					dashboard.getSubmitTestButton().click();
-					dashboard.getConfirmSubmitTestButton().click();
-					break;
-				}
-			}
-			dashboard.getSubmitTestButton().click();
-			dashboard.getConfirmSubmitTestButton().click();
-			break;
-
-		case "b":
-			while (dashboard.getNextButton().isEnabled() && count++ <= 90) {
-				for (WebElement choice : dashboard.getAnswerChoicesB()) {
-					if (choice.isDisplayed()) {
-						choice.click();
-					}
-				}
-				if (dashboard.getNextButton().isEnabled()
-						&& dashboard.getNextButton().getAttribute("aria-disabled").equals("false")) {
-					dashboard.getNextButton().click();
-				} else {
-					dashboard.getSubmitTestButton().click();
-					dashboard.getConfirmSubmitTestButton().click();
-				}
-			}
-			dashboard.getSubmitTestButton().click();
-			dashboard.getConfirmSubmitTestButton().click();
-			break;
-		case "c":
-			while (dashboard.getNextButton().isEnabled() && count++ <= 90) {
-				for (WebElement choice : dashboard.getAnswerChoicesC()) {
-					if (choice.isDisplayed()) {
-						choice.click();
-					}
-				}
-				if (dashboard.getNextButton().isEnabled()
-						&& dashboard.getNextButton().getAttribute("aria-disabled").equals("false")) {
-					dashboard.getNextButton().click();
-				} else {
-					dashboard.getSubmitTestButton().click();
-					dashboard.getConfirmSubmitTestButton().click();
-				}
-			}
-			dashboard.getSubmitTestButton().click();
-			dashboard.getConfirmSubmitTestButton().click();
-			break;
-		case "d":
-			while (dashboard.getNextButton().isEnabled() && count++ <= 90) {
-				for (WebElement choice : dashboard.getAnswerChoicesD()) {
-					if (choice.isDisplayed()) {
-						choice.click();
-					}
-				}
-				if (dashboard.getNextButton().isEnabled()
-						&& dashboard.getNextButton().getAttribute("aria-disabled").equals("false")) {
-					dashboard.getNextButton().click();
-				} else {
-					dashboard.getSubmitTestButton().click();
-					dashboard.getConfirmSubmitTestButton().click();
-				}
-			}
-			dashboard.getSubmitTestButton().click();
-			dashboard.getConfirmSubmitTestButton().click();
-			break;
-		default:
-			Assert.fail("invalid answer choic option.");
-
-		}
-
-		reportPage = new ReportPage(driver, wait);
-		executor.softWaitForWebElement(reportPage.getTopicTitle());
-		executor.verifyTrue(reportPage.getTopicTitle().isDisplayed(),
-				util.takeScreenshot(driver, "verify topic title displayed"));
-		executor.verifyTrue(reportPage.getRecomendationsSection().isDisplayed(),
-				util.takeScreenshot(driver, "verify recommendations section displayed"));
-		executor.verifyTrue(reportPage.getQuestionsWisePerformance().isDisplayed(),
-				util.takeScreenshot(driver, "verify questions wise performance displayed"));
-		createAssessment.getActions().click(dashboard.getDashBoardButton()).build().perform();
-		executor.softWaitForWebElement(dashboard.getPerformanceSection());
-		executor.verifyTrue(dashboard.getPerformanceSection().isDisplayed(),
-				util.takeScreenshot(driver, "verify performance section displayed on report page"));
-		// to verify notification displayed for test completion
-		dashboard.getNotificationsButton().click();
-		String notificationItemText = dashboard.getNotificationItem().getText().toLowerCase();
-		executor.verifyTrue(
-				notificationItemText.contains(user.get("subject")) && notificationItemText.contains("completed"),
-				util.takeScreenshot(driver,
-						"verify notification item contains test completed for subject" + user.get("subject")));
-
-		dashboard.logoutUser();*/
 
 	}
 
@@ -210,8 +84,10 @@ public class CreateAssessmentTest extends BaseTest {
 				// createAssessment.getsubjectPhysicsLink().click();
 				break;
 			case "chemistry":
-				wait.until(ExpectedConditions.visibilityOf(createAssessment.getsubjectChemistryLink()));
-				createAssessment.getsubjectChemistryLink().click();
+				executor.softWaitForWebElement(createAssessment.getsubjectChemistryLink(),"wait for chemistry link");
+				//wait.until(ExpectedConditions.visibilityOf(createAssessment.getsubjectChemistryLink()));
+				executor.click(createAssessment.getsubjectChemistryLink(), "Chemistry Link");
+				//createAssessment.getsubjectChemistryLink().click();
 				break;
 			case "math":
 			case "maths":
@@ -230,7 +106,8 @@ public class CreateAssessmentTest extends BaseTest {
 
 			if (toggleModule.findElement(By.tagName("span")).getAttribute("class").contains("plus")
 					&& sub_Module.length() > 0) {
-				toggleModule.click();
+				executor.click(toggleModule, module);
+				//toggleModule.click();
 			}
 
 			if (sub_Module != "") {
@@ -253,7 +130,7 @@ public class CreateAssessmentTest extends BaseTest {
 				selectedTopics += e.getAttribute("innerHTML");
 			}
 
-			Assert.assertTrue(selectedTopics.contains(sub_Module) && selectedTopics.contains(module),
+			executor.assertTrue(selectedTopics.contains(sub_Module) && selectedTopics.contains(module),
 					util.takeScreenshot(driver, "verify topic selected"));
 
 		}

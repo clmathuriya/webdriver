@@ -14,6 +14,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -24,72 +25,61 @@ import com.plancess.selenium.pages.HomePage;
 import com.plancess.selenium.pages.LoginPage;
 import com.plancess.selenium.pages.ProfilePage;
 import com.plancess.selenium.utils.DataProviderClass;
+import com.plancess.selenium.utils.ExcelReader;
 import com.plancess.selenium.utils.Util;
 import com.plancess.selenium.utils.Verifications;
 
 public class UserProfileTest extends BaseTest {
 
-	private WebDriver driver;
-	private HomePage homePage;
-	private LoginPage loginPage;
+	// private WebDriver driver;
+	// private HomePage homePage;
+	// private LoginPage loginPage;
 	private String pageTitle = "Plancess Dashboard";
-	private WebDriverWait wait;
-	private Executioner executor;
+	// private WebDriverWait wait;
+	// private Executioner executor;
 	private ProfilePage userProfile;
 
-	@Parameters({ "host_ip", "port", "os", "browser", "browserVersion" })
-	@BeforeMethod
-	public void setUp(@Optional("localhost") String host, @Optional("4444") String port, @Optional("WINDOWS") String os,
-			@Optional("firefox") String browser, @Optional("40.0") String browserVersion) {
+	private Dashboard dashboard;
 
-		try {
-
-			DesiredCapabilities capabilities = new DesiredCapabilities();
-			capabilities.setBrowserName(browser);
-			// capabilities.setCapability("version", browserVersion);
-			capabilities.setCapability("platform", Platform.valueOf(os));
-
-			this.driver = new RemoteWebDriver(new URL("http://" + host + ":" + port + "/wd/hub"), capabilities);
-
-			// driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-			wait = new WebDriverWait(driver, 30);
-			executor = new Executioner(driver, wait);
-			homePage = new HomePage(driver, wait);
-
-			loginPage = homePage.openLoginPage();
-			util = Util.getInstance();
-			verifications = Verifications.getInstance();
-
-		} catch (MalformedURLException e) {
-			Assert.fail("Unable to start selenium session make sure Grid hub is running on url :" + "http://" + host
-					+ ":" + port + "/wd/hub");
-
-		}
-	}
-
-	@AfterMethod
-	public void tearDown() {
-		driver.quit();
-	}
-
-	@Test(dataProvider = "userProfileValidData", dataProviderClass = DataProviderClass.class, groups = { "smoke",
-			"regression" })
+	
+	@Test(dataProvider = "userProfileValidData", groups = { "smoke", "regression" })
 	public void userProfileWithValidDataTest(Map<String, String> user) {
 
-		Dashboard dashboard = loginPage.doLogin(user);
+		dashboard = landingPage.openLoginDialogPage().doLogin(user);
+		
 		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(dashboard.getStartAssessmentSection()));
 
-		Assert.assertTrue(dashboard.getStartAssessmentSection().isDisplayed(),
+		executor.assertTrue(dashboard.getStartAssessmentSection().isDisplayed(),
 				util.takeScreenshot(driver, "assert user login succefull and start assessment section displayed"));
 		userProfile = dashboard.navigateToUserProfile();
 		executor.softWaitForWebElement(userProfile.getFirstName());
 		userProfile.updateUserProfile(user);
-		executor.softWaitForWebElement(userProfile.getToastTitle());
+		// executor.softWaitForWebElement(userProfile.getAlertMessage());
+		executor.softWaitForCondition(new ExpectedCondition<Boolean>() {
 
-		Assert.assertEquals(userProfile.getToastTitle().getText(), "Saved!",
-				util.takeScreenshot(driver, "verify toast title displayed"));
-		Assert.assertEquals(userProfile.getToastMessage().getText(), "Your data have been saved successfully.",
-				util.takeScreenshot(driver, "verify toast message displayed"));
+			@Override
+			public Boolean apply(WebDriver driver) {
+				System.out.println(userProfile.getAlertMessage().getAttribute("alert-message"));
+
+				return (userProfile.getAlertMessage().getAttribute("alert-message")
+						+ userProfile.getAlertMessage().getText()).contains("Your data have been saved successfully.");
+			}
+		});
+
+		executor.assertEquals(
+				userProfile.getAlertMessage().getAttribute("alert-message") + userProfile.getAlertMessage().getText(),
+				"Your data have been saved successfully.", "Data have been saved successfully");
+		/*
+		 * Assert.assertEquals(userProfile.getToastMessage().getText(),
+		 * "Your data have been saved successfully.",
+		 * util.takeScreenshot(driver, "verify toast message displayed"));
+		 */
+	}
+
+	@DataProvider(name = "userProfileValidData")
+	public static Object[][] dashboardDataProvider() {
+
+		return new ExcelReader().getUserDataFromExcel("testData.xlsx", "userProfile");
 
 	}
 
