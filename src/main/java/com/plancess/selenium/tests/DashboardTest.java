@@ -30,6 +30,7 @@ public class DashboardTest extends BaseTest {
 		executor.verifyTrue(dashboard.getToggleDropDown().isDisplayed(), "verify toggle dropdown displayed");
 
 		executor.verifyTrue(dashboard.getPlancessHeaderLogo().isDisplayed(), "verify toggle dropdown displayed");
+		executor.softWaitForWebElement(dashboard.getAcceptChallenges().get(0));
 		executor.verifyTrue(dashboard.getAcceptChallenges().size() >= 2, "verify accept challenges displayed");
 		executor.softWaitForWebElement(dashboard.getTakeSubjectTest());
 		executor.verifyTrue(dashboard.getPhysicsSubjectSection().isDisplayed(),
@@ -72,7 +73,7 @@ public class DashboardTest extends BaseTest {
 		executor.verifyTrue(dashboard.getUpcomingTests().isDisplayed(), "verify upcoming test button  displayed");
 
 		executor.verifyTrue(executor.isElementExist(By.xpath(dashboard.getPerformanceSummarySectionXpath())),
-				util.takeScreenshot(driver, "verify performance summary section displayed"));
+				"verify performance summary section displayed");
 
 		// more verifications to be added
 

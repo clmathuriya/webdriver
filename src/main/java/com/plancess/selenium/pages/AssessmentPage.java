@@ -87,14 +87,6 @@ public class AssessmentPage {
 	@FindBy(xpath = "//*[normalize-space(.)='C' and @class='option-indicator']")
 	WebElement answerChoicesC;
 
-	/*
-	 * //@FindBys(value = { @FindBy(xpath = "//*[normalize-space(.)='Option C']"
-	 * ) })
-	 * 
-	 * @FindBys(value = { @FindBy(xpath = "//*[normalize-space(.)='C']") })
-	 * List<WebElement> answerChoicesC;
-	 */
-
 	@FindBy(xpath = "//*[normalize-space(.)='D' and @class='option-indicator']")
 	WebElement answerChoicesD;
 
@@ -396,7 +388,7 @@ public class AssessmentPage {
 	}
 
 	public SecurityPage navigateToUserSecurity() {
-		// actions.click(toggleDropDown).build().perform();
+
 		toggleDropDown.click();
 		securityLink.click();
 
@@ -413,8 +405,9 @@ public class AssessmentPage {
 
 	public ReportPage takeAssessment(Map<String, String> user) {
 		// to test pause/resume button
+		executor.softWaitForWebElement(getPauseTestButton());
 		executor.click(getPauseTestButton(), "Pause Button");
-		//getPauseTestButton().click();
+		// getPauseTestButton().click();
 		executor.softWaitForWebElement(getRemainingTime());
 		String remainingTime = getRemainingTime().getText().trim();
 		executor.softWaitForWebElement(getResumeTest());
@@ -422,19 +415,10 @@ public class AssessmentPage {
 		executor.verifyEquals(getRemainingTime().getText().trim(), remainingTime,
 				"verify remaining time not changing for paused test expected=" + remainingTime);
 		executor.click(getResumeTest(), "Resume Button");
-		//getResumeTest().click();
 
-		// to test hint button and hint text
-
-		/*
-		 * getHintButton().click();
-		 * executor.softWaitForWebElement(getHintText());
-		 * executor.verifyTrue(getHintText().isDisplayed(),
-		 * "verify hint text displayed");
-		 */
 		// to test mark for review option
 		executor.click(getMarkForReview(), "Mark For Review Button");
-		//getMarkForReview().click();
+		// getMarkForReview().click();
 
 		int count = 0;
 		switch (user.get("answerChoices").toLowerCase()) {
@@ -446,48 +430,40 @@ public class AssessmentPage {
 					executor.click(getAnswerChoicesA(), "Answer choice 'A'");
 				}
 
-				/*
-				 * for (WebElement choice : getAnswerChoicesA()) { if
-				 * (choice.isDisplayed()) { choice.click(); } }
-				 */
 				if (getNextButton().isEnabled() && getNextButton().getAttribute("aria-disabled").equals("false")) {
-					getNextButton().click();
+					executor.click(getNextButton(), "next button");
+
 				} else {
-					getSubmitTestButton().click();
-					getConfirmSubmitTestButton().click();
+					executor.click(getSubmitTestButton(), "Submit test button");
+					executor.click(getConfirmSubmitTestButton(), "confirm submit test button");
 					break;
 				}
 			}
-			getSubmitTestButton().click();
-			getConfirmSubmitTestButton().click();
+
+			executor.click(getSubmitTestButton(), "Submit test button");
+			executor.click(getConfirmSubmitTestButton(), "confirm submit test button");
 			break;
 
 		case "b":
 
 			while (getNextButton().isEnabled() && count++ <= 90) {
-				/*
-				 * for (WebElement choice : getAnswerChoicesB()) { if
-				 * (choice.isDisplayed()) { choice.click(); } }
-				 */
+
 				if (getAnswerChoicesB().isDisplayed()) {
 					executor.click(getAnswerChoicesB(), "Answer choice 'B'");
 				}
 				if (getNextButton().isEnabled() && getNextButton().getAttribute("aria-disabled").equals("false")) {
-					getNextButton().click();
+					executor.click(getNextButton(), "next button");
 				} else {
-					getSubmitTestButton().click();
-					getConfirmSubmitTestButton().click();
+					executor.click(getSubmitTestButton(), "Submit test button");
+					executor.click(getConfirmSubmitTestButton(), "confirm submit test button");
 				}
 			}
-			getSubmitTestButton().click();
-			getConfirmSubmitTestButton().click();
+			executor.click(getSubmitTestButton(), "Submit test button");
+			executor.click(getConfirmSubmitTestButton(), "confirm submit test button");
 			break;
 		case "c":
 			while (getNextButton().isEnabled() && count++ <= 90) {
-				/*
-				 * for (WebElement choice : getAnswerChoicesC()) { if
-				 * (choice.isDisplayed()) { choice.click(); } }
-				 */
+
 				executor.softWaitForWebElement(getAnswerChoicesC());
 				if (getAnswerChoicesC().isDisplayed()) {
 
@@ -498,32 +474,30 @@ public class AssessmentPage {
 					executor.click(getNextButton(), "next button");
 
 				} else {
-					getSubmitTestButton().click();
-					getConfirmSubmitTestButton().click();
+					executor.click(getSubmitTestButton(), "Submit test button");
+					executor.click(getConfirmSubmitTestButton(), "confirm submit test button");
 				}
 			}
-			getSubmitTestButton().click();
-			getConfirmSubmitTestButton().click();
+			executor.click(getSubmitTestButton(), "Submit test button");
+			executor.click(getConfirmSubmitTestButton(), "confirm submit test button");
 			break;
 		case "d":
 
 			while (getNextButton().isEnabled() && count++ <= 90) {
-				/*
-				 * for (WebElement choice : getAnswerChoicesD()) { if
-				 * (choice.isDisplayed()) { choice.click(); } }
-				 */
+
 				if (getAnswerChoicesD().isDisplayed()) {
 					executor.click(getAnswerChoicesD(), "Answer choice 'D'");
 				}
 				if (getNextButton().isEnabled() && getNextButton().getAttribute("aria-disabled").equals("false")) {
-					getNextButton().click();
+					executor.click(getNextButton(), "next button");
+
 				} else {
-					getSubmitTestButton().click();
-					getConfirmSubmitTestButton().click();
+					executor.click(getSubmitTestButton(), "Submit test button");
+					executor.click(getConfirmSubmitTestButton(), "confirm submit test button");
 				}
 			}
-			getSubmitTestButton().click();
-			getConfirmSubmitTestButton().click();
+			executor.click(getSubmitTestButton(), "Submit test button");
+			executor.click(getConfirmSubmitTestButton(), "confirm submit test button");
 			break;
 		default:
 			Assert.fail("invalid answer choic option.");
