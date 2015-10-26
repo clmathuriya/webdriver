@@ -271,23 +271,6 @@ public class DataProviderClass {
 		return dataSet;
 	}
 
-	// update user security data providers
-
-	@DataProvider(name = "userSecurityValidData")
-	public static Object[][] userSecurityDataProviderWithValidDetails() {
-
-		Object[][] dataSet = new Object[1][1];
-		Map<String, String> user = new HashMap<String, String>();
-
-		user.put("email", "testuser1@mailinator.com");
-		user.put("password", "P@ssw0rd");
-		user.put("currentPassword", "P@ssw0rd");
-		user.put("newPassword", "P@ssw0rd1");
-		user.put("confirmPassword", "P@ssw0rd1");
-
-		dataSet[0][0] = user;
-
-		return dataSet;
-	}
+	
 
 }

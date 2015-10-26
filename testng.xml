@@ -17,8 +17,9 @@
 			<class name="com.plancess.selenium.tests.DashboardTest" />
 			<class name="com.plancess.selenium.tests.ResetPasswordTest" />
 			<class name="com.plancess.selenium.tests.AssessmentTest" />
-			<!-- <class name="com.plancess.selenium.tests.CreateAssessmentTest"/> -->
+			<class name="com.plancess.selenium.tests.CreateAssessmentTest"/>
 			<class name="com.plancess.selenium.tests.UserProfileTest" />
+			<class name="com.plancess.selenium.tests.UserSecurityTest"/>
 		</classes>
 	</test>
 
