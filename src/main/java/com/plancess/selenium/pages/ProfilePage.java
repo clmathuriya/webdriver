@@ -10,6 +10,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -25,19 +26,23 @@ public class ProfilePage {
 	WebElement firstName;
 	WebElement lastName;
 	WebElement email;
-	// WebElement emailNotification;
-	// WebElement myImg;
+
 	WebElement fileInput;
 
-	
 	@FindBy(xpath = ".//*[@class='selected-flag']")
 	WebElement mobileCountryCode;
-	
+
 	@FindBy(css = "input[name='tel']")
 	WebElement mobile;
 
 	@FindBy(xpath = "//input[@ng-model='dt']")
 	WebElement dob;
+
+	@FindBy(xpath = "//*[@class='ui-datepicker-year']")
+	WebElement dob_year;
+
+	@FindBy(xpath = "//*[@class='ui-datepicker-month']")
+	WebElement dob_month;
 
 	@FindBy(xpath = "//*[@ng-model='profile.exam_target_year']")
 	WebElement exam_target_year;
@@ -87,10 +92,6 @@ public class ProfilePage {
 	@FindBy(xpath = "//*[@ng-click='croppedImg(myCroppedImage)']")
 	WebElement profileCroppedImage;
 
-	/*
-	 * @FindBy(xpath = "a[data-toggle='dropdown'] img") WebElement fileInput;
-	 */
-
 	public ProfilePage(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
 		this.wait = wait;
@@ -138,10 +139,6 @@ public class ProfilePage {
 		return securityLink;
 	}
 
-	/*
-	 * public WebElement getMyImg() { return myImg; }
-	 */
-
 	public WebElement getFileInput() {
 		return fileInput;
 	}
@@ -173,7 +170,6 @@ public class ProfilePage {
 	public WebElement getMobileCountryCode() {
 		return mobileCountryCode;
 	}
-	
 
 	public WebElement getDob() {
 		return dob;
@@ -227,33 +223,52 @@ public class ProfilePage {
 
 		executor.clear(mobile, "mobile");
 		executor.click(mobileCountryCode, "Mobile Country Code");
-		
-		if(!user.get("mobile_Country_Code").equals("")){
-			WebElement mobileCountryCodeElement = executor.getElement(By.xpath("//span[.='" + user.get("mobile_Country_Code") + "']"));
+
+		if (!user.get("mobile_Country_Code").equals("")) {
+			WebElement mobileCountryCodeElement = executor
+					.getElement(By.xpath("//span[.='" + user.get("mobile_Country_Code") + "']"));
 			executor.click(mobileCountryCodeElement, "mobileCountryCode");
-		}else if(!user.get("mobile_Country").equals("")){
-			WebElement mobileCountryElement = executor.getElement(By.xpath("//span[.='" + user.get("mobile_Country") + "']"));
+		} else if (!user.get("mobile_Country").equals("")) {
+			WebElement mobileCountryElement = executor
+					.getElement(By.xpath("//span[.='" + user.get("mobile_Country") + "']"));
 			executor.click(mobileCountryElement, "mobileCountry");
 		}
-		
-		//executor.clear(mobile, "mobile");
+
+		executor.click(mobile, "mobile");
 		executor.sendKeys(mobile, user.get("mobile"), "mobile");
 
-		// mobile.clear();
-		// mobile.sendKeys(user.get("mobile"));
+		if (!user.get("dob").equals("")) {
+			executor.mouseClick(dob);
 
-		// dob.clear();
-		// temporary commented
-		// dob.sendKeys(user.get("dob"));
+			String a[] = user.get("dob").split("/");
+			String date = a[0];
+			String month = a[1];
+			String year = a[2];
 
-		new Select(exam_target_year).selectByVisibleText(user.get("target_year"));
+			int actualMonth = (Integer.parseInt(month) - 1);
+			executor.softWaitForWebElement(dob_year);
 
+			executor.selectFromDropDown(dob_year, "text", year);
+
+			executor.selectFromDropDown(dob_month, "value", "" + actualMonth);
+
+			WebElement dateDOBElement = executor.getElement(By.xpath("//a[.='" + Integer.parseInt(date) + "']"));
+			executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(dateDOBElement));
+			executor.click(dateDOBElement, "Date of DOB");
+
+		}
+
+		// Date Month Year
+		if (!user.get("target_year").equals("")) {
+			executor.selectFromDropDown(exam_target_year, "text", user.get("target_year"));
+
+		}
 		int trycount = 0;
 		while (!notify_exam_prep_checkbox.isSelected() && trycount <= 5) {
 
 			try {
 
-				actions.click(notify_exam_prep_checkbox).build().perform();
+				executor.mouseClick(notify_exam_prep_checkbox);
 				trycount++;
 
 			} catch (Exception e) {
