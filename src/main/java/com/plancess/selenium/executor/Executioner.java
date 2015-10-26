@@ -391,5 +391,17 @@ public class Executioner {
 		}
 
 	}
+	
+	public void refresh() {
+		try {
+			startTime = stopWatch.getTime();
+			driver.navigate().refresh();
+			addStep(startTime, stopWatch.getTime() - startTime, "refresh page", "Pass", util.takeScreenshot(driver));
+			
+		} catch (Exception e) {
+			Reporter.log("wait timeout for web element", 0, true);
+		}
+
+	}
 
 }

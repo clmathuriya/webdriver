@@ -166,6 +166,9 @@ public class ReportPage {
 		executor.verifyTrue(getRecomendationsSection().isDisplayed(), "verify recommendations section displayed");
 		executor.verifyTrue(getQuestionsWisePerformance().isDisplayed(), "verify questions wise performance displayed");
 		executor.mouseClick(getDashBoardButton());
+		
+		executor.refresh();
+		
 		executor.softWaitForWebElement(getPerformanceSection());
 		executor.verifyTrue(getPerformanceSection().isDisplayed(),
 				"verify performance section displayed on report page");
@@ -173,7 +176,8 @@ public class ReportPage {
 		getNotificationsButton().click();
 		String notificationItemText = getNotificationItem().getText().toLowerCase();
 		executor.verifyTrue(
-				notificationItemText.contains(user.get("subject")) && notificationItemText.contains("completed"),
+				(notificationItemText.contains(user.get("subject")) || notificationItemText.contains("custom test"))
+						&& (notificationItemText.contains("completed")||notificationItemText.contains("available")),
 
 		"verify notification item contains test completed for subject" + user.get("subject"));
 	}

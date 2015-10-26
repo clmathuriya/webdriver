@@ -3,6 +3,7 @@ package com.plancess.selenium.pages;
 import java.io.File;
 import java.util.Map;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -28,9 +29,10 @@ public class ProfilePage {
 	// WebElement myImg;
 	WebElement fileInput;
 
-	@FindBy(css = "input[name='tel']")
+	
+	@FindBy(xpath = ".//*[@class='selected-flag']")
 	WebElement mobileCountryCode;
-
+	
 	@FindBy(css = "input[name='tel']")
 	WebElement mobile;
 
@@ -57,7 +59,7 @@ public class ProfilePage {
 
 	@FindBy(css = "div.toast-message")
 	WebElement toastMessage;
-	
+
 	@FindBy(xpath = "//*[@ng-show='alertShow']")
 	WebElement alertMessage;
 
@@ -144,10 +146,6 @@ public class ProfilePage {
 		return fileInput;
 	}
 
-	public WebElement getMobileCountryCode() {
-		return mobileCountryCode;
-	}
-
 	public WebElement getNotify_by_email_switch() {
 		return notify_by_email_switch;
 	}
@@ -155,7 +153,7 @@ public class ProfilePage {
 	public WebElement getFirstName() {
 		return firstName;
 	}
-	
+
 	public WebElement getAlertMessage() {
 		return alertMessage;
 	}
@@ -171,6 +169,11 @@ public class ProfilePage {
 	public WebElement getMobile() {
 		return mobile;
 	}
+
+	public WebElement getMobileCountryCode() {
+		return mobileCountryCode;
+	}
+	
 
 	public WebElement getDob() {
 		return dob;
@@ -216,22 +219,26 @@ public class ProfilePage {
 
 	public ProfilePage updateUserProfile(Map<String, String> user) {
 		executor.clear(firstName, "firstName");
-		// firstName.clear();
-		executor.sendKeys(firstName, user.get("firstName"), "firstName");
 
-		// firstName.clear();
-		// firstName.sendKeys(user.get("firstName"));
+		executor.sendKeys(firstName, user.get("firstName"), "firstName");
 
 		executor.clear(lastName, "lastName");
 		executor.sendKeys(lastName, user.get("lastName"), "lastName");
 
-		// lastName.clear();
-		// lastName.sendKeys(user.get("lastName"));
+		executor.clear(mobile, "mobile");
+		executor.click(mobileCountryCode, "Mobile Country Code");
+		
+		if(!user.get("mobile_Country_Code").equals("")){
+			WebElement mobileCountryCodeElement = executor.getElement(By.xpath("//span[.='" + user.get("mobile_Country_Code") + "']"));
+			executor.click(mobileCountryCodeElement, "mobileCountryCode");
+		}else if(!user.get("mobile_Country").equals("")){
+			WebElement mobileCountryElement = executor.getElement(By.xpath("//span[.='" + user.get("mobile_Country") + "']"));
+			executor.click(mobileCountryElement, "mobileCountry");
+		}
+		
+		//executor.clear(mobile, "mobile");
+		executor.sendKeys(mobile, user.get("mobile"), "mobile");
 
-		/*
-		 * executor.clear(mobile, "mobile"); executor.sendKeys(mobile,
-		 * user.get("mobile"), "mobile");
-		 */
 		// mobile.clear();
 		// mobile.sendKeys(user.get("mobile"));
 
@@ -245,10 +252,10 @@ public class ProfilePage {
 		while (!notify_exam_prep_checkbox.isSelected() && trycount <= 5) {
 
 			try {
-				
+
 				actions.click(notify_exam_prep_checkbox).build().perform();
 				trycount++;
-				
+
 			} catch (Exception e) {
 				trycount++;
 			}
@@ -270,7 +277,7 @@ public class ProfilePage {
 		if (getNotify_by_email_switch().getAttribute("aria-checked").equals("false")
 				^ (user.get("emailNotification").equalsIgnoreCase("No"))) {
 
-			executor.click(getNotify_by_email(),"Email Notification");
+			executor.click(getNotify_by_email(), "Email Notification");
 		}
 
 		// notify_by_email_switch.click();
