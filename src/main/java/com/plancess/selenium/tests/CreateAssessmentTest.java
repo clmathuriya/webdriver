@@ -111,17 +111,12 @@ public class CreateAssessmentTest extends BaseTest {
 			}
 
 			if (sub_Module != "") {
-				// executor.getElement(By.xpath("//span[.='" + module +
-				// "']")).click();
-				// executor.getElement(By.xpath("//span[.='" + module +
-				// "']")).click();
-				// executor.getElement(By.xpath("//span[normalize-space(.)='" +
-				// sub_Module + "']")).click();
+				
 				executor.getElement(By.xpath("//input[@name='" + sub_Module + "']")).click();
 			} else {
 				// executor.getElement(By.xpath("//span[normalize-space(.)='" +
 				// module + "']")).click();
-				executor.getElement(By.xpath("//input[@name='" + module + "']")).click();
+				executor.getElement(By.xpath("//input[@name='"+module+"']")).click();
 			}
 
 			String selectedTopics = "";
