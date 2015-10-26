@@ -12,6 +12,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.Reporter;
@@ -396,6 +397,23 @@ public class Executioner {
 		try {
 			startTime = stopWatch.getTime();
 			driver.navigate().refresh();
+			addStep(startTime, stopWatch.getTime() - startTime, "refresh page", "Pass", util.takeScreenshot(driver));
+			
+		} catch (Exception e) {
+			Reporter.log("wait timeout for web element", 0, true);
+		}
+
+	}
+	
+	public void selectFromDropDown(WebElement element,String typeOfSelection, String valueToBeSelected) {
+		try {
+			startTime = stopWatch.getTime();
+			if(typeOfSelection.equalsIgnoreCase("value")){
+				new Select(element).selectByValue(valueToBeSelected);
+			}else{
+				new Select(element).selectByVisibleText(valueToBeSelected);
+			}
+				
 			addStep(startTime, stopWatch.getTime() - startTime, "refresh page", "Pass", util.takeScreenshot(driver));
 			
 		} catch (Exception e) {

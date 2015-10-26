@@ -31,14 +31,8 @@ import com.plancess.selenium.utils.Verifications;
 
 public class UserProfileTest extends BaseTest {
 
-	// private WebDriver driver;
-	// private HomePage homePage;
-	// private LoginPage loginPage;
 	private String pageTitle = "Plancess Dashboard";
-	// private WebDriverWait wait;
-	// private Executioner executor;
 	private ProfilePage userProfile;
-
 	private Dashboard dashboard;
 
 	
@@ -54,7 +48,7 @@ public class UserProfileTest extends BaseTest {
 		userProfile = dashboard.navigateToUserProfile();
 		executor.softWaitForWebElement(userProfile.getFirstName());
 		userProfile.updateUserProfile(user);
-		// executor.softWaitForWebElement(userProfile.getAlertMessage());
+		
 		executor.softWaitForCondition(new ExpectedCondition<Boolean>() {
 
 			@Override
