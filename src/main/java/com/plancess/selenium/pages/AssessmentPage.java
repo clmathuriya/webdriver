@@ -14,6 +14,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 import com.plancess.selenium.executor.Executioner;
+import com.plancess.selenium.utils.Config;
 
 public class AssessmentPage {
 	private final WebDriver driver;
@@ -158,8 +159,8 @@ public class AssessmentPage {
 		// new Executioner(driver).navigateToURL(url);
 		PageFactory.initElements(driver, this);
 		executor.softWaitForCondition(ExpectedConditions.titleIs("Preplane Dashboard"));
-		if (!"Preplane Dashboard".equals(driver.getTitle().trim())) {
-			throw new IllegalStateException("This is not  the Plancess Dashboard page");
+		if (!Config.ASSESSMENT_TITLE.equals(driver.getTitle().trim())) {
+			throw new IllegalStateException("This is not  the Plancess Assessment page");
 		}
 
 	}

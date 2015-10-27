@@ -10,6 +10,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.plancess.selenium.executor.Executioner;
+import com.plancess.selenium.utils.Config;
 
 public class ReportPage {
 	private final WebDriver driver;
@@ -64,8 +65,8 @@ public class ReportPage {
 		this.executor = new Executioner(driver, wait);
 		PageFactory.initElements(driver, this);
 		// new Executioner(driver).navigateToURL(url);
-		if (!"Preplane Dashboard".equals(driver.getTitle())) {
-			throw new IllegalStateException("This is not  the Plancess Dashboard page");
+		if (!Config.REPORT_TITLE.equals(driver.getTitle())) {
+			throw new IllegalStateException("This is not  the Plancess Report page");
 		}
 
 	}
@@ -166,9 +167,9 @@ public class ReportPage {
 		executor.verifyTrue(getRecomendationsSection().isDisplayed(), "verify recommendations section displayed");
 		executor.verifyTrue(getQuestionsWisePerformance().isDisplayed(), "verify questions wise performance displayed");
 		executor.mouseClick(getDashBoardButton());
-		
+
 		executor.refresh();
-		
+
 		executor.softWaitForWebElement(getPerformanceSection());
 		executor.verifyTrue(getPerformanceSection().isDisplayed(),
 				"verify performance section displayed on report page");
@@ -177,7 +178,7 @@ public class ReportPage {
 		String notificationItemText = getNotificationItem().getText().toLowerCase();
 		executor.verifyTrue(
 				(notificationItemText.contains(user.get("subject")) || notificationItemText.contains("custom test"))
-						&& (notificationItemText.contains("completed")||notificationItemText.contains("available")),
+						&& (notificationItemText.contains("completed") || notificationItemText.contains("available")),
 
 		"verify notification item contains test completed for subject" + user.get("subject"));
 	}

@@ -8,6 +8,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.plancess.selenium.executor.Executioner;
+import com.plancess.selenium.utils.Config;
 
 public class HomePage {
 	private final WebDriver driver;
@@ -38,7 +39,7 @@ public class HomePage {
 		this.driver = driver;
 		this.wait = wait;
 		new Executioner(driver, wait).navigateToURL(url);
-		if (!"Plancess Dashboard".equals(driver.getTitle())) {
+		if (!Config.DASHBOARD_TITLE.equals(driver.getTitle())) {
 			throw new IllegalStateException("This is not  the Plancess Home page");
 		}
 		PageFactory.initElements(driver, this);

@@ -10,6 +10,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.plancess.selenium.executor.Executioner;
+import com.plancess.selenium.utils.Config;
 
 public class SecurityPage {
 	private final WebDriver driver;
@@ -78,7 +79,7 @@ public class SecurityPage {
 		this.actions = new Actions(driver);
 		this.executor = new Executioner(driver, wait);
 
-		if (!"Preplane Dashboard".equals(driver.getTitle())) {
+		if (!Config.PROFILE_TITLE.equals(driver.getTitle())) {
 			throw new IllegalStateException("This is not  the user security page");
 		}
 		PageFactory.initElements(driver, this);
