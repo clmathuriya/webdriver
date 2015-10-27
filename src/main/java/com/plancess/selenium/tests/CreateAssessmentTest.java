@@ -48,9 +48,9 @@ public class CreateAssessmentTest extends BaseTest {
 				util.takeScreenshot(driver, "verify number of total questions"));
 
 		executor.click(dashboard.getStartTest(), "Start The Test");
-		//dashboard.getStartTest().click();
+		// dashboard.getStartTest().click();
 		executor.softWaitForWebElement(dashboard.getNextButton());
-		
+
 		assessmentPage = new AssessmentPage(driver, wait);
 		assessmentPage.takeAssessment(user);
 
@@ -84,10 +84,10 @@ public class CreateAssessmentTest extends BaseTest {
 				// createAssessment.getsubjectPhysicsLink().click();
 				break;
 			case "chemistry":
-				executor.softWaitForWebElement(createAssessment.getsubjectChemistryLink(),"wait for chemistry link");
-				//wait.until(ExpectedConditions.visibilityOf(createAssessment.getsubjectChemistryLink()));
+				executor.softWaitForWebElement(createAssessment.getsubjectChemistryLink(), "wait for chemistry link");
+				// wait.until(ExpectedConditions.visibilityOf(createAssessment.getsubjectChemistryLink()));
 				executor.click(createAssessment.getsubjectChemistryLink(), "Chemistry Link");
-				//createAssessment.getsubjectChemistryLink().click();
+				// createAssessment.getsubjectChemistryLink().click();
 				break;
 			case "math":
 			case "maths":
@@ -101,22 +101,26 @@ public class CreateAssessmentTest extends BaseTest {
 				Assert.fail("Subject :" + user.get("subject") + "not found");
 
 			}
+			WebElement toggleModule = executor.softWaitForWebElement(ExpectedConditions
+					.presenceOfElementLocated(By.xpath("//*[normalize-space(.)='" + module + "']/../a")));
 
-			WebElement toggleModule = executor.getElement(By.xpath("//*[normalize-space(.)='" + module + "']/../a"));
+			// WebElement toggleModule =
+			// executor.getElement(By.xpath("//*[normalize-space(.)='" + module
+			// + "']/../a"));
 
 			if (toggleModule.findElement(By.tagName("span")).getAttribute("class").contains("plus")
 					&& sub_Module.length() > 0) {
 				executor.click(toggleModule, module);
-				//toggleModule.click();
+				// toggleModule.click();
 			}
 
 			if (sub_Module != "") {
-				
+
 				executor.getElement(By.xpath("//input[@name='" + sub_Module + "']")).click();
 			} else {
 				// executor.getElement(By.xpath("//span[normalize-space(.)='" +
 				// module + "']")).click();
-				executor.getElement(By.xpath("//input[@name='"+module+"']")).click();
+				executor.getElement(By.xpath("//input[@name='" + module + "']")).click();
 			}
 
 			String selectedTopics = "";

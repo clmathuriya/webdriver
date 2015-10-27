@@ -11,6 +11,8 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.plancess.selenium.utils.Config;
+
 public class CreateAccessment {
 	private final WebDriver driver;
 	private WebDriverWait wait;
@@ -50,8 +52,6 @@ public class CreateAccessment {
 
 	@FindBy(xpath = "//*[@ng-click='createTest()']")
 	WebElement createTest;
-	
-
 
 	@FindBys(value = { @FindBy(xpath = ".//*[@ng-if='subject.selected']") })
 	List<WebElement> topicsSelected;
@@ -62,9 +62,9 @@ public class CreateAccessment {
 		this.actions = new Actions(driver);
 
 		PageFactory.initElements(driver, this);
-		wait.until(ExpectedConditions.titleIs("Preplane Dashboard"));
-		if (!"Preplane Dashboard".equals(driver.getTitle())) {
-			throw new IllegalStateException("This is not  the Plancess Dashboard page");
+		wait.until(ExpectedConditions.titleIs(Config.CUSTOM_TEST_TITLE));
+		if (!Config.CUSTOM_TEST_TITLE.equals(driver.getTitle())) {
+			throw new IllegalStateException("This is not  the Custom Test page");
 		}
 
 	}
@@ -108,6 +108,7 @@ public class CreateAccessment {
 	public List<WebElement> getTopicsSelected() {
 		return topicsSelected;
 	}
+
 	public Actions getActions() {
 		return actions;
 	}

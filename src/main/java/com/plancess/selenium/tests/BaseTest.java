@@ -52,7 +52,7 @@ public class BaseTest {
 
 	@Parameters({ "host_ip", "port", "os", "browser", "browserVersion", "useProxy" })
 	@BeforeMethod
-	public void setUp(@Optional("localhost") String host, @Optional("4444") String port, @Optional("WINDOWS") String os,
+	public void setUp(@Optional("localhost") String host, @Optional("4444") String port, @Optional("LINUX") String os,
 			@Optional("firefox") String browser, @Optional("40.0") String browserVersion,
 			@Optional("false") String useProxy, @Optional Method method) {
 

@@ -3,8 +3,9 @@ package com.plancess.selenium.utils;
 public class Config {
 
 	private Config instance = null;
-	
-	public String pageTitle = "Preplane Dashboard";
+
+	public static String DASHBOARD_TITLE = "Dashboard - Preplane";
+	public static String CUSTOM_TEST_TITLE = "Custom Test - Preplane";
 
 	public Config getInstance() {
 		if (instance != null) {
@@ -12,6 +13,5 @@ public class Config {
 		}
 		return instance;
 	}
-	
 
 }

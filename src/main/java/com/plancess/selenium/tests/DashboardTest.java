@@ -24,12 +24,15 @@ public class DashboardTest extends BaseTest {
 		signUpDialogPage.signUp(user);
 		dashboard = signUpDialogPage.verifyEmail(user).doLogin(user);
 		executor.softWaitForWebElement(dashboard.getDashBoardButton());
-		executor.mouseClick(dashboard.getDashBoardButton());
+		if (dashboard.getDashBoardButton().isDisplayed())
+			executor.click(dashboard.getDashBoardButton(), "dashboard button");
 		executor.verifyTrue(dashboard.getNotificationsButton().isDisplayed(), "verify notifications button displayed");
 
 		executor.verifyTrue(dashboard.getToggleDropDown().isDisplayed(), "verify toggle dropdown displayed");
 
-		executor.verifyTrue(dashboard.getPlancessHeaderLogo().isDisplayed(), "verify toggle dropdown displayed");
+		executor.verifyTrue(
+				dashboard.getPlancessHeaderLogo().isDisplayed() || dashboard.getPreplaneHeaderLogoIcon().isDisplayed(),
+				"verify toggle dropdown displayed");
 		executor.softWaitForWebElement(dashboard.getAcceptChallenges().get(0));
 		executor.verifyTrue(dashboard.getAcceptChallenges().size() >= 2, "verify accept challenges displayed");
 		executor.softWaitForWebElement(dashboard.getTakeSubjectTest());

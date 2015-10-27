@@ -12,6 +12,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.plancess.selenium.executor.Executioner;
+import com.plancess.selenium.utils.Config;
 
 public class Dashboard {
 	private final WebDriver driver;
@@ -21,10 +22,13 @@ public class Dashboard {
 	private Executioner executor;
 
 	@FindBy(css = "header img[title='Preplane Logo']")
-	WebElement plancessHeaderLogo;
+	WebElement preplaneHeaderLogo;
+
+	@FindBy(css = "header img[src='images/logo-icon.png']")
+	WebElement preplaneHeaderLogoIcon;
 
 	@FindBy(css = "footer img[title='Plancess Logo']")
-	WebElement plancessFooterLogo;
+	WebElement preplaneFooterLogo;
 
 	@FindBy(css = "a[ng-click='logoutUser()']")
 	WebElement logoutLink;
@@ -165,7 +169,7 @@ public class Dashboard {
 		// new Executioner(driver).navigateToURL(url);
 		PageFactory.initElements(driver, this);
 		executor.softWaitForCondition(ExpectedConditions.titleIs("Preplane Dashboard"));
-		if (!"Preplane Dashboard".equals(driver.getTitle().trim())) {
+		if (!Config.DASHBOARD_TITLE.equals(driver.getTitle().trim())) {
 			throw new IllegalStateException("This is not  the Plancess Dashboard page");
 		}
 
@@ -178,11 +182,11 @@ public class Dashboard {
 	}
 
 	public WebElement getPlancessHeaderLogo() {
-		return plancessHeaderLogo;
+		return preplaneHeaderLogo;
 	}
 
 	public WebElement getPlancessFooterLogo() {
-		return plancessFooterLogo;
+		return preplaneFooterLogo;
 	}
 
 	public WebElement getToggleDropDown() {
@@ -215,11 +219,11 @@ public class Dashboard {
 	}
 
 	public boolean isHeaderLogoVisible() {
-		return plancessHeaderLogo.isDisplayed();
+		return preplaneHeaderLogo.isDisplayed();
 	}
 
 	public boolean isFooterLogoVisible() {
-		return plancessFooterLogo.isDisplayed();
+		return preplaneFooterLogo.isDisplayed();
 	}
 
 	public boolean isToggleDropDownVisible() {
@@ -372,6 +376,10 @@ public class Dashboard {
 
 	public WebElement getNoTopicMsg() {
 		return noTopicMsg;
+	}
+
+	public WebElement getPreplaneHeaderLogoIcon() {
+		return preplaneHeaderLogoIcon;
 	}
 
 	public LoginPage logoutUser() {
