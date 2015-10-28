@@ -410,6 +410,7 @@ public class Dashboard {
 	}
 
 	public CreateAccessment navigateToCreateAccessment() {
+		executor.softWaitForWebElement(createAccessmentButton);
 		executor.click(createAccessmentButton, "Create assessment button");
 
 		return new CreateAccessment(driver, wait);

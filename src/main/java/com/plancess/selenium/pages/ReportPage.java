@@ -170,11 +170,10 @@ public class ReportPage {
 
 		executor.refresh();
 
-		executor.softWaitForWebElement(getPerformanceSection());
-		executor.verifyTrue(getPerformanceSection().isDisplayed(),
-				"verify performance section displayed on report page");
+		executor.softWaitForWebElement(getNotificationsButton());
+
 		// to verify notification displayed for test completion
-		getNotificationsButton().click();
+		executor.click(getNotificationsButton(), "Notifications button ");
 		String notificationItemText = getNotificationItem().getText().toLowerCase();
 		executor.verifyTrue(
 				(notificationItemText.contains(user.get("subject")) || notificationItemText.contains("custom test"))

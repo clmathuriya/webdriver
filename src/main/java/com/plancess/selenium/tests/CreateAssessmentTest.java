@@ -15,6 +15,7 @@ import com.plancess.selenium.pages.CreateAccessment;
 import com.plancess.selenium.pages.Dashboard;
 import com.plancess.selenium.pages.LoginDialogPage;
 import com.plancess.selenium.pages.ReportPage;
+import com.plancess.selenium.pages.SignUpDialogPage;
 import com.plancess.selenium.utils.ExcelReader;
 
 public class CreateAssessmentTest extends BaseTest {
@@ -23,15 +24,20 @@ public class CreateAssessmentTest extends BaseTest {
 	private CreateAccessment createAssessment;
 	private ReportPage reportPage;
 	private AssessmentPage assessmentPage;
+	private SignUpDialogPage signUpDialogPage;
+	private Dashboard dashboard;
 
 	@Test(dataProvider = "createAssessmentDataProvider", groups = { "smoke", "regression" })
 	public void CreateAssessmentWithValidDataTest(Map<String, String> user) {
-		loginDialogPage = landingPage.openLoginDialogPage();
-		Dashboard dashboard = loginDialogPage.doLogin(user);
-		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(dashboard.getCreateAssessmentButton()));
 
-		executor.assertTrue(dashboard.getCreateAssessmentButton().isDisplayed(),
-				util.takeScreenshot(driver, "assert user login succefull and start assessment section displayed"));
+		long timestamp = System.currentTimeMillis();
+
+		user.put("email", "webuser" + timestamp + "@mailinator.com");
+
+		signUpDialogPage = landingPage.openSignUpDialogPage();
+		signUpDialogPage.signUp(user);
+		dashboard = signUpDialogPage.verifyEmail(user).doLogin(user);
+		executor.softWaitForWebElement(dashboard.getDashBoardButton());
 		// executor.softWaitForWebElement(ExpectedConditions.visibilityOf(dashboard.getToggleDropDown()));
 		createAssessment = dashboard.navigateToCreateAccessment();
 		executor.softWaitForWebElement(createAssessment.getCustomTestLink());
@@ -40,8 +46,11 @@ public class CreateAssessmentTest extends BaseTest {
 		executor.click(createAssessment.getCreateTest(), "Begin Test");
 		// createAssessment.getCreateTest().click();
 		// -------------
-
 		executor.softWaitForWebElement(dashboard.getStartTest());
+		executor.assertTrue(!executor.isElementExist(By.xpath("//*[@ng-if='noTopic']")),
+				"Verify if no more tests exist for this subject");
+
+		
 		executor.verifyEquals(dashboard.getTimeRequired().getText().trim(), user.get("timeRequired").trim(),
 				util.takeScreenshot(driver, "verify time required"));
 		executor.verifyEquals(dashboard.getTotalQuestions().getText().trim(), user.get("totalQuestions"),
@@ -132,13 +141,15 @@ public class CreateAssessmentTest extends BaseTest {
 			executor.assertTrue(selectedTopics.contains(sub_Module) && selectedTopics.contains(module),
 					util.takeScreenshot(driver, "verify topic selected"));
 
+			
 		}
 		executor.getElement(By.xpath("//label[normalize-space(.)='" + user.get("ExamType") + "']/input")).click();
 
 		// executor.getElement(By.xpath("//label[normalize-space(.)='"
 		// +user.get("ExamType")+ "']/input")).click();
+		executor.selectFromDropDown(createAssessment.getExamDurationDropDown(), "text", user.get("TestDuration"));
 
-		new Select(createAssessment.getExamDurationDropDown()).selectByVisibleText(user.get("TestDuration"));
+		//new Select(createAssessment.getExamDurationDropDown()).selectByVisibleText(user.get("TestDuration"));
 
 		executor.getElement(By.xpath("//span[.='" + user.get("DifficultyLevel") + "']")).click();
 

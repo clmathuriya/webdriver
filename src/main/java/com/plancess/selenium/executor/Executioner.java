@@ -414,7 +414,8 @@ public class Executioner {
 				new Select(element).selectByVisibleText(valueToBeSelected);
 			}
 
-			addStep(startTime, stopWatch.getTime() - startTime, "refresh page", "Pass", util.takeScreenshot(driver));
+			addStep(startTime, stopWatch.getTime() - startTime, "Select " + valueToBeSelected + " from drop down",
+					"Pass", util.takeScreenshot(driver));
 
 		} catch (Exception e) {
 			Reporter.log("wait timeout for web element", 0, true);

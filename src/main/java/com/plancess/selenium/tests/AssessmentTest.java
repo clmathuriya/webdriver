@@ -10,6 +10,7 @@ import org.testng.annotations.Test;
 import com.plancess.selenium.pages.AssessmentPage;
 import com.plancess.selenium.pages.Dashboard;
 import com.plancess.selenium.pages.ReportPage;
+import com.plancess.selenium.pages.SignUpDialogPage;
 import com.plancess.selenium.utils.ExcelReader;
 
 public class AssessmentTest extends BaseTest {
@@ -17,6 +18,7 @@ public class AssessmentTest extends BaseTest {
 	private Dashboard dashboard;
 	private ReportPage reportPage;
 	private AssessmentPage assessmentPage;
+	private SignUpDialogPage signUpDialogPage;
 
 	@Test(dataProvider = "noMoreTestDataProvider", groups = { "regression" })
 	public void noMoreTestErorTest(Map<String, String> user) {
@@ -62,7 +64,14 @@ public class AssessmentTest extends BaseTest {
 	@Test(dataProvider = "takeTestValidData", groups = { "smoke", "regression" })
 	public void takeTestWithValidDataTest(Map<String, String> user) {
 
-		dashboard = landingPage.openLoginDialogPage().doLogin(user);
+		long timestamp = System.currentTimeMillis();
+
+		user.put("email", "webuser" + timestamp + "@mailinator.com");
+
+		signUpDialogPage = landingPage.openSignUpDialogPage();
+		signUpDialogPage.signUp(user);
+		dashboard = signUpDialogPage.verifyEmail(user).doLogin(user);
+		executor.softWaitForWebElement(dashboard.getDashBoardButton());
 
 		executor.assertTrue(dashboard.getStartAssessmentSection().isDisplayed(),
 				"assert user login succefull and start assessment section displayed");
