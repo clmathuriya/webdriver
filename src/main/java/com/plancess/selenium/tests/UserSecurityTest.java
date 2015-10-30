@@ -49,7 +49,18 @@ public class UserSecurityTest extends BaseTest {
 		user.put("newPassword", currentPassword);
 		user.put("confirmPassword", currentPassword);
 		userSecurity.updateUserSecurity(user);
-		executor.softWaitForWebElement(userSecurity.getAlertMessage());
+		executor.softWaitForCondition(new ExpectedCondition<Boolean>() {
+
+			@Override
+			public Boolean apply(WebDriver driver) {
+				System.out.println(userSecurity.getAlertMessage().getAttribute("alert-message")
+						+ userSecurity.getAlertMessage().getText());
+
+				return (userSecurity.getAlertMessage().getAttribute("alert-message")
+						+ userSecurity.getAlertMessage().getText())
+								.contains("Your password has been changed successfully");
+			}
+		});
 
 		executor.assertEquals(
 				userSecurity.getAlertMessage().getAttribute("alert-message") + userSecurity.getAlertMessage().getText(),

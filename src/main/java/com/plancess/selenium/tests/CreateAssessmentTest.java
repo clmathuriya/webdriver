@@ -3,7 +3,9 @@ package com.plancess.selenium.tests;
 import java.util.Map;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
@@ -39,6 +41,7 @@ public class CreateAssessmentTest extends BaseTest {
 		dashboard = signUpDialogPage.verifyEmail(user).doLogin(user);
 		executor.softWaitForWebElement(dashboard.getDashBoardButton());
 		// executor.softWaitForWebElement(ExpectedConditions.visibilityOf(dashboard.getToggleDropDown()));
+
 		createAssessment = dashboard.navigateToCreateAccessment();
 		executor.softWaitForWebElement(createAssessment.getCustomTestLink());
 		selectCustomTest(user);
@@ -50,7 +53,6 @@ public class CreateAssessmentTest extends BaseTest {
 		executor.assertTrue(!executor.isElementExist(By.xpath("//*[@ng-if='noTopic']")),
 				"Verify if no more tests exist for this subject");
 
-		
 		executor.verifyEquals(dashboard.getTimeRequired().getText().trim(), user.get("timeRequired").trim(),
 				util.takeScreenshot(driver, "verify time required"));
 		executor.verifyEquals(dashboard.getTotalQuestions().getText().trim(), user.get("totalQuestions"),
@@ -123,7 +125,7 @@ public class CreateAssessmentTest extends BaseTest {
 				// toggleModule.click();
 			}
 
-			if (sub_Module != "") {
+			if (!sub_Module.isEmpty()) {
 
 				executor.getElement(By.xpath("//input[@name='" + sub_Module + "']")).click();
 			} else {
@@ -131,6 +133,17 @@ public class CreateAssessmentTest extends BaseTest {
 				// module + "']")).click();
 				executor.getElement(By.xpath("//input[@name='" + module + "']")).click();
 			}
+
+			final String MODULE = module;
+			executor.softWaitForCondition(new ExpectedCondition<Boolean>() {
+
+				@Override
+				public Boolean apply(WebDriver driver) {
+
+					String selectedSubjects = createAssessment.getTopicsSelected().get(0).getAttribute("innerHTML");
+					return selectedSubjects.contains(MODULE);
+				}
+			});
 
 			String selectedTopics = "";
 			for (WebElement e : createAssessment.getTopicsSelected()) {
@@ -141,7 +154,6 @@ public class CreateAssessmentTest extends BaseTest {
 			executor.assertTrue(selectedTopics.contains(sub_Module) && selectedTopics.contains(module),
 					util.takeScreenshot(driver, "verify topic selected"));
 
-			
 		}
 		executor.getElement(By.xpath("//label[normalize-space(.)='" + user.get("ExamType") + "']/input")).click();
 
@@ -149,7 +161,8 @@ public class CreateAssessmentTest extends BaseTest {
 		// +user.get("ExamType")+ "']/input")).click();
 		executor.selectFromDropDown(createAssessment.getExamDurationDropDown(), "text", user.get("TestDuration"));
 
-		//new Select(createAssessment.getExamDurationDropDown()).selectByVisibleText(user.get("TestDuration"));
+		// new
+		// Select(createAssessment.getExamDurationDropDown()).selectByVisibleText(user.get("TestDuration"));
 
 		executor.getElement(By.xpath("//span[.='" + user.get("DifficultyLevel") + "']")).click();
 

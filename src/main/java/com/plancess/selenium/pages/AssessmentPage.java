@@ -97,8 +97,8 @@ public class AssessmentPage {
 	@FindBy(xpath = "//*[@ng-click='nextQues(false)']")
 	WebElement previousButton;
 
-	@FindBy(xpath = "//button[@ng-click='pauseTest(true)']")
-	WebElement pauseTestButton;
+	// @FindBy(xpath = "//button[@ng-click='pauseTest(true)']")
+	WebElement pause;
 
 	@FindBy(xpath = "//button[@ng-click='pauseTest(false)']")
 	WebElement submitTestButton;
@@ -150,6 +150,8 @@ public class AssessmentPage {
 
 	@FindBy(xpath = "//*[.='UPCOMING TESTS']")
 	WebElement upcomingTests;
+	@FindBy(xpath = "//*[.=\"I'm not interested\"]")
+	WebElement notInterestedButton;
 
 	public AssessmentPage(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
@@ -158,9 +160,13 @@ public class AssessmentPage {
 		executor = new Executioner(driver, wait);
 		// new Executioner(driver).navigateToURL(url);
 		PageFactory.initElements(driver, this);
-		executor.softWaitForCondition(ExpectedConditions.titleIs("Preplane Dashboard"));
+		executor.softWaitForCondition(ExpectedConditions.titleIs(Config.ASSESSMENT_TITLE));
 		if (!Config.ASSESSMENT_TITLE.equals(driver.getTitle().trim())) {
 			throw new IllegalStateException("This is not  the Plancess Assessment page");
+		}
+		executor.softWaitForWebElement(notInterestedButton);
+		if (executor.isElementExist(notInterestedButton) && notInterestedButton.isDisplayed()) {
+			executor.click(notInterestedButton, "not interested button");
 		}
 
 	}
@@ -288,9 +294,6 @@ public class AssessmentPage {
 		return remainingTime;
 	}
 
-	/*
-	 * public List<WebElement> getAnswerChoicesA() { return answerChoicesA; }
-	 */
 	public WebElement getAnswerChoicesA() {
 		return answerChoicesA;
 	}
@@ -316,7 +319,7 @@ public class AssessmentPage {
 	}
 
 	public WebElement getPauseTestButton() {
-		return pauseTestButton;
+		return pause;
 	}
 
 	public WebElement getSubmitTestButton() {

@@ -82,7 +82,8 @@ public class BaseTest {
 		landingPage = new LandingPage(driver, wait);
 		util = Util.getInstance();
 
-		driver.manage().window().setSize(new Dimension(1366, 768));
+		// driver.manage().window().setSize(new Dimension(1920, 1080));
+		// driver.manage().window().maximize();
 
 	}
 

@@ -141,7 +141,7 @@ public class Executioner {
 		} catch (Exception exception) {
 			addStep(startTime, stopWatch.getTime() - startTime, "Click on " + elementName, "Failed",
 					util.takeScreenshot(driver));
-			Assert.fail("unable to click on " + elementName);
+			Assert.fail("unable to click on " + elementName + " exception :" + exception.getMessage());
 			return this;
 
 		}

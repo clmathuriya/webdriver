@@ -11,12 +11,15 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.plancess.selenium.executor.Executioner;
 import com.plancess.selenium.utils.Config;
 
 public class CreateAccessment {
-	private final WebDriver driver;
+
+	private WebDriver driver;
 	private WebDriverWait wait;
 	private Actions actions;
+	private Executioner executor;
 
 	WebElement CreateAccessment;
 
@@ -53,18 +56,25 @@ public class CreateAccessment {
 	@FindBy(xpath = "//*[@ng-click='createTest()']")
 	WebElement createTest;
 
-	@FindBys(value = { @FindBy(xpath = ".//*[@ng-if='subject.selected']") })
+	@FindBys(value = { @FindBy(xpath = ".//*[@ng-if='subject.selected' and @class='angular-ui-tree-node']") })
 	List<WebElement> topicsSelected;
+	@FindBy(xpath = "//a[.=\"I'm not interested\"]")
+	WebElement notInterestedButton;
 
 	public CreateAccessment(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
 		this.wait = wait;
 		this.actions = new Actions(driver);
+		executor = new Executioner(driver, wait);
 
 		PageFactory.initElements(driver, this);
-		wait.until(ExpectedConditions.titleIs(Config.CUSTOM_TEST_TITLE));
-		if (!Config.CUSTOM_TEST_TITLE.equals(driver.getTitle())) {
+		executor.softWaitForCondition(ExpectedConditions.titleIs(Config.CUSTOM_TEST_TITLE));
+		if (!Config.CUSTOM_TEST_TITLE.equals(driver.getTitle().trim())) {
 			throw new IllegalStateException("This is not  the Custom Test page");
+		}
+		executor.softWaitForWebElement(notInterestedButton);
+		if (executor.isElementExist(notInterestedButton) && notInterestedButton.isDisplayed()) {
+			executor.click(notInterestedButton, "not interested button");
 		}
 
 	}

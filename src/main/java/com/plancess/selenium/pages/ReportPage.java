@@ -57,6 +57,8 @@ public class ReportPage {
 
 	@FindBy(xpath = "//*[@ng-show='bell']")
 	WebElement notificationsButton;
+	@FindBy(xpath = "//a[.=\"I'm not interested\"]")
+	WebElement notInterestedButton;
 
 	public ReportPage(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
@@ -67,6 +69,10 @@ public class ReportPage {
 		// new Executioner(driver).navigateToURL(url);
 		if (!Config.REPORT_TITLE.equals(driver.getTitle())) {
 			throw new IllegalStateException("This is not  the Plancess Report page");
+		}
+		executor.softWaitForWebElement(notInterestedButton);
+		if (executor.isElementExist(notInterestedButton) && notInterestedButton.isDisplayed()) {
+			executor.click(notInterestedButton, "not interested button");
 		}
 
 	}
@@ -174,7 +180,7 @@ public class ReportPage {
 
 		// to verify notification displayed for test completion
 		executor.click(getNotificationsButton(), "Notifications button ");
-		String notificationItemText = getNotificationItem().getText().toLowerCase();
+		String notificationItemText = getNotificationItem().getAttribute("innerHTML").toLowerCase();
 		executor.verifyTrue(
 				(notificationItemText.contains(user.get("subject")) || notificationItemText.contains("custom test"))
 						&& (notificationItemText.contains("completed") || notificationItemText.contains("available")),
