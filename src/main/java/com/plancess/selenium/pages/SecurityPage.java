@@ -7,6 +7,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.plancess.selenium.executor.Executioner;
@@ -160,6 +161,8 @@ public class SecurityPage {
 
 	public SecurityPage updateUserSecurity(Map<String, String> user) {
 
+		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(currentPassword));
+		executor.click(currentPassword, "current password");
 		executor.clear(currentPassword, "current password");
 		executor.sendKeys(currentPassword, user.get("currentPassword"), "current password");
 

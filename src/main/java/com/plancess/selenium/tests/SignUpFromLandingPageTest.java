@@ -81,9 +81,9 @@ public class SignUpFromLandingPageTest extends BaseTest {
 
 		signUpDialogPage.fillSignUpForm(user);
 		executor.verifyEquals(signUpDialogPage.getPasswordErrorMessage().getText(), passwordError,
-				util.takeScreenshot(driver, "assert password error message for invalid password values"));
+				"assert password error message for invalid password values");
 		executor.assertEquals(signUpDialogPage.getSubmit().getAttribute("disabled"), "true",
-				util.takeScreenshot(driver, "assert submit button disabled for invalid password values"));
+				"assert submit button disabled for invalid password values");
 
 	}
 

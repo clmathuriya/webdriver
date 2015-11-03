@@ -26,7 +26,7 @@ public class ForgotPasswordDialogPage {
 	@FindBy(xpath = "//div[@class='success-message' and @id='forgotPassError']")
 	WebElement successMessage;
 
-	@FindBy(partialLinkText = "Password reset on Plancess")
+	@FindBy(xpath = "//a[contains(.,'Password reset on PrepLane')]")
 	WebElement plancessResetMail;
 
 	@FindBy(xpath = "//a[contains(@href,'reset-password')]")

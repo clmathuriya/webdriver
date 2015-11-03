@@ -39,6 +39,8 @@ public class CreateAssessmentTest extends BaseTest {
 		signUpDialogPage = landingPage.openSignUpDialogPage();
 		signUpDialogPage.signUp(user);
 		dashboard = signUpDialogPage.verifyEmail(user).doLogin(user);
+		// user.put("email", "clmathuriya@gmail.com");
+		// dashboard = landingPage.openLoginDialogPage().doLogin(user);
 		executor.softWaitForWebElement(dashboard.getDashBoardButton());
 		// executor.softWaitForWebElement(ExpectedConditions.visibilityOf(dashboard.getToggleDropDown()));
 
@@ -54,9 +56,9 @@ public class CreateAssessmentTest extends BaseTest {
 				"Verify if no more tests exist for this subject");
 
 		executor.verifyEquals(dashboard.getTimeRequired().getText().trim(), user.get("timeRequired").trim(),
-				util.takeScreenshot(driver, "verify time required"));
+				"verify time required");
 		executor.verifyEquals(dashboard.getTotalQuestions().getText().trim(), user.get("totalQuestions"),
-				util.takeScreenshot(driver, "verify number of total questions"));
+				"verify number of total questions");
 
 		executor.click(dashboard.getStartTest(), "Start The Test");
 		// dashboard.getStartTest().click();
@@ -89,9 +91,11 @@ public class CreateAssessmentTest extends BaseTest {
 			switch (subject.toLowerCase()) {
 
 			case "physics":
-				executor.softWaitForWebElement(createAssessment.getsubjectPhysicsLink(), "wait for physics link");
+				executor.softWaitForWebElement(
+						ExpectedConditions.elementToBeClickable(createAssessment.getsubjectPhysicsLink()));
 				// wait.until(ExpectedConditions.visibilityOf(createAssessment.getsubjectPhysicsLink()));
-				executor.click(createAssessment.getsubjectPhysicsLink(), "Physics Link");
+				if (createAssessment.getsubjectPhysicsLink().isEnabled())
+					executor.mouseClick(createAssessment.getsubjectPhysicsLink());
 				// createAssessment.getsubjectPhysicsLink().click();
 				break;
 			case "chemistry":
@@ -140,7 +144,11 @@ public class CreateAssessmentTest extends BaseTest {
 				@Override
 				public Boolean apply(WebDriver driver) {
 
-					String selectedSubjects = createAssessment.getTopicsSelected().get(0).getAttribute("innerHTML");
+					String selectedSubjects = "";
+					for (WebElement e : createAssessment.getTopicsSelected()) {
+						// selectedTopics += e.getText();
+						selectedSubjects += e.getAttribute("innerHTML");
+					}
 					return selectedSubjects.contains(MODULE);
 				}
 			});
@@ -152,7 +160,7 @@ public class CreateAssessmentTest extends BaseTest {
 			}
 
 			executor.assertTrue(selectedTopics.contains(sub_Module) && selectedTopics.contains(module),
-					util.takeScreenshot(driver, "verify topic selected"));
+					"verify topic selected");
 
 		}
 		executor.getElement(By.xpath("//label[normalize-space(.)='" + user.get("ExamType") + "']/input")).click();

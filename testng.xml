@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<suite name="Plancess Web APP Suite" parallel="false">
+<suite name="Preplane Web APP Suite" parallel="false">
 
 	<listeners>
 		<listener class-name="com.plancess.selenium.reporter.PlancessReporter" />
@@ -8,20 +8,61 @@
 
 	<parameter name="browser" value="firefox" />
 	<parameter name="os" value="LINUX" />
-	<!-- <parameter name="host_ip" value="chhaganmathuriya:135ce8d8-f5af-427c-a4cd-76b2d6c50dfc@ondemand.saucelabs.com" />
-	<parameter name="port" value="80" /> -->
-	<test name="WebApp Test with Firefox on Linux">
+	<!-- <parameter name="host_ip" value="chhaganmathuriya:135ce8d8-f5af-427c-a4cd-76b2d6c50dfc@ondemand.saucelabs.com" 
+		/> <parameter name="port" value="80" /> -->
+	<test name="WebApp Smoke Test with Firefox on Linux">
+
 		<classes>
 			<class name="com.plancess.selenium.tests.BaseTest" />
-			<class name="com.plancess.selenium.tests.LoginFromLandingPageTest" />
-			<class name="com.plancess.selenium.tests.SignUpFromLandingPageTest" />
+			<class name="com.plancess.selenium.tests.LoginFromLandingPageTest">
+				<methods>
+					<include name="loginWithValidEmailPasswordTest" />
+					<include name="loginWithFacebookSuccessTest" />
+					<include name="loginWithGoogleSuccessTest" />
+				</methods>
+			</class>
+			<class name="com.plancess.selenium.tests.SignUpFromLandingPageTest">
+				<methods>
+					<include name="signUpWithMandatoryFieldsTest" />
+				</methods>
+			</class>
 			<class name="com.plancess.selenium.tests.DashboardTest" />
 			<class name="com.plancess.selenium.tests.ResetPasswordTest" />
-			<class name="com.plancess.selenium.tests.AssessmentTest" />
-			<class name="com.plancess.selenium.tests.CreateAssessmentTest"/>
+			<class name="com.plancess.selenium.tests.AssessmentTest">
+				<methods>
+					<include name="takeTestWithValidDataTest" />
+				</methods>
+			</class>
+			<class name="com.plancess.selenium.tests.CreateAssessmentTest" />
 			<class name="com.plancess.selenium.tests.UserProfileTest" />
-			<class name="com.plancess.selenium.tests.UserSecurityTest"/>
+			<class name="com.plancess.selenium.tests.UserSecurityTest" />
 		</classes>
 	</test>
+
+	<!-- <parameter name="browser" value="firefox" />
+	<parameter name="os" value="LINUX" />
+	<parameter name="host_ip" value="chhaganmathuriya:135ce8d8-f5af-427c-a4cd-76b2d6c50dfc@ondemand.saucelabs.com" 
+		/> <parameter name="port" value="80" />
+	<test name="WebApp All Tests with Firefox on Linux">
+		<groups> <run> <include name="smoke" /> </run> </groups>
+
+		<classes>
+			<class name="com.plancess.selenium.tests.BaseTest" />
+			<class name="com.plancess.selenium.tests.LoginFromLandingPageTest">
+
+			</class>
+			<class name="com.plancess.selenium.tests.SignUpFromLandingPageTest">
+
+			</class>
+			<class name="com.plancess.selenium.tests.DashboardTest" />
+			<class name="com.plancess.selenium.tests.ResetPasswordTest" />
+			<class name="com.plancess.selenium.tests.AssessmentTest">
+
+			</class>
+			<class name="com.plancess.selenium.tests.CreateAssessmentTest" />
+			<class name="com.plancess.selenium.tests.UserProfileTest" />
+			<class name="com.plancess.selenium.tests.UserSecurityTest" />
+		</classes>
+	</test> -->
 
 </suite> <!-- Suite -->

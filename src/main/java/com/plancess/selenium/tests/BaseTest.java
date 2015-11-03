@@ -35,7 +35,7 @@ public class BaseTest {
 	String endReport = "</body> </html>";
 	String endTable = "</table>";
 	public static PlancessReporter reporter;
-	String PROXY = "192.168.1.124:8090";
+	String PROXY = "localhost:8080";
 
 	protected LandingPage landingPage;
 	protected String pageTitle = "Preplane";

@@ -7,6 +7,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.plancess.selenium.executor.Executioner;
@@ -40,7 +41,7 @@ public class ReportPage {
 	WebElement toggleDropDown;
 
 	WebElement dashboard;
-	@FindBy(xpath = "(//a[@ui-sref='app.dashboard'])[2]")
+	@FindBy(css = "header img[title='Plancess Logo']")
 	WebElement dashBoardButton;
 	@FindBy(xpath = "//*[@ng-if='isNewUser']")
 	WebElement performanceSection;
@@ -70,10 +71,11 @@ public class ReportPage {
 		if (!Config.REPORT_TITLE.equals(driver.getTitle())) {
 			throw new IllegalStateException("This is not  the Plancess Report page");
 		}
-		executor.softWaitForWebElement(notInterestedButton);
-		if (executor.isElementExist(notInterestedButton) && notInterestedButton.isDisplayed()) {
-			executor.click(notInterestedButton, "not interested button");
-		}
+		// executor.softWaitForWebElement(notInterestedButton);
+		// if (executor.isElementExist(notInterestedButton) &&
+		// notInterestedButton.isDisplayed()) {
+		// executor.click(notInterestedButton, "not interested button");
+		// }
 
 	}
 
@@ -170,9 +172,14 @@ public class ReportPage {
 
 		executor.softWaitForWebElement(getTopicTitle());
 		executor.verifyTrue(getTopicTitle().isDisplayed(), "verify topic title displayed");
+		executor.softWaitForWebElement(getRecomendationsSection());
+		int count = 0;
+		while (!executor.isElementExist(getRecomendationsSection()) && count++ <= 10) {
+			driver.navigate().refresh();
+		}
 		executor.verifyTrue(getRecomendationsSection().isDisplayed(), "verify recommendations section displayed");
 		executor.verifyTrue(getQuestionsWisePerformance().isDisplayed(), "verify questions wise performance displayed");
-		executor.mouseClick(getDashBoardButton());
+		// executor.mouseClick(getDashBoardButton());
 
 		executor.refresh();
 

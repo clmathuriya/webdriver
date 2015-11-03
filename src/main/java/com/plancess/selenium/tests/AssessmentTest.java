@@ -54,7 +54,7 @@ public class AssessmentTest extends BaseTest {
 
 		}
 		executor.softWaitForWebElement(dashboard.getNoTopicMsg());
-		executor.assertTrue(executor.isElementExist(By.xpath("//*[@ng-if='noTopic']")),
+		executor.assertTrue(executor.isElementExist(By.xpath("//*[@ng-if='premiumUser']")),
 				"Verify if no more tests exist for this subject");
 
 		dashboard.logoutUser();
@@ -71,6 +71,8 @@ public class AssessmentTest extends BaseTest {
 		signUpDialogPage = landingPage.openSignUpDialogPage();
 		signUpDialogPage.signUp(user);
 		dashboard = signUpDialogPage.verifyEmail(user).doLogin(user);
+//		user.put("email", "clmathuriya@gmail.com");
+//		dashboard = landingPage.openLoginDialogPage().doLogin(user);
 		executor.softWaitForWebElement(dashboard.getDashBoardButton());
 
 		executor.assertTrue(dashboard.getStartAssessmentSection().isDisplayed(),
@@ -96,10 +98,11 @@ public class AssessmentTest extends BaseTest {
 		case "chemistry":
 			executor.softWaitForWebElement(dashboard.getChemistrySubjectSection());
 			executor.mouseClick(dashboard.getChemistrySubjectSection());
+			executor.softWaitForWebElement(dashboard.getTakeSubjectTest());
 			executor.click(dashboard.getTakeSubjectTest(), "take subject test");
 			// to test cancel button
 
-			executor.softWaitForWebElement(dashboard.getStartTest());
+			executor.softWaitForWebElement(dashboard.getCancelButton());
 			// dashboard.getStartTest().click();
 			executor.click(dashboard.getCancelButton(), "Cancel button");
 

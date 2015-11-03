@@ -255,7 +255,7 @@ public class ProfilePage {
 
 			WebElement dateDOBElement = executor.getElement(By.xpath("//a[.='" + Integer.parseInt(date) + "']"));
 			executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(dateDOBElement));
-			executor.click(dateDOBElement, "Date of DOB");
+			executor.mouseClick(dateDOBElement);
 
 		}
 

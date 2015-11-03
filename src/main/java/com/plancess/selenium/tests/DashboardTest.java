@@ -20,9 +20,12 @@ public class DashboardTest extends BaseTest {
 
 	@Test(dataProvider = "dashboardNewUserDataProvider", groups = { "smoke", "regression" })
 	public void dashboardNewUserContentTest(Map<String, String> user) {
-		signUpDialogPage = landingPage.openSignUpDialogPage();
-		signUpDialogPage.signUp(user);
-		dashboard = signUpDialogPage.verifyEmail(user).doLogin(user);
+		 signUpDialogPage = landingPage.openSignUpDialogPage();
+		 signUpDialogPage.signUp(user);
+		 dashboard = signUpDialogPage.verifyEmail(user).doLogin(user);
+
+//		user.put("email", "clmathuriya@gmail.com");
+//		dashboard = landingPage.openLoginDialogPage().doLogin(user);
 		executor.softWaitForWebElement(dashboard.getDashBoardButton());
 		if (dashboard.getDashBoardButton().isDisplayed())
 			executor.click(dashboard.getDashBoardButton(), "dashboard button");

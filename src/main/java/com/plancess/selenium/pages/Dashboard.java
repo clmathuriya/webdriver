@@ -134,7 +134,7 @@ public class Dashboard {
 	@FindBy(xpath = "//*[@ng-if='showHint']")
 	WebElement hintText;
 
-	@FindBy(xpath = "(//a[@ui-sref='app.dashboard'])[2]")
+	@FindBy(css = "header img[title='Preplane Logo']")
 	WebElement dashBoardButton;
 
 	@FindBy(xpath = "(//*[@ui-sref='usertest.customize-test'])[2]")
@@ -187,16 +187,16 @@ public class Dashboard {
 			throw new IllegalStateException("This is not  the Plancess Dashboard page");
 		}
 		driver.manage().window().maximize();
-		executor.softWaitForWebElement(notInterestedButton);
-
-		for (WebElement tourBtn : beginTour) {
-			if (tourBtn.isDisplayed()) {
-				completeTour();
-			}
-		}
-		if (executor.isElementExist(notInterestedButton) && notInterestedButton.isDisplayed()) {
-			executor.click(notInterestedButton, "Not interested button");
-		}
+//		executor.softWaitForWebElement(notInterestedButton);
+//
+//		for (WebElement tourBtn : beginTour) {
+//			if (tourBtn.isDisplayed()) {
+//				completeTour();
+//			}
+//		}
+//		if (executor.isElementExist(notInterestedButton) && notInterestedButton.isDisplayed()) {
+//			executor.click(notInterestedButton, "Not interested button");
+//		}
 
 	}
 

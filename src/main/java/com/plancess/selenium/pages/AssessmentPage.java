@@ -79,16 +79,16 @@ public class AssessmentPage {
 	@FindBy(xpath = ".//button[.='Resume Test']")
 	WebElement resumeTest;
 
-	@FindBy(xpath = "//*[normalize-space(.)='A' and @class='option-indicator']")
+	@FindBy(xpath = "//*[normalize-space(.)='A' and contains(@class,'option-indicator')]")
 	WebElement answerChoicesA;
 
-	@FindBy(xpath = "//*[normalize-space(.)='B' and @class='option-indicator']")
+	@FindBy(xpath = "//*[normalize-space(.)='B' and contains(@class,'option-indicator')]")
 	WebElement answerChoicesB;
 
-	@FindBy(xpath = "//*[normalize-space(.)='C' and @class='option-indicator']")
+	@FindBy(xpath = "//*[normalize-space(.)='C' and contains(@class,'option-indicator')]")
 	WebElement answerChoicesC;
 
-	@FindBy(xpath = "//*[normalize-space(.)='D' and @class='option-indicator']")
+	@FindBy(xpath = "//*[normalize-space(.)='D' and contains(@class,'option-indicator')]")
 	WebElement answerChoicesD;
 
 	@FindBy(xpath = "//*[@ng-click=\"goToQuestion(quesIndex, 'next'); index=quesIndex\"]")

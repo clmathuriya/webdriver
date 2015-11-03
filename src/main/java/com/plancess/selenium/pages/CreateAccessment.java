@@ -56,7 +56,7 @@ public class CreateAccessment {
 	@FindBy(xpath = "//*[@ng-click='createTest()']")
 	WebElement createTest;
 
-	@FindBys(value = { @FindBy(xpath = ".//*[@ng-if='subject.selected' and @class='angular-ui-tree-node']") })
+	@FindBys(value = { @FindBy(xpath = "//*[@class='tree-section']") })
 	List<WebElement> topicsSelected;
 	@FindBy(xpath = "//a[.=\"I'm not interested\"]")
 	WebElement notInterestedButton;
@@ -72,10 +72,10 @@ public class CreateAccessment {
 		if (!Config.CUSTOM_TEST_TITLE.equals(driver.getTitle().trim())) {
 			throw new IllegalStateException("This is not  the Custom Test page");
 		}
-		executor.softWaitForWebElement(notInterestedButton);
-		if (executor.isElementExist(notInterestedButton) && notInterestedButton.isDisplayed()) {
-			executor.click(notInterestedButton, "not interested button");
-		}
+//		executor.softWaitForWebElement(notInterestedButton);
+//		if (executor.isElementExist(notInterestedButton) && notInterestedButton.isDisplayed()) {
+//			executor.click(notInterestedButton, "not interested button");
+//		}
 
 	}
 
