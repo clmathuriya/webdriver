@@ -215,6 +215,7 @@ public class ProfilePage {
 	}
 
 	public ProfilePage updateUserProfile(Map<String, String> user) {
+		executor.softWaitForWebElement(firstName);
 		executor.clear(firstName, "firstName");
 
 		executor.sendKeys(firstName, user.get("firstName"), "firstName");
