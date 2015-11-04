@@ -41,9 +41,8 @@ public class UserSecurityTest extends BaseTest {
 								.contains("Your password has been changed successfully");
 			}
 		});
-		executor.assertEquals(
-				userSecurity.getAlertMessage().getAttribute("alert-message") + userSecurity.getAlertMessage().getText(),
-				"Your password has been changed successfully", "Your password has been changed successfully");
+		executor.assertEquals(userSecurity.getAlertMessage().getText(), "Your password has been changed successfully.",
+				"Your password has been changed successfully");
 
 		String currentPassword = user.get("currentPassword");
 		user.put("currentPassword", user.get("newPassword"));

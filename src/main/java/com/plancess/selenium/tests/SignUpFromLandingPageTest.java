@@ -14,7 +14,7 @@ import com.plancess.selenium.utils.ExcelReader;
 public class SignUpFromLandingPageTest extends BaseTest {
 
 	private SignUpDialogPage signUpDialogPage;
-	private String emailError = "Enter a valid email";
+	private String emailError = "please enter a valid email address";
 	private String passwordError = "Password must be atleast 6 characters";
 
 	@Test(alwaysRun = true, groups = { "smoke", "regression" })

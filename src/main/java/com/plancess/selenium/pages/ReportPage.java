@@ -172,12 +172,12 @@ public class ReportPage {
 
 		executor.softWaitForWebElement(getTopicTitle());
 		executor.verifyTrue(getTopicTitle().isDisplayed(), "verify topic title displayed");
-		executor.softWaitForWebElement(getRecomendationsSection());
-		int count = 0;
-		while (!executor.isElementExist(getRecomendationsSection()) && count++ <= 10) {
-			driver.navigate().refresh();
-		}
-		executor.verifyTrue(getRecomendationsSection().isDisplayed(), "verify recommendations section displayed");
+//		executor.softWaitForWebElement(getRecomendationsSection());
+//		int count = 0;
+//		while (!executor.isElementExist(getRecomendationsSection()) && count++ <= 10) {
+//			driver.navigate().refresh();
+//		}
+//		executor.verifyTrue(getRecomendationsSection().isDisplayed(), "verify recommendations section displayed");
 		executor.verifyTrue(getQuestionsWisePerformance().isDisplayed(), "verify questions wise performance displayed");
 		// executor.mouseClick(getDashBoardButton());
 

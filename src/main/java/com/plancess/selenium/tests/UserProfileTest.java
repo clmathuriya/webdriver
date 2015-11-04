@@ -43,9 +43,8 @@ public class UserProfileTest extends BaseTest {
 			}
 		});
 
-		executor.assertEquals(
-				userProfile.getAlertMessage().getAttribute("alert-message") + userProfile.getAlertMessage().getText(),
-				"Your data have been saved successfully.", "Data have been saved successfully");
+		executor.assertEquals(userProfile.getAlertMessage().getText(), "Your data have been saved successfully.",
+				"Data have been saved successfully");
 		/*
 		 * Assert.assertEquals(userProfile.getToastMessage().getText(),
 		 * "Your data have been saved successfully.",
