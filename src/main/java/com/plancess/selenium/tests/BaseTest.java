@@ -98,7 +98,8 @@ public class BaseTest {
 	@AfterMethod(alwaysRun = true)
 	public void tearDown(ITestResult testResult) {
 
-		executor.closeBrowser();
+		if (driver != null)
+			executor.closeBrowser();
 		endTable();
 	}
 
