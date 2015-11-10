@@ -60,7 +60,7 @@ public class Dashboard {
 	@FindBy(xpath = "//div[@id='MATHEMATICS']/a")
 	WebElement mathsSubjectSection;
 
-	@FindBy(xpath = "//a[.='Take Subject Test']")
+	@FindBy(xpath = "//a[normalize-space(.)='Take Subject Test']")
 	WebElement takeSubjectTest;
 
 	@FindBy(xpath = ".//button[.='Start Test']")
@@ -187,16 +187,17 @@ public class Dashboard {
 			throw new IllegalStateException("This is not  the Plancess Dashboard page");
 		}
 		driver.manage().window().maximize();
-//		executor.softWaitForWebElement(notInterestedButton);
-//
-//		for (WebElement tourBtn : beginTour) {
-//			if (tourBtn.isDisplayed()) {
-//				completeTour();
-//			}
-//		}
-//		if (executor.isElementExist(notInterestedButton) && notInterestedButton.isDisplayed()) {
-//			executor.click(notInterestedButton, "Not interested button");
-//		}
+		// executor.softWaitForWebElement(notInterestedButton);
+		//
+		// for (WebElement tourBtn : beginTour) {
+		// if (tourBtn.isDisplayed()) {
+		// completeTour();
+		// }
+		// }
+		// if (executor.isElementExist(notInterestedButton) &&
+		// notInterestedButton.isDisplayed()) {
+		// executor.click(notInterestedButton, "Not interested button");
+		// }
 
 	}
 
@@ -411,14 +412,14 @@ public class Dashboard {
 		return notInterestedButton;
 	}
 
-	public LoginPage logoutUser() {
+	public LandingPage logoutUser() {
 
 		executor.softWaitForWebElement(toggleDropDown);
 		executor.click(toggleDropDown, "Toggle dropdown");
 		executor.softWaitForWebElement(logoutLink);
 		executor.click(logoutLink, "logout link");
 
-		return new LoginPage(driver, wait);
+		return new LandingPage(driver, wait);
 
 	}
 

@@ -159,7 +159,8 @@ public class Executioner {
 		} catch (Exception exception) {
 			addStep(startTime, stopWatch.getTime() - startTime,
 					"enter text : " + text + " in text field : " + elementName, "Failed", util.takeScreenshot(driver));
-			Assert.fail("unable to enter text : " + text + " in text field : " + elementName);
+			Assert.fail("unable to enter text : " + text + " in text field : " + elementName + " exception: "
+					+ exception.getMessage());
 			return this;
 
 		}
