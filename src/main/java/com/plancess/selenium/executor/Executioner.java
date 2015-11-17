@@ -141,7 +141,7 @@ public class Executioner {
 		} catch (Exception exception) {
 			addStep(startTime, stopWatch.getTime() - startTime, "Click on " + elementName, "Failed",
 					util.takeScreenshot(driver));
-			Assert.fail("unable to click on " + elementName);
+			Assert.fail("unable to click on " + elementName + " exception :" + exception.getMessage());
 			return this;
 
 		}
@@ -159,7 +159,8 @@ public class Executioner {
 		} catch (Exception exception) {
 			addStep(startTime, stopWatch.getTime() - startTime,
 					"enter text : " + text + " in text field : " + elementName, "Failed", util.takeScreenshot(driver));
-			Assert.fail("unable to enter text : " + text + " in text field : " + elementName);
+			Assert.fail("unable to enter text : " + text + " in text field : " + elementName + " exception: "
+					+ exception.getMessage());
 			return this;
 
 		}
@@ -177,7 +178,7 @@ public class Executioner {
 		} catch (Exception exception) {
 			addStep(startTime, stopWatch.getTime() - startTime, "clear text of element :" + elementName, "Failed",
 					util.takeScreenshot(driver));
-			Assert.fail("unable to clear text of element : " + elementName);
+			Assert.fail("unable to clear text of element : " + elementName + " exception " + exception.getMessage());
 			return this;
 
 		}
@@ -291,17 +292,17 @@ public class Executioner {
 
 	}
 
-	public Executioner softWaitForWebElement(ExpectedCondition<WebElement> visibilityOf) {
+	public WebElement softWaitForWebElement(ExpectedCondition<WebElement> visibilityOf) {
 		try {
 			startTime = stopWatch.getTime();
 
-			wait.until(visibilityOf);
+			WebElement e = wait.until(visibilityOf);
 			addStep(startTime, stopWatch.getTime() - startTime, "wait for element", "Pass",
 					util.takeScreenshot(driver));
-			return this;
+			return e;
 		} catch (Exception e) {
 			Reporter.log("wait timeout for web element", 0, true);
-			return this;
+			return null;
 
 		}
 
@@ -392,30 +393,31 @@ public class Executioner {
 		}
 
 	}
-	
+
 	public void refresh() {
 		try {
 			startTime = stopWatch.getTime();
 			driver.navigate().refresh();
 			addStep(startTime, stopWatch.getTime() - startTime, "refresh page", "Pass", util.takeScreenshot(driver));
-			
+
 		} catch (Exception e) {
 			Reporter.log("wait timeout for web element", 0, true);
 		}
 
 	}
-	
-	public void selectFromDropDown(WebElement element,String typeOfSelection, String valueToBeSelected) {
+
+	public void selectFromDropDown(WebElement element, String typeOfSelection, String valueToBeSelected) {
 		try {
 			startTime = stopWatch.getTime();
-			if(typeOfSelection.equalsIgnoreCase("value")){
+			if (typeOfSelection.equalsIgnoreCase("value")) {
 				new Select(element).selectByValue(valueToBeSelected);
-			}else{
+			} else {
 				new Select(element).selectByVisibleText(valueToBeSelected);
 			}
-				
-			addStep(startTime, stopWatch.getTime() - startTime, "refresh page", "Pass", util.takeScreenshot(driver));
-			
+
+			addStep(startTime, stopWatch.getTime() - startTime, "Select " + valueToBeSelected + " from drop down",
+					"Pass", util.takeScreenshot(driver));
+
 		} catch (Exception e) {
 			Reporter.log("wait timeout for web element", 0, true);
 		}

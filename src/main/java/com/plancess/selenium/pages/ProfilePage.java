@@ -16,6 +16,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.plancess.selenium.executor.Executioner;
+import com.plancess.selenium.utils.Config;
 
 public class ProfilePage {
 	private final WebDriver driver;
@@ -98,7 +99,7 @@ public class ProfilePage {
 		this.actions = new Actions(driver);
 		executor = new Executioner(driver, wait);
 
-		if (!"Preplane Dashboard".equals(driver.getTitle())) {
+		if (!Config.PROFILE_TITLE.equals(driver.getTitle())) {
 			throw new IllegalStateException("This is not  the user profile page");
 		}
 		PageFactory.initElements(driver, this);
@@ -214,6 +215,7 @@ public class ProfilePage {
 	}
 
 	public ProfilePage updateUserProfile(Map<String, String> user) {
+		executor.softWaitForWebElement(firstName);
 		executor.clear(firstName, "firstName");
 
 		executor.sendKeys(firstName, user.get("firstName"), "firstName");
@@ -254,7 +256,7 @@ public class ProfilePage {
 
 			WebElement dateDOBElement = executor.getElement(By.xpath("//a[.='" + Integer.parseInt(date) + "']"));
 			executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(dateDOBElement));
-			executor.click(dateDOBElement, "Date of DOB");
+			executor.mouseClick(dateDOBElement);
 
 		}
 

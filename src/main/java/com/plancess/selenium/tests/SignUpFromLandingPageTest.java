@@ -14,7 +14,7 @@ import com.plancess.selenium.utils.ExcelReader;
 public class SignUpFromLandingPageTest extends BaseTest {
 
 	private SignUpDialogPage signUpDialogPage;
-	private String emailError = "Enter a valid email";
+	private String emailError = "please enter a valid email address";
 	private String passwordError = "Password must be atleast 6 characters";
 
 	@Test(alwaysRun = true, groups = { "smoke", "regression" })
@@ -81,9 +81,9 @@ public class SignUpFromLandingPageTest extends BaseTest {
 
 		signUpDialogPage.fillSignUpForm(user);
 		executor.verifyEquals(signUpDialogPage.getPasswordErrorMessage().getText(), passwordError,
-				util.takeScreenshot(driver, "assert password error message for invalid password values"));
+				"assert password error message for invalid password values");
 		executor.assertEquals(signUpDialogPage.getSubmit().getAttribute("disabled"), "true",
-				util.takeScreenshot(driver, "assert submit button disabled for invalid password values"));
+				"assert submit button disabled for invalid password values");
 
 	}
 

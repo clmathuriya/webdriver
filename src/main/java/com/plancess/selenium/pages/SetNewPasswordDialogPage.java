@@ -14,8 +14,9 @@ public class SetNewPasswordDialogPage {
 	private WebDriverWait wait;
 	private Executioner executor;
 	private Actions actions;
-	@FindBy(xpath = "//*[@name='password' and @placeholder='New Password']")
+	@FindBy(xpath = "(//*[@name='password' and @placeholder='New Password'])[2]")
 	WebElement password;
+	@FindBy(xpath = "(//*[@name='cpassword'])[2]")
 	WebElement cpassword;
 	WebElement resetBtn;
 

@@ -35,7 +35,7 @@ public class BaseTest {
 	String endReport = "</body> </html>";
 	String endTable = "</table>";
 	public static PlancessReporter reporter;
-	String PROXY = "192.168.1.124:8090";
+	String PROXY = "localhost:8080";
 
 	protected LandingPage landingPage;
 	protected String pageTitle = "Preplane";
@@ -52,7 +52,7 @@ public class BaseTest {
 
 	@Parameters({ "host_ip", "port", "os", "browser", "browserVersion", "useProxy" })
 	@BeforeMethod
-	public void setUp(@Optional("localhost") String host, @Optional("4444") String port, @Optional("WINDOWS") String os,
+	public void setUp(@Optional("localhost") String host, @Optional("4444") String port, @Optional("LINUX") String os,
 			@Optional("firefox") String browser, @Optional("40.0") String browserVersion,
 			@Optional("false") String useProxy, @Optional Method method) {
 
@@ -77,12 +77,13 @@ public class BaseTest {
 			this.driver = executor.openBrowser(host, port, capabilities);
 		}
 
-		wait = new WebDriverWait(driver, 30);
+		wait = new WebDriverWait(driver, 40);
 		executor = new Executioner(driver, wait);
 		landingPage = new LandingPage(driver, wait);
 		util = Util.getInstance();
 
-		driver.manage().window().setSize(new Dimension(1366, 768));
+		// driver.manage().window().setSize(new Dimension(1920, 1080));
+		// driver.manage().window().maximize();
 
 	}
 
@@ -97,7 +98,8 @@ public class BaseTest {
 	@AfterMethod(alwaysRun = true)
 	public void tearDown(ITestResult testResult) {
 
-		executor.closeBrowser();
+		if (driver != null)
+			executor.closeBrowser();
 		endTable();
 	}
 

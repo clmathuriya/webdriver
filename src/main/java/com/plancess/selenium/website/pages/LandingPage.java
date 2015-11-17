@@ -29,11 +29,7 @@ public class LandingPage {
 		this.driver = driver;
 		this.wait = wait;
 		executor = new Executioner(driver, wait);
-		/*executor.navigateToURL(url);
-		//System.out.println(getTitle());
-		if (!"Plancess JEE Main & Advanced Preparation | IIT JEE Online Coaching | AIPMT Preparation | Test Series".equals(driver.getTitle().trim())) {
-			throw new IllegalStateException("This is not  the Plancess Landing page");
-		}*/
+		
 		PageFactory.initElements(driver, this);
 
 	}

@@ -1,33 +1,16 @@
 package com.plancess.selenium.tests;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Map;
 
-import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
-import org.testng.annotations.Optional;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.plancess.selenium.executor.Executioner;
 import com.plancess.selenium.pages.Dashboard;
-import com.plancess.selenium.pages.HomePage;
-import com.plancess.selenium.pages.LoginPage;
 import com.plancess.selenium.pages.ProfilePage;
-import com.plancess.selenium.utils.DataProviderClass;
 import com.plancess.selenium.utils.ExcelReader;
-import com.plancess.selenium.utils.Util;
-import com.plancess.selenium.utils.Verifications;
 
 public class UserProfileTest extends BaseTest {
 
@@ -35,20 +18,20 @@ public class UserProfileTest extends BaseTest {
 	private ProfilePage userProfile;
 	private Dashboard dashboard;
 
-	
 	@Test(dataProvider = "userProfileValidData", groups = { "smoke", "regression" })
 	public void userProfileWithValidDataTest(Map<String, String> user) {
+		// user.put("email", "clmathuriya@gmail.com");
 
 		dashboard = landingPage.openLoginDialogPage().doLogin(user);
-		
+
 		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(dashboard.getStartAssessmentSection()));
 
 		executor.assertTrue(dashboard.getStartAssessmentSection().isDisplayed(),
-				util.takeScreenshot(driver, "assert user login succefull and start assessment section displayed"));
+				"assert user login succefull and start assessment section displayed");
 		userProfile = dashboard.navigateToUserProfile();
 		executor.softWaitForWebElement(userProfile.getFirstName());
 		userProfile.updateUserProfile(user);
-		
+
 		executor.softWaitForCondition(new ExpectedCondition<Boolean>() {
 
 			@Override
@@ -60,9 +43,8 @@ public class UserProfileTest extends BaseTest {
 			}
 		});
 
-		executor.assertEquals(
-				userProfile.getAlertMessage().getAttribute("alert-message") + userProfile.getAlertMessage().getText(),
-				"Your data have been saved successfully.", "Data have been saved successfully");
+		executor.assertEquals(userProfile.getAlertMessage().getText(), "Your data have been saved successfully.",
+				"Data have been saved successfully");
 		/*
 		 * Assert.assertEquals(userProfile.getToastMessage().getText(),
 		 * "Your data have been saved successfully.",

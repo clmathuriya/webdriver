@@ -7,20 +7,24 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.plancess.selenium.executor.Executioner;
+import com.plancess.selenium.utils.Config;
 
 public class SecurityPage {
 	private final WebDriver driver;
 	private WebDriverWait wait;
 	private Actions actions;
+	private Executioner executor;
 
 	WebElement currentPassword;
-	
-	@FindBy(name="seurityNewPassword")
+
+	@FindBy(name = "seurityNewPassword")
 	WebElement newPassword;
-	
-	@FindBy(name="seurityConfirmPassword")
+
+	@FindBy(name = "seurityConfirmPassword")
 	WebElement confirmPassword;
 
 	@FindBy(css = "input[name='tel']")
@@ -67,13 +71,16 @@ public class SecurityPage {
 
 	@FindBy(css = "a[data-toggle='dropdown'] img")
 	WebElement toggleDropDown;
+	@FindBy(xpath = "//*[@ng-show='alertShow']")
+	WebElement alertMessage;
 
 	public SecurityPage(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
 		this.wait = wait;
 		this.actions = new Actions(driver);
+		this.executor = new Executioner(driver, wait);
 
-		if (!"Plancess Dashboard".equals(driver.getTitle())) {
+		if (!Config.PROFILE_TITLE.equals(driver.getTitle())) {
 			throw new IllegalStateException("This is not  the user security page");
 		}
 		PageFactory.initElements(driver, this);
@@ -126,7 +133,6 @@ public class SecurityPage {
 		return confirmPassword;
 	}
 
-
 	public WebElement getSubmit_button() {
 		return submit_button;
 	}
@@ -139,26 +145,36 @@ public class SecurityPage {
 		return toastTitle;
 	}
 
+	public WebElement getAlertMessage() {
+		return alertMessage;
+	}
+
 	// user operations
 
 	public LoginPage logoutUser() {
-		toggleDropDown.click();
-		logoutLink.click();
+		executor.click(toggleDropDown, "toggle drop down");
+		executor.click(logoutLink, "logout link");
 
 		return new LoginPage(driver, wait);
 
 	}
 
 	public SecurityPage updateUserSecurity(Map<String, String> user) {
-		currentPassword.clear();
-		currentPassword.sendKeys(user.get("currentPassword"));
-		newPassword.clear();
-		newPassword.sendKeys(user.get("newPassword"));
-		confirmPassword.clear();
-		confirmPassword.sendKeys(user.get("confirmPassword"));
-				submit_button.click();
 
-		return new SecurityPage(driver, wait);
+		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(currentPassword));
+		executor.click(currentPassword, "current password");
+		executor.clear(currentPassword, "current password");
+		executor.sendKeys(currentPassword, user.get("currentPassword"), "current password");
+
+		executor.clear(newPassword, "new password");
+		executor.sendKeys(newPassword, user.get("newPassword"), "new password");
+
+		executor.clear(confirmPassword, "confirm password");
+		executor.sendKeys(confirmPassword, user.get("confirmPassword"), "confirm password");
+
+		executor.click(submit_button, "submit button");
+
+		return this;
 
 	}
 
@@ -179,6 +195,6 @@ public class SecurityPage {
 	}
 
 	public void clickToggelDropDown() {
-		toggleDropDown.click();
+		executor.click(toggleDropDown, "toggle drop down");
 	}
 }

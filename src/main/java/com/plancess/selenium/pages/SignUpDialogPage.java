@@ -75,7 +75,7 @@ public class SignUpDialogPage {
 	@FindBy(id = "inboxfield")
 	WebElement inboxField;
 
-	@FindBy(xpath = "//*[@onclick='changeInbox();']")
+	@FindBy(xpath = "//*[@onclick='changeInbox(); return false;']")
 	WebElement checkInbox;
 
 	@FindBy(xpath = "//*[@name='rendermail']")

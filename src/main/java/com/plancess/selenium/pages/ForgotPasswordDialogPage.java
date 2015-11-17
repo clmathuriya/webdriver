@@ -26,7 +26,7 @@ public class ForgotPasswordDialogPage {
 	@FindBy(xpath = "//div[@class='success-message' and @id='forgotPassError']")
 	WebElement successMessage;
 
-	@FindBy(partialLinkText = "Password reset on Plancess")
+	@FindBy(xpath = "//a[contains(.,'Reset your password')]")
 	WebElement plancessResetMail;
 
 	@FindBy(xpath = "//a[contains(@href,'reset-password')]")
@@ -38,7 +38,7 @@ public class ForgotPasswordDialogPage {
 	@FindBy(id = "inboxfield")
 	WebElement inboxField;
 
-	@FindBy(xpath = "//*[@onclick='changeInbox();']")
+	@FindBy(xpath = "//*[@onclick='changeInbox(); return false;']")
 	WebElement checkInbox;
 
 	@FindBy(xpath = "//*[@name='rendermail']")

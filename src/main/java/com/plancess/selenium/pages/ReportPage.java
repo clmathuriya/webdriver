@@ -7,9 +7,11 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.plancess.selenium.executor.Executioner;
+import com.plancess.selenium.utils.Config;
 
 public class ReportPage {
 	private final WebDriver driver;
@@ -39,7 +41,7 @@ public class ReportPage {
 	WebElement toggleDropDown;
 
 	WebElement dashboard;
-	@FindBy(xpath = "(//a[@ui-sref='app.dashboard'])[2]")
+	@FindBy(css = "header img[title='Plancess Logo']")
 	WebElement dashBoardButton;
 	@FindBy(xpath = "//*[@ng-if='isNewUser']")
 	WebElement performanceSection;
@@ -56,6 +58,8 @@ public class ReportPage {
 
 	@FindBy(xpath = "//*[@ng-show='bell']")
 	WebElement notificationsButton;
+	@FindBy(xpath = "//a[.=\"I'm not interested\"]")
+	WebElement notInterestedButton;
 
 	public ReportPage(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
@@ -64,9 +68,14 @@ public class ReportPage {
 		this.executor = new Executioner(driver, wait);
 		PageFactory.initElements(driver, this);
 		// new Executioner(driver).navigateToURL(url);
-		if (!"Preplane Dashboard".equals(driver.getTitle())) {
-			throw new IllegalStateException("This is not  the Plancess Dashboard page");
+		if (!Config.REPORT_TITLE.equals(driver.getTitle())) {
+			throw new IllegalStateException("This is not  the Plancess Report page");
 		}
+		// executor.softWaitForWebElement(notInterestedButton);
+		// if (executor.isElementExist(notInterestedButton) &&
+		// notInterestedButton.isDisplayed()) {
+		// executor.click(notInterestedButton, "not interested button");
+		// }
 
 	}
 
@@ -163,21 +172,25 @@ public class ReportPage {
 
 		executor.softWaitForWebElement(getTopicTitle());
 		executor.verifyTrue(getTopicTitle().isDisplayed(), "verify topic title displayed");
-		executor.verifyTrue(getRecomendationsSection().isDisplayed(), "verify recommendations section displayed");
+//		executor.softWaitForWebElement(getRecomendationsSection());
+//		int count = 0;
+//		while (!executor.isElementExist(getRecomendationsSection()) && count++ <= 10) {
+//			driver.navigate().refresh();
+//		}
+//		executor.verifyTrue(getRecomendationsSection().isDisplayed(), "verify recommendations section displayed");
 		executor.verifyTrue(getQuestionsWisePerformance().isDisplayed(), "verify questions wise performance displayed");
-		executor.mouseClick(getDashBoardButton());
-		
+		// executor.mouseClick(getDashBoardButton());
+
 		executor.refresh();
-		
-		executor.softWaitForWebElement(getPerformanceSection());
-		executor.verifyTrue(getPerformanceSection().isDisplayed(),
-				"verify performance section displayed on report page");
+
+		executor.softWaitForWebElement(getNotificationsButton());
+
 		// to verify notification displayed for test completion
-		getNotificationsButton().click();
-		String notificationItemText = getNotificationItem().getText().toLowerCase();
+		executor.click(getNotificationsButton(), "Notifications button ");
+		String notificationItemText = getNotificationItem().getAttribute("innerHTML").toLowerCase();
 		executor.verifyTrue(
 				(notificationItemText.contains(user.get("subject")) || notificationItemText.contains("custom test"))
-						&& (notificationItemText.contains("completed")||notificationItemText.contains("available")),
+						&& (notificationItemText.contains("completed") || notificationItemText.contains("available")),
 
 		"verify notification item contains test completed for subject" + user.get("subject"));
 	}

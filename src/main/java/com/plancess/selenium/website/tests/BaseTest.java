@@ -23,6 +23,7 @@ import org.testng.annotations.Test;
 
 import com.plancess.selenium.executor.Executioner;
 import com.plancess.selenium.reporter.PlancessReporter;
+import com.plancess.selenium.utils.Config;
 import com.plancess.selenium.utils.Util;
 import com.plancess.selenium.utils.Verifications;
 import com.plancess.selenium.website.pages.LandingPage;
@@ -39,7 +40,7 @@ public class BaseTest {
 	String PROXY = "192.168.1.124:8090";
 
 	protected LandingPage landingPage;
-	protected String pageTitle = "Preplane";
+	protected String pageTitle = "Plancess";
 	protected WebDriverWait wait;
 	protected Executioner executor;
 
@@ -81,7 +82,12 @@ public class BaseTest {
 		wait = new WebDriverWait(driver, 30);
 		executor = new Executioner(driver, wait);
 		
+		executor.navigateToURL(Config.URL_WEBSITE);
+		
 		landingPage = new LandingPage(driver, wait);
+		if (!Config.LANDING_PAGE_TITLE_WEBSITE.equals(driver.getTitle().trim())) {
+			throw new IllegalStateException("This is not  the Plancess Landing page");
+		}
 		util = Util.getInstance();
 		verifications = Verifications.getInstance();
 		driver.manage().window().setSize(new Dimension(1366, 768));

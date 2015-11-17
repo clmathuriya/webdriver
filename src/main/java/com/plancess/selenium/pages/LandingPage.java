@@ -8,13 +8,14 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.plancess.selenium.executor.Executioner;
+import com.plancess.selenium.utils.Config;
 
 public class LandingPage {
 	private final WebDriver driver;
 	private WebDriverWait wait;
 
 	private Executioner executor;
-	private String url = "http://dev.preplane.com/";
+	// private String url = "http://dev.preplane.com/";
 
 	@FindBy(css = "header img[title='Preplane Logo']")
 	WebElement plancessHeaderLogo;
@@ -40,7 +41,7 @@ public class LandingPage {
 		this.driver = driver;
 		this.wait = wait;
 		executor = new Executioner(driver, wait);
-		executor.navigateToURL(url);
+		executor.navigateToURL(Config.URL);
 		if (!"Preplane".equals(driver.getTitle().trim())) {
 			throw new IllegalStateException("This is not  the Plancess Landing page");
 		}
@@ -53,7 +54,7 @@ public class LandingPage {
 	}
 
 	public String getUrl() {
-		return url;
+		return Config.URL;
 	}
 
 	public WebElement getPlancessHeaderLogo() {

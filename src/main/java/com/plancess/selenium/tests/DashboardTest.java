@@ -20,16 +20,23 @@ public class DashboardTest extends BaseTest {
 
 	@Test(dataProvider = "dashboardNewUserDataProvider", groups = { "smoke", "regression" })
 	public void dashboardNewUserContentTest(Map<String, String> user) {
-		signUpDialogPage = landingPage.openSignUpDialogPage();
-		signUpDialogPage.signUp(user);
-		dashboard = signUpDialogPage.verifyEmail(user).doLogin(user);
+		 signUpDialogPage = landingPage.openSignUpDialogPage();
+		 signUpDialogPage.signUp(user);
+		 dashboard = signUpDialogPage.verifyEmail(user).doLogin(user);
+
+//		user.put("email", "clmathuriya@gmail.com");
+//		dashboard = landingPage.openLoginDialogPage().doLogin(user);
 		executor.softWaitForWebElement(dashboard.getDashBoardButton());
-		executor.mouseClick(dashboard.getDashBoardButton());
+		if (dashboard.getDashBoardButton().isDisplayed())
+			executor.click(dashboard.getDashBoardButton(), "dashboard button");
 		executor.verifyTrue(dashboard.getNotificationsButton().isDisplayed(), "verify notifications button displayed");
 
 		executor.verifyTrue(dashboard.getToggleDropDown().isDisplayed(), "verify toggle dropdown displayed");
 
-		executor.verifyTrue(dashboard.getPlancessHeaderLogo().isDisplayed(), "verify toggle dropdown displayed");
+		executor.verifyTrue(
+				dashboard.getPlancessHeaderLogo().isDisplayed() || dashboard.getPreplaneHeaderLogoIcon().isDisplayed(),
+				"verify toggle dropdown displayed");
+		executor.softWaitForWebElement(dashboard.getAcceptChallenges().get(0));
 		executor.verifyTrue(dashboard.getAcceptChallenges().size() >= 2, "verify accept challenges displayed");
 		executor.softWaitForWebElement(dashboard.getTakeSubjectTest());
 		executor.verifyTrue(dashboard.getPhysicsSubjectSection().isDisplayed(),
@@ -72,7 +79,7 @@ public class DashboardTest extends BaseTest {
 		executor.verifyTrue(dashboard.getUpcomingTests().isDisplayed(), "verify upcoming test button  displayed");
 
 		executor.verifyTrue(executor.isElementExist(By.xpath(dashboard.getPerformanceSummarySectionXpath())),
-				util.takeScreenshot(driver, "verify performance summary section displayed"));
+				"verify performance summary section displayed");
 
 		// more verifications to be added
 
