@@ -41,7 +41,8 @@ public class LandingPage {
 		this.driver = driver;
 		this.wait = wait;
 		executor = new Executioner(driver, wait);
-		executor.navigateToURL(Config.URL);
+		executor.softWaitForCondition(ExpectedConditions.titleIs("Preplane"));
+
 		if (!"Preplane".equals(driver.getTitle().trim())) {
 			throw new IllegalStateException("This is not  the Plancess Landing page");
 		}
