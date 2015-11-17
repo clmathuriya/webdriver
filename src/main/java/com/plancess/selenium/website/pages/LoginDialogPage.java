@@ -12,6 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.plancess.selenium.executor.Executioner;
 //import com.plancess.selenium.pages.Dashboard;
+import com.plancess.selenium.utils.Config;
 
 public class LoginDialogPage {
 	private final WebDriver driver;
@@ -35,7 +36,7 @@ public class LoginDialogPage {
 		this.actions = new Actions(driver);
 		this.executor = new Executioner(driver, wait);
 		//System.out.println(getTitle());
-		if (!"Plancess JEE Main & Advanced Preparation | IIT JEE Online Coaching | AIPMT Preparation | Test Series".equals(driver.getTitle())) {
+		if (!Config.LANDING_PAGE_TITLE_WEBSITE.equals(driver.getTitle())) {
 			throw new IllegalStateException("This is not  the Plancess Home page");
 		}
 		PageFactory.initElements(driver, this);

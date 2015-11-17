@@ -17,7 +17,7 @@ public class LandingPage {
 	private WebDriverWait wait;
 	
 	private Executioner executor;
-	private String url = "http://dev.plancess.com/";
+	//private String url = "http://dev.plancess.com/";
 	
 	@FindBy(xpath = "//.[@class='login-btn']")
 	WebElement loginLink;
@@ -38,9 +38,9 @@ public class LandingPage {
 		return driver;
 	}
 
-	public String getUrl() {
+	/*public String getUrl() {
 		return url;
-	}
+	}*/
 	
 	public String getTitle() {
 		return driver.getTitle();
