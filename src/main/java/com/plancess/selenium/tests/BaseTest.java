@@ -23,6 +23,7 @@ import org.testng.annotations.Parameters;
 import com.plancess.selenium.executor.Executioner;
 import com.plancess.selenium.pages.LandingPage;
 import com.plancess.selenium.reporter.PlancessReporter;
+import com.plancess.selenium.utils.Config;
 import com.plancess.selenium.utils.Util;
 import com.plancess.selenium.utils.Verifications;
 
@@ -79,6 +80,7 @@ public class BaseTest {
 
 		wait = new WebDriverWait(driver, 40);
 		executor = new Executioner(driver, wait);
+		executor.navigateToURL(Config.URL);
 		landingPage = new LandingPage(driver, wait);
 		util = Util.getInstance();
 
