@@ -28,26 +28,23 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 
-public class LoginTest extends BaseTest{
+public class LoginTest extends BaseTest {
 
 	private LoginDialogPage loginDialogPage;
-	
 
 	@Test(alwaysRun = true, dataProvider = "PlancessWebsiteDataProvider")
 	public void LoginContentTest(Map<String, String> user) {
 
-		
 		landingPage.openLoginDialogPage();
 		loginDialogPage = new LoginDialogPage(driver, wait);
-		
-		
+
 		loginDialogPage.doLogin(user);
-			
+
 		executor.softWaitForCondition(ExpectedConditions.titleContains("Plancess"));
-		verifications.verifyTrue(driver.getTitle().contains("Plancess"),
-				util.takeScreenshot(driver, "Verify Login"));
-		;
-		verifications.verifyTrue(executor.getElement(By.xpath("//*[contains(text(),'" + user.get("name") + "')]")).isDisplayed(),
+		verifications.verifyTrue(driver.getTitle().contains("Plancess"), util.takeScreenshot(driver, "Verify Login"));
+
+		verifications.verifyTrue(
+				executor.getElement(By.xpath("//*[contains(text(),'" + user.get("name") + "')]")).isDisplayed(),
 				util.takeScreenshot(driver, "verify name field displayed"));
 
 	}

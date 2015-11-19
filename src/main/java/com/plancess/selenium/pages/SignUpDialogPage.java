@@ -7,10 +7,12 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.plancess.selenium.executor.Executioner;
+import com.plancess.selenium.utils.Config;
 
 public class SignUpDialogPage {
 	private final WebDriver driver;
@@ -66,6 +68,9 @@ public class SignUpDialogPage {
 	@FindBy(partialLinkText = "Verify your email for PrepLane")
 	WebElement plancessMail;
 
+	@FindBy(partialLinkText = "Welcome to PrepLane")
+	WebElement plancessWelcomeMail;
+
 	@FindBy(xpath = "//*[@title='VERIFY MY EMAIL ID']")
 	WebElement activationLink;
 
@@ -81,12 +86,18 @@ public class SignUpDialogPage {
 	@FindBy(xpath = "//*[@name='rendermail']")
 	WebElement renderemail;
 
+	@FindBy(xpath = "(//*[@id='FbBtn'])[1]")
+	WebElement FbBtn;
+
+	@FindBy(xpath = "(//*[@id='GBtn'])[1]")
+	WebElement GBtn;
+
 	public SignUpDialogPage(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
 		this.wait = wait;
 		this.actions = new Actions(driver);
 		this.executor = new Executioner(driver, wait);
-		if (!"Preplane".equals(driver.getTitle())) {
+		if (!Config.LANDING_PAGE_TITLE.equals(driver.getTitle())) {
 			throw new IllegalStateException("This is not  the Plancess SignUp page");
 		}
 		PageFactory.initElements(driver, this);
@@ -148,6 +159,14 @@ public class SignUpDialogPage {
 		return lastNameErrorMessage;
 	}
 
+	public WebElement getFbBtn() {
+		return FbBtn;
+	}
+
+	public WebElement getGBtn() {
+		return GBtn;
+	}
+
 	public WebElement getMobileErrorMessage() {
 		wait.until(ExpectedConditions.visibilityOf(mobileErrorMessage));
 		return mobileErrorMessage;
@@ -156,6 +175,10 @@ public class SignUpDialogPage {
 	public WebElement getPasswordErrorMessage() {
 		wait.until(ExpectedConditions.visibilityOf(passwordErrorMessage));
 		return passwordErrorMessage;
+	}
+
+	public WebElement getPlancessWelcomeMail() {
+		return plancessWelcomeMail;
 	}
 
 	// user operations
@@ -220,6 +243,64 @@ public class SignUpDialogPage {
 		executor.softWaitForWebElement(activationMessage);
 		executor.verifyTrue(activationMessage.isDisplayed(), "verify activation success message displayed");
 		return new LoginDialogPage(driver, wait);
+
+	}
+
+	public FacebookLoginDialogPage navigateToFacebookLoginDialog() {
+		String currentWindowHandle = driver.getWindowHandle();
+		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(getFbBtn()), "wait for Facebook button");
+		executor.click(getFbBtn(), "Facebook button");
+		executor.softWaitForCondition(new ExpectedCondition<Boolean>() {
+
+			@Override
+			public Boolean apply(WebDriver driver) {
+
+				return driver.getWindowHandles().size() >= 2;
+			}
+		});
+		for (String handle : driver.getWindowHandles()) {
+
+			if (!handle.equals(currentWindowHandle))
+				driver.switchTo().window(handle);
+		}
+		return new FacebookLoginDialogPage(driver, wait);
+	}
+
+	public GoogleSignInDialogPage navigateToGoogleLoginDialog() {
+		String currentWindowHandle = driver.getWindowHandle();
+		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(getGBtn()),
+				"wait for google plus button");
+		executor.mouseClick(getGBtn());
+		executor.softWaitForCondition(new ExpectedCondition<Boolean>() {
+
+			@Override
+			public Boolean apply(WebDriver driver) {
+
+				return driver.getWindowHandles().size() >= 2;
+			}
+		});
+		for (String handle : driver.getWindowHandles()) {
+
+			if (!handle.equals(currentWindowHandle))
+				driver.switchTo().window(handle);
+		}
+		return new GoogleSignInDialogPage(driver, wait);
+	}
+
+	public void verifyWelcomeEmail(Map<String, String> user) {
+		// to verify email address
+		executor.navigateToURL("http://mailinator.com/inbox.jsp?to=" + user.get("email"));
+		executor.softWaitForWebElement(inboxField);
+		if (executor.isElementExist(inboxField)) {
+			executor.sendKeys(inboxField, user.get("email"), "email inbox");
+			executor.click(checkInbox, "Check inbox button");
+		}
+		int count = 0;
+		while (!executor.isElementExist(plancessWelcomeMail) && count++ <= 10) {
+			driver.navigate().refresh();
+		}
+
+		executor.verifyTrue(plancessWelcomeMail.isDisplayed(), "verify welcome mail displayed");
 
 	}
 

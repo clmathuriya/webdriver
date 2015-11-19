@@ -7,6 +7,9 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import com.plancess.selenium.pages.Dashboard;
+import com.plancess.selenium.pages.FacebookLoginDialogPage;
+import com.plancess.selenium.pages.GoogleSignInDialogPage;
 import com.plancess.selenium.pages.SignUpDialogPage;
 import com.plancess.selenium.utils.DataProviderClass;
 import com.plancess.selenium.utils.ExcelReader;
@@ -16,6 +19,8 @@ public class SignUpFromLandingPageTest extends BaseTest {
 	private SignUpDialogPage signUpDialogPage;
 	private String emailError = "please enter a valid email address";
 	private String passwordError = "Password must be atleast 6 characters";
+	private FacebookLoginDialogPage facebookLoginDialog;
+	private GoogleSignInDialogPage googleLoginDialog;
 
 	@Test(alwaysRun = true, groups = { "smoke", "regression" })
 	public void signUpContentTest() {
@@ -115,6 +120,7 @@ public class SignUpFromLandingPageTest extends BaseTest {
 		signUpDialogPage.signUp(user);
 		executor.assertTrue(signUpDialogPage.getSuccessMessage().isDisplayed(), "assert user created succefully");
 		signUpDialogPage.verifyEmail(user);
+		signUpDialogPage.verifyWelcomeEmail(user);
 
 	}
 
@@ -128,6 +134,42 @@ public class SignUpFromLandingPageTest extends BaseTest {
 		signUpDialogPage.signUp(user);
 		executor.assertTrue(signUpDialogPage.getSuccessMessage().isDisplayed(), "assert user created succefully");
 		signUpDialogPage.verifyEmail(user);
+
+	}
+
+	@Test(alwaysRun = true, groups = { "regression" })
+	public void signUpWithFacebookFailureTest() {
+		signUpDialogPage = landingPage.openSignUpDialogPage();
+
+		facebookLoginDialog = signUpDialogPage.navigateToFacebookLoginDialog();
+		facebookLoginDialog.cancelLogin();
+		executor.verifyTrue(signUpDialogPage.getFbBtn().isDisplayed(), "Verify facebook login button displayed");
+	}
+
+	@Test(alwaysRun = true, dataProvider = "loginWithFacebook", groups = { "smoke", "regression" })
+	public void signUpWithFacebookSuccessTest(Map<String, String> user) {
+		signUpDialogPage = landingPage.openSignUpDialogPage();
+
+		facebookLoginDialog = signUpDialogPage.navigateToFacebookLoginDialog();
+		Dashboard dashboard = facebookLoginDialog.doLogin(user);
+		executor.softWaitForWebElement(dashboard.getWelcomeMessage());
+	}
+
+	@Test(alwaysRun = true, groups = { "regression" })
+	public void signUpWithGoogleFailureTest() {
+		signUpDialogPage = landingPage.openSignUpDialogPage();
+
+		googleLoginDialog = signUpDialogPage.navigateToGoogleLoginDialog();
+		googleLoginDialog.cancelLogin();
+		executor.verifyTrue(signUpDialogPage.getFbBtn().isDisplayed(), "Verify facebook login button displayed");
+	}
+
+	@Test(alwaysRun = true, dataProvider = "loginWithGoogle", groups = { "smoke", "regression" })
+	public void signUpWithGoogleSuccessTest(Map<String, String> user) {
+		signUpDialogPage = landingPage.openSignUpDialogPage();
+
+		googleLoginDialog = signUpDialogPage.navigateToGoogleLoginDialog();
+		googleLoginDialog.doLogin(user);
 
 	}
 
@@ -151,6 +193,16 @@ public class SignUpFromLandingPageTest extends BaseTest {
 	@DataProvider(name = "validEmailPasswords")
 	public static Object[][] signUpDataProviderWithValidEmailPasswords() {
 		return new ExcelReader().getUserDataFromExcel("testData.xlsx", "signUpvalidEmailPasswords");
+	}
+
+	@DataProvider(name = "loginWithFacebook")
+	public static Object[][] signUpWithFacebookDataProvider() {
+		return new ExcelReader().getUserDataFromExcel("testData.xlsx", "loginWithFacebook");
+	}
+
+	@DataProvider(name = "loginWithGoogle")
+	public static Object[][] signUpWithGoogleDataProvider() {
+		return new ExcelReader().getUserDataFromExcel("testData.xlsx", "loginWithGoogle");
 	}
 
 }

@@ -14,6 +14,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.plancess.selenium.executor.Executioner;
+import com.plancess.selenium.utils.Config;
 
 public class LoginDialogPage {
 	private final WebDriver driver;
@@ -60,7 +61,7 @@ public class LoginDialogPage {
 		this.actions = new Actions(driver);
 		this.executor = new Executioner(driver, wait);
 
-		if (!"Preplane".equals(driver.getTitle())) {
+		if (!Config.LANDING_PAGE_TITLE.equals(driver.getTitle())) {
 			throw new IllegalStateException("This is not  the Plancess Home page");
 		}
 		PageFactory.initElements(driver, this);

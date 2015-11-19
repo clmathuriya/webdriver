@@ -8,7 +8,6 @@ import java.io.PrintWriter;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.http.HttpResponse;
@@ -20,11 +19,9 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 import org.testng.IReporter;
-import org.testng.IResultMap;
 import org.testng.ISuite;
 import org.testng.ISuiteResult;
 import org.testng.ITestContext;
-import org.testng.ITestResult;
 import org.testng.Reporter;
 
 public class PlancessReporter implements IReporter {
