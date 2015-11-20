@@ -32,13 +32,13 @@ public class CreateAccessment {
 	@FindBy(xpath = "(//a[@ui-sref='usertest.schedule-test.upcoming-test'])[3]")
 	WebElement mockTestLink;
 
-	@FindBy(partialLinkText = "Physics")
+	@FindBy(xpath = "//a[text()='Physics' and @ng-click='select()']")
 	WebElement subjectPhysicsLink;
 
-	@FindBy(linkText = "Chemistry")
+	@FindBy(xpath = "//a[text()='Chemistry' and @ng-click='select()']")
 	WebElement subjectChemistryLink;
 
-	@FindBy(linkText = "Mathematics")
+	@FindBy(xpath = "//a[text()='Mathematics' and @ng-click='select()']")
 	WebElement subjectMathematicsLink;
 
 	@FindBy(xpath = "(//a[@ui-sref='usertest.schedule-test.upcoming-test'])[3]")
@@ -72,10 +72,11 @@ public class CreateAccessment {
 		if (!Config.CUSTOM_TEST_TITLE.equals(driver.getTitle().trim())) {
 			throw new IllegalStateException("This is not  the Custom Test page");
 		}
-//		executor.softWaitForWebElement(notInterestedButton);
-//		if (executor.isElementExist(notInterestedButton) && notInterestedButton.isDisplayed()) {
-//			executor.click(notInterestedButton, "not interested button");
-//		}
+		// executor.softWaitForWebElement(notInterestedButton);
+		// if (executor.isElementExist(notInterestedButton) &&
+		// notInterestedButton.isDisplayed()) {
+		// executor.click(notInterestedButton, "not interested button");
+		// }
 
 	}
 
