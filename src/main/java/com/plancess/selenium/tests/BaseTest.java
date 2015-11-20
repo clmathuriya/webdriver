@@ -39,7 +39,7 @@ public class BaseTest {
 	String PROXY = "localhost:8080";
 
 	protected LandingPage landingPage;
-	protected String pageTitle = "Preplane";
+	protected String pageTitle = Config.LANDING_PAGE_TITLE;
 	protected WebDriverWait wait;
 	protected Executioner executor;
 
