@@ -22,16 +22,12 @@ public class AssessmentTest extends BaseTest {
 
 	@Test(dataProvider = "noMoreTestDataProvider", groups = { "regression" })
 	public void noMoreTestErorTest(Map<String, String> user) {
-
-		// takeTestWithValidDataTest(user);
+		user.put("email", "clmathuriya@gmail.com");
 
 		dashboard = landingPage.openLoginDialogPage().doLogin(user);
-
 		executor.assertTrue(dashboard.getStartAssessmentSection().isDisplayed(),
 				"assert user login succefull and start assessment section displayed");
-
 		switch (user.get("subject").toLowerCase()) {
-
 		case "physics":
 			executor.softWaitForWebElement(dashboard.getPhysicsSubjectSection());
 			executor.click(dashboard.getPhysicsSubjectSection(), "Physics subject section");
@@ -64,15 +60,15 @@ public class AssessmentTest extends BaseTest {
 	@Test(dataProvider = "takeTestValidData", groups = { "smoke", "regression" })
 	public void takeTestWithValidDataTest(Map<String, String> user) {
 
-		long timestamp = System.currentTimeMillis();
-
-		user.put("email", "webuser" + timestamp + "@mailinator.com");
-
-		signUpDialogPage = landingPage.openSignUpDialogPage();
-		signUpDialogPage.signUp(user);
-		dashboard = signUpDialogPage.verifyEmail(user).doLogin(user);
-//		user.put("email", "clmathuriya@gmail.com");
-//		dashboard = landingPage.openLoginDialogPage().doLogin(user);
+		// long timestamp = System.currentTimeMillis();
+		//
+		// user.put("email", "webuser" + timestamp + "@mailinator.com");
+		//
+		// signUpDialogPage = landingPage.openSignUpDialogPage();
+		// signUpDialogPage.signUp(user);
+		// dashboard = signUpDialogPage.verifyEmail(user).doLogin(user);
+		// user.put("email", "chhaganlal.m@plancess.com");
+		dashboard = landingPage.openLoginDialogPage().doLogin(user);
 		executor.softWaitForWebElement(dashboard.getDashBoardButton());
 
 		executor.assertTrue(dashboard.getStartAssessmentSection().isDisplayed(),

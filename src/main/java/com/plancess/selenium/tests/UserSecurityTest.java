@@ -78,7 +78,7 @@ public class UserSecurityTest extends BaseTest {
 		Object[][] dataSet = new Object[1][1];
 		Map<String, String> user = new HashMap<String, String>();
 
-		user.put("email", "cl101@mailinator.com");
+		user.put("email", "chhaganlal.m@plancess.com");
 		user.put("password", "P@ssw0rd");
 		user.put("currentPassword", "P@ssw0rd");
 		user.put("newPassword", "P@ssw0rd1");
