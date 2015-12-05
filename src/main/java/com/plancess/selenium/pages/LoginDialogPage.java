@@ -52,8 +52,8 @@ public class LoginDialogPage {
 	@FindBy(xpath = "(//*[@id='FbBtn'])[2]")
 	WebElement FbBtn;
 
-	@FindBy(xpath = "(//*[@id='GBtn'])[2]")
-	WebElement GBtn;
+	//@FindBy(xpath = "(//*[@id='GBtn'])[2]")
+	WebElement GBtn2;
 
 	public LoginDialogPage(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
@@ -117,7 +117,7 @@ public class LoginDialogPage {
 	}
 
 	public WebElement getGBtn() {
-		return GBtn;
+		return GBtn2;
 	}
 
 	public Dashboard doLogin(Map<String, String> user) {

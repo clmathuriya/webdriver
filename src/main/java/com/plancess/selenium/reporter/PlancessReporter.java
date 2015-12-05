@@ -110,7 +110,7 @@ public class PlancessReporter implements IReporter {
 					JSONObject temp1 = new JSONObject(json_string);
 					JSONObject storage = new JSONObject(
 							new JSONObject(temp1.get("body").toString()).get("storage").toString());
-					Reporter.log(storage.get("value").toString(), true);
+					// Reporter.log(storage.get("value").toString(), true);
 					String currentValue = storage.get("value").toString();
 					String replaceString = "<table style=\"width: 100.0%;\"><tbody><tr><th>Build#</th><th>Date-Time</th><th>Passed</th><th>Skipped</th><th>Failed</th><th>Build Status</th><th>Comments</th></tr>";
 
@@ -121,7 +121,7 @@ public class PlancessReporter implements IReporter {
 
 					String replacewith = replaceString + step;
 					String valuetoPost = currentValue.replace(replaceString, replacewith).replaceAll("\"", "'");
-					Reporter.log("updated content:" + valuetoPost, true);
+					// Reporter.log("updated content:" + valuetoPost, true);
 
 					HttpPut requestPut = new HttpPut(putURL);
 
@@ -136,7 +136,7 @@ public class PlancessReporter implements IReporter {
 					StringEntity params = new StringEntity(putbody);
 					requestPut.setEntity(params);
 					response = client.execute(requestPut);
-					Reporter.log("update response :" + response, true);
+					// Reporter.log("update response :" + response, true);
 				}
 			}
 
