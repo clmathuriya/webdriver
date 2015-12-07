@@ -216,7 +216,7 @@ public class ProfilePage {
 
 	public ProfilePage updateUserProfile(Map<String, String> user) {
 		int timer = 1;
-		while (!executor.isElementExist(firstName) && timer++ < 10) {
+		while (!executor.isElementExist(firstName) || !firstName.isDisplayed() && timer++ < 10) {
 			executor.softWaitForWebElement(firstName);
 		}
 		executor.clear(firstName, "firstName");
