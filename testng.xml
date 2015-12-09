@@ -30,8 +30,6 @@
 
 				</methods>
 			</class>
-
-			<class name="com.plancess.selenium.tests.CreateAssessmentTest" />
 			<class name="com.plancess.selenium.tests.UserProfileTest" />
 			<class name="com.plancess.selenium.tests.UserSecurityTest" />
 		</classes>
