@@ -45,11 +45,7 @@ public class UserProfileTest extends BaseTest {
 
 		executor.assertEquals(userProfile.getAlertMessage().getText(), "Your data have been saved successfully.",
 				"Data have been saved successfully");
-		/*
-		 * Assert.assertEquals(userProfile.getToastMessage().getText(),
-		 * "Your data have been saved successfully.",
-		 * util.takeScreenshot(driver, "verify toast message displayed"));
-		 */
+
 	}
 
 	@DataProvider(name = "userProfileValidData")
