@@ -18,7 +18,7 @@ public class ResetPasswordTest extends BaseTest {
 	@Test(alwaysRun = true, groups = { "smoke", "regression" })
 	public void resetPassContentTest() {
 		loginDialogPage = landingPage.openLoginDialogPage();
-		loginDialogPage = landingPage.openLoginDialogPage();
+
 		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(loginDialogPage.getEmail()),
 				"wait for email field to be displayed");
 

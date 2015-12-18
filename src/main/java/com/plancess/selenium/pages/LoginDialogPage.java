@@ -52,7 +52,7 @@ public class LoginDialogPage {
 	@FindBy(xpath = "(//*[@id='FbBtn'])[2]")
 	WebElement FbBtn;
 
-	//@FindBy(xpath = "(//*[@id='GBtn'])[2]")
+	// @FindBy(xpath = "(//*[@id='GBtn'])[2]")
 	WebElement GBtn2;
 
 	public LoginDialogPage(WebDriver driver, WebDriverWait wait) {

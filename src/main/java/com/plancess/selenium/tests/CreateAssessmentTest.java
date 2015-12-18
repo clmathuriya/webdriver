@@ -123,7 +123,8 @@ public class CreateAssessmentTest extends BaseTest {
 			// executor.getElement(By.xpath("//*[normalize-space(.)='" + module
 			// + "']/../a"));
 
-			if (toggleModule.findElement(By.tagName("span")).getAttribute("class").contains("plus")
+			if (executor.isElementExist(toggleModule)
+					&& toggleModule.findElement(By.tagName("span")).getAttribute("class").contains("plus")
 					&& sub_Module.length() > 0) {
 				executor.click(toggleModule, module);
 				// toggleModule.click();

@@ -56,6 +56,7 @@ public class AssessmentTest extends BaseTest {
 		executor.softWaitForWebElement(dashboard.getNoTopicMsg());
 		executor.assertTrue(executor.isElementExist(By.xpath("//*[@ng-if='!premiumUser']")),
 				"Verify if no more tests exist for this subject");
+		executor.click(dashboard.getCloseModel(), "close model");
 
 		dashboard.logoutUser();
 
@@ -64,15 +65,15 @@ public class AssessmentTest extends BaseTest {
 	@Test(dataProvider = "takeTestValidData", groups = { "smoke", "regression" })
 	public void takeTestWithValidDataTest(Map<String, String> user) {
 
-		long timestamp = System.currentTimeMillis();
-
-		user.put("email", "webuser" + timestamp + "@mailinator.com");
-
-		signUpDialogPage = landingPage.openSignUpDialogPage();
-		signUpDialogPage.signUp(user);
-		dashboard = signUpDialogPage.verifyEmail(user).doLogin(user);
-//		user.put("email", "clmathuriya@gmail.com");
-//		dashboard = landingPage.openLoginDialogPage().doLogin(user);
+		// long timestamp = System.currentTimeMillis();
+		//
+		// user.put("email", "webuser" + timestamp + "@mailinator.com");
+		//
+		// signUpDialogPage = landingPage.openSignUpDialogPage();
+		// signUpDialogPage.signUp(user);
+		// dashboard = signUpDialogPage.verifyEmail(user).doLogin(user);
+		user.put("email", "cl601@mailinator.com");
+		dashboard = landingPage.openLoginDialogPage().doLogin(user);
 		executor.softWaitForWebElement(dashboard.getDashBoardButton());
 
 		executor.assertTrue(dashboard.getStartAssessmentSection().isDisplayed(),
@@ -135,6 +136,7 @@ public class AssessmentTest extends BaseTest {
 		}
 		executor.assertTrue(!executor.isElementExist(By.xpath("//*[@ng-if='noTopic']")),
 				"Verify if no more tests error does not exist for this subject");
+		executor.softWaitForWebElement(dashboard.getTimeRequired());
 		executor.verifyEquals(dashboard.getTimeRequired().getText().trim(), user.get("timeRequired").trim(),
 				"verify time required");
 		executor.verifyEquals(dashboard.getTotalQuestions().getText().trim(), user.get("totalQuestions"),

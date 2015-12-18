@@ -2,8 +2,8 @@ package com.plancess.selenium.tests;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.net.URL;
 
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxBinary;
@@ -26,6 +26,8 @@ import com.plancess.selenium.reporter.PlancessReporter;
 import com.plancess.selenium.utils.Config;
 import com.plancess.selenium.utils.Util;
 import com.plancess.selenium.utils.Verifications;
+
+import io.appium.java_client.android.AndroidDriver;
 
 public class BaseTest {
 	public WebDriver driver;
@@ -51,11 +53,11 @@ public class BaseTest {
 
 	}
 
-	@Parameters({ "host_ip", "port", "os", "browser", "browserVersion", "useProxy" })
+	@Parameters({ "host_ip", "port", "os", "browser", "browserVersion", "useProxy", "deviceName" })
 	@BeforeMethod
 	public void setUp(@Optional("localhost") String host, @Optional("4444") String port, @Optional("LINUX") String os,
 			@Optional("firefox") String browser, @Optional("40.0") String browserVersion,
-			@Optional("false") String useProxy, @Optional Method method) {
+			@Optional("false") String useProxy, @Optional("") String deviceName, @Optional Method method) {
 
 		// to log starting of test case in report table
 		startTable(method.getName());
@@ -66,17 +68,22 @@ public class BaseTest {
 			setProxy(capabilities);
 		}
 
-		capabilities.setBrowserName(browser);
+		// capabilities.setBrowserName(browser);
 		// capabilities.setCapability("version", browserVersion);
-		capabilities.setCapability("platform", Platform.valueOf(os));
-		capabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
-		executor = new Executioner();
-		if (browser.equalsIgnoreCase("headlessfirefox")) {
-			this.driver = getHeadLessFireFox();
-		} else {
+		capabilities.setCapability(CapabilityType.BROWSER_NAME, browser);
+		// capabilities.setCapability("androidUseRunningApp", true);
+		if (deviceName.length() >= 5) {
+			capabilities.setCapability("deviceName", deviceName);
+		} else
 
-			this.driver = executor.openBrowser(host, port, capabilities);
+		{
+			capabilities.setCapability("platform", Platform.valueOf(os));
+			capabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
 		}
+
+		executor = new Executioner();
+
+		this.driver = executor.openBrowser(host, port, capabilities);
 
 		wait = new WebDriverWait(driver, 40);
 		executor = new Executioner(driver, wait);

@@ -58,7 +58,7 @@ public class ReportPage {
 
 	@FindBy(xpath = "//*[@ng-show='bell']")
 	WebElement notificationsButton;
-	@FindBy(xpath = "//a[.=\"I'm not interested\"]")
+	@FindBy(xpath = "//*[.=\"No I'm not interested\"]")
 	WebElement notInterestedButton;
 
 	public ReportPage(WebDriver driver, WebDriverWait wait) {
@@ -71,11 +71,11 @@ public class ReportPage {
 		if (!Config.REPORT_TITLE.equals(driver.getTitle())) {
 			throw new IllegalStateException("This is not  the Plancess Report page");
 		}
-		// executor.softWaitForWebElement(notInterestedButton);
-		// if (executor.isElementExist(notInterestedButton) &&
-		// notInterestedButton.isDisplayed()) {
-		// executor.click(notInterestedButton, "not interested button");
-		// }
+		executor.softWaitForWebElement(notInterestedButton);
+		executor.softWaitForWebElement(notInterestedButton);
+		if (executor.isElementExist(notInterestedButton) && notInterestedButton.isDisplayed()) {
+			executor.click(notInterestedButton, "not interested button");
+		}
 
 	}
 
@@ -172,12 +172,14 @@ public class ReportPage {
 
 		executor.softWaitForWebElement(getTopicTitle());
 		executor.verifyTrue(getTopicTitle().isDisplayed(), "verify topic title displayed");
-//		executor.softWaitForWebElement(getRecomendationsSection());
-//		int count = 0;
-//		while (!executor.isElementExist(getRecomendationsSection()) && count++ <= 10) {
-//			driver.navigate().refresh();
-//		}
-//		executor.verifyTrue(getRecomendationsSection().isDisplayed(), "verify recommendations section displayed");
+		// executor.softWaitForWebElement(getRecomendationsSection());
+		// int count = 0;
+		// while (!executor.isElementExist(getRecomendationsSection()) &&
+		// count++ <= 10) {
+		// driver.navigate().refresh();
+		// }
+		// executor.verifyTrue(getRecomendationsSection().isDisplayed(), "verify
+		// recommendations section displayed");
 		executor.verifyTrue(getQuestionsWisePerformance().isDisplayed(), "verify questions wise performance displayed");
 		// executor.mouseClick(getDashBoardButton());
 

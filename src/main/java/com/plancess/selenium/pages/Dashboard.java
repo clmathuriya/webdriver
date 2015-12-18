@@ -46,7 +46,7 @@ public class Dashboard {
 	@FindBy(css = ".start-assessment-section")
 	WebElement startAssessmentSection;
 
-	@FindBy(xpath = ".//img[@title='Profile']")
+	@FindBy(xpath = "//img[@title='Profile']")
 	WebElement toggleDropDown;
 
 	WebElement dashboard;
@@ -125,6 +125,9 @@ public class Dashboard {
 	@FindBy(xpath = "//*[@ng-if='noTopic']")
 	WebElement noTopicMsg;
 
+	@FindBy(xpath = "//*[@ng-click='closeModal()']")
+	WebElement closeModel;
+
 	@FindBy(css = "div.toast-message")
 	WebElement toastMessage;
 
@@ -158,10 +161,10 @@ public class Dashboard {
 	@FindBy(xpath = ".//*[.='Create Your Own Test']")
 	WebElement createCustomTestButton;
 
-	@FindBy(xpath = "//*[.='UPCOMING TESTS']")
+	@FindBy(xpath = "//*[.='UPCOMING MOCK TESTS']")
 	WebElement upcomingTests;
 
-	@FindBy(xpath = "//a[.=\"I'm not interested\"]")
+	@FindBy(xpath = "//*[.=\"No I'm not interested\"]")
 	WebElement notInterestedButton;
 
 	@FindBys(value = @FindBy(xpath = "//a[.='Begin Tour']") )
@@ -187,17 +190,16 @@ public class Dashboard {
 			throw new IllegalStateException("This is not  the Plancess Dashboard page");
 		}
 		driver.manage().window().maximize();
-		// executor.softWaitForWebElement(notInterestedButton);
-		//
-		// for (WebElement tourBtn : beginTour) {
-		// if (tourBtn.isDisplayed()) {
-		// completeTour();
-		// }
-		// }
-		// if (executor.isElementExist(notInterestedButton) &&
-		// notInterestedButton.isDisplayed()) {
-		// executor.click(notInterestedButton, "Not interested button");
-		// }
+		executor.softWaitForWebElement(notInterestedButton);
+
+		for (WebElement tourBtn : beginTour) {
+			if (tourBtn.isDisplayed()) {
+				completeTour();
+			}
+		}
+		if (executor.isElementExist(notInterestedButton) && notInterestedButton.isDisplayed()) {
+			executor.click(notInterestedButton, "Not interested button");
+		}
 
 	}
 
@@ -412,10 +414,15 @@ public class Dashboard {
 		return notInterestedButton;
 	}
 
+	public WebElement getCloseModel() {
+		return closeModel;
+	}
+
 	public LandingPage logoutUser() {
 
 		executor.softWaitForWebElement(toggleDropDown);
-		executor.click(toggleDropDown, "Toggle dropdown");
+		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(toggleDropDown));
+		executor.mouseClick(toggleDropDown);
 		executor.softWaitForWebElement(logoutLink);
 		executor.click(logoutLink, "logout link");
 

@@ -150,7 +150,7 @@ public class AssessmentPage {
 
 	@FindBy(xpath = "//*[.='UPCOMING TESTS']")
 	WebElement upcomingTests;
-	@FindBy(xpath = "//*[.=\"I'm not interested\"]")
+	@FindBy(xpath = "//*[.=\"No I'm not interested\"]")
 	WebElement notInterestedButton;
 
 	public AssessmentPage(WebDriver driver, WebDriverWait wait) {
@@ -164,6 +164,7 @@ public class AssessmentPage {
 		if (!Config.ASSESSMENT_TITLE.equals(driver.getTitle().trim())) {
 			throw new IllegalStateException("This is not  the Plancess Assessment page");
 		}
+		executor.softWaitForWebElement(notInterestedButton);
 		executor.softWaitForWebElement(notInterestedButton);
 		if (executor.isElementExist(notInterestedButton) && notInterestedButton.isDisplayed()) {
 			executor.click(notInterestedButton, "not interested button");
@@ -412,6 +413,7 @@ public class AssessmentPage {
 		executor.softWaitForWebElement(getPauseTestButton());
 		executor.click(getPauseTestButton(), "Pause Button");
 		// getPauseTestButton().click();
+		executor.softWaitForWebElement(getRemainingTime());
 		executor.softWaitForWebElement(getRemainingTime());
 		String remainingTime = getRemainingTime().getText().trim();
 		executor.softWaitForWebElement(getResumeTest());

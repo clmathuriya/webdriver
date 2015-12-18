@@ -21,6 +21,8 @@ import org.testng.annotations.Optional;
 import com.plancess.selenium.reporter.PlancessReporter;
 import com.plancess.selenium.utils.Util;
 
+import io.appium.java_client.android.AndroidDriver;
+
 public class Executioner {
 	private WebDriver driver;
 	private Util util;
@@ -64,7 +66,14 @@ public class Executioner {
 		try {
 
 			startTime = stopWatch.getTime();
-			WebDriver driver = new RemoteWebDriver(new URL("http://" + host + ":" + port + "/wd/hub"), capabilities);
+			WebDriver driver = null;
+			if (capabilities.getCapability("deviceName") != null
+					&& capabilities.getCapability("deviceName").toString().length() >= 5) {
+				driver = new AndroidDriver<>(new URL("http://" + host + ":4723/wd/hub"), capabilities);
+
+			} else {
+				driver = new RemoteWebDriver(new URL("http://" + host + ":" + port + "/wd/hub"), capabilities);
+			}
 			duration = stopWatch.getTime() - startTime;
 			addStep(startTime, duration, "Open browser", "Pass", "NA");
 
