@@ -26,7 +26,7 @@
 #Running tests
 
 1. Start Selenium grid hub 
- 	$java -jar selenium-server-standalone-2.47.1.jar -role hub &
+ 	$java -jar selenium-server-standalone-2.48.2.jar -role hub &
 2. Register nodes to hub 
 	$xvfb-run -s "-screen 0 1920x1020x24" java -jar selenium-server-standalone-2.48.2.jar -role node -nodeConfig node.json -Dwebdriver.ie.driver=.\IEDriverServer.exe -Dwebdriver.chrome.driver=./chromedriver & 
 3. Run project as maven test
