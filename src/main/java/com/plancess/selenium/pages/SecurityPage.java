@@ -162,6 +162,7 @@ public class SecurityPage {
 	public SecurityPage updateUserSecurity(Map<String, String> user) {
 
 		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(currentPassword));
+		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(currentPassword));
 		executor.click(currentPassword, "current password");
 		executor.clear(currentPassword, "current password");
 		executor.sendKeys(currentPassword, user.get("currentPassword"), "current password");
