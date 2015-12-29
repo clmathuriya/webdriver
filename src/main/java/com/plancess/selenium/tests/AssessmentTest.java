@@ -3,6 +3,7 @@ package com.plancess.selenium.tests;
 import java.util.Map;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -19,6 +20,7 @@ public class AssessmentTest extends BaseTest {
 	private ReportPage reportPage;
 	private AssessmentPage assessmentPage;
 	private SignUpDialogPage signUpDialogPage;
+	
 
 	@Test(dataProvider = "noMoreTestDataProvider", groups = { "regression" })
 	public void noMoreTestErorTest(Map<String, String> user) {
@@ -54,9 +56,19 @@ public class AssessmentTest extends BaseTest {
 
 		}
 		executor.softWaitForWebElement(dashboard.getNoTopicMsg());
-		executor.assertTrue(executor.isElementExist(By.xpath("//*[@ng-if='!premiumUser']")),
+		if(executor.isElementExist(By.xpath("//*[@ng-if='package_type === 'premium'']"))){
+			executor.assertTrue(executor.isElementExist(By.xpath("//*[@ng-if='package_type === 'premium'']")),
+					"Verify if no more tests exist for this subject");
+			executor.click(dashboard.getCloseModel(), "close model");
+		}else{
+			executor.assertTrue(executor.isElementExist(By.xpath(".//*[@ng-click='try()']")),
 				"Verify if no more tests exist for this subject");
-		executor.click(dashboard.getCloseModel(), "close model");
+			
+			executor.sendKeys(executor.getElement(By.xpath(".//*[@ng-click='try()']")), "ESC", "No more Test found");
+		}
+		/*executor.assertTrue(executor.isElementExist(By.xpath("//*[@ng-if='package_type === 'premium'']")),
+				"Verify if no more tests exist for this subject");
+		executor.click(dashboard.getCloseModel(), "close model");*/
 
 		dashboard.logoutUser();
 

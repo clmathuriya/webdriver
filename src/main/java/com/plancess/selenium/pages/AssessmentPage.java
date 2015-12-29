@@ -3,6 +3,7 @@ package com.plancess.selenium.pages;
 import java.util.List;
 import java.util.Map;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -22,6 +23,9 @@ public class AssessmentPage {
 	private Actions actions;
 	private String performanceSummarySectionXpath = "//*[@ng-if='isNewUser']";
 	private Executioner executor;
+
+	private TourPage tourPage;
+	public static boolean takeTour;
 
 	@FindBy(css = "header img[title='Preplane Logo']")
 	WebElement plancessHeaderLogo;
@@ -150,9 +154,19 @@ public class AssessmentPage {
 
 	@FindBy(xpath = "//*[.='UPCOMING TESTS']")
 	WebElement upcomingTests;
-	@FindBy(xpath = "//*[.=\"No I'm not interested\"]")
+	
+/*	@FindBy(xpath = "//*[.=\"No I'm not interested\"]")
 	WebElement notInterestedButton;
 
+	@FindBy(xpath = "//*[.='Begin Tour']")
+	WebElement beginTour;
+
+	@FindBy(xpath = "//*[.='Skip Tour']")
+	WebElement skipTour;
+	
+	@FindBy(xpath = "//*[.='Back']")
+	WebElement Back;*/
+	
 	public AssessmentPage(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
 		this.wait = wait;
@@ -164,10 +178,14 @@ public class AssessmentPage {
 		if (!Config.ASSESSMENT_TITLE.equals(driver.getTitle().trim())) {
 			throw new IllegalStateException("This is not  the Plancess Assessment page");
 		}
-		executor.softWaitForWebElement(notInterestedButton);
-		executor.softWaitForWebElement(notInterestedButton);
-		if (executor.isElementExist(notInterestedButton) && notInterestedButton.isDisplayed()) {
-			executor.click(notInterestedButton, "not interested button");
+		tourPage=new TourPage(driver, wait);
+		executor.softWaitForWebElement(tourPage.getNotInterestedButton());
+		executor.softWaitForWebElement(tourPage.getNotInterestedButton());
+		if (executor.isElementExist(tourPage.getBeginTour())&&tourPage.getBeginTour().isDisplayed() && takeTour == true) {
+			tourPage.completeAssessmentTour();
+		}
+		if (executor.isElementExist(tourPage.getNotInterestedButton()) && tourPage.getNotInterestedButton().isDisplayed()) {
+			executor.click(tourPage.getNotInterestedButton(), "Not Interested button");
 		}
 
 	}
@@ -511,5 +529,6 @@ public class AssessmentPage {
 		}
 		return new ReportPage(driver, wait);
 	}
+
 
 }

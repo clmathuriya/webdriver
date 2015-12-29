@@ -1,8 +1,11 @@
 package com.plancess.selenium.pages;
 
+import java.util.List;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.FindBys;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -34,6 +37,9 @@ public class LandingPage {
 
 	@FindBy(css = "a[ng-click='logoutUser()']")
 	WebElement logoutLink;
+	
+	@FindBy(xpath = "(.//*[@class='btn offer-btn'])[1]") 
+	WebElement buyNow;
 
 	// getter and setters
 
@@ -49,6 +55,8 @@ public class LandingPage {
 		PageFactory.initElements(driver, this);
 
 	}
+	
+	
 
 	public WebDriver getDriver() {
 		return driver;
@@ -99,6 +107,15 @@ public class LandingPage {
 		return new LoginDialogPage(driver, wait);
 
 	}
+	
+	public PaymentPage openPaymentPage() {
+
+		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(buyNow));
+		executor.mouseClick(buyNow);
+
+		return new PaymentPage(driver, wait);
+
+	}
 
 	public String getTitle() {
 		return driver.getTitle();
@@ -129,6 +146,7 @@ public class LandingPage {
 	public void clickToggelDropDown() {
 		toggleDropDown.click();
 	}
+	
 
 	public void tryLogout() {
 
