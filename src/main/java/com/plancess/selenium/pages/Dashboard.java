@@ -179,10 +179,10 @@ public class Dashboard {
 			throw new IllegalStateException("This is not  the Plancess Dashboard page");
 		}
 		driver.manage().window().maximize();
-		
+
 		tourPage = new TourPage(driver, wait);
 		executor.softWaitForWebElement(tourPage.getNotInterestedButton());
-		
+
 		if (executor.isElementExist(tourPage.getBeginTour()) && takeTour == true) {
 			tourPage.completeDashboardTour();
 		}
@@ -398,27 +398,30 @@ public class Dashboard {
 		return preplaneHeaderLogoIcon;
 	}
 
-	/*public WebElement getNotInterestedButton() {
-		return notInterestedButton;
-	}
-*/
+	/*
+	 * public WebElement getNotInterestedButton() { return notInterestedButton;
+	 * }
+	 */
 	public WebElement getCloseModel() {
 		return closeModel;
 	}
 
-	/*public WebElement getSkipTour() {
-		return skipTour;
-	}
-*/
+	/*
+	 * public WebElement getSkipTour() { return skipTour; }
+	 */
 	public LandingPage logoutUser() {
-
-		executor.softWaitForWebElement(toggleDropDown);
-		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(toggleDropDown));
-		executor.mouseClick(toggleDropDown);
-		executor.softWaitForWebElement(logoutLink);
-		if (executor.isElementExist(logoutLink))
-			executor.click(logoutLink, "logout link");
-
+		int i = 0;
+		boolean flag=true;
+		while (i < 5&&flag==true) {
+			executor.softWaitForWebElement(toggleDropDown);
+			executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(toggleDropDown));
+			executor.mouseClick(toggleDropDown);
+			executor.softWaitForWebElement(logoutLink);
+			if (executor.isElementExist(logoutLink) && logoutLink.isDisplayed()){
+				executor.click(logoutLink, "logout link");
+				flag=false;
+			}			
+		}
 		return new LandingPage(driver, wait);
 
 	}

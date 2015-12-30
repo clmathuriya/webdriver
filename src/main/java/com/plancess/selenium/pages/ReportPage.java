@@ -79,7 +79,7 @@ public class ReportPage {
 		tourPage=new TourPage(driver, wait);
 		
 		executor.softWaitForWebElement(tourPage.getNotInterestedButton());
-		executor.softWaitForWebElement(tourPage.getNotInterestedButton());
+		//executor.softWaitForWebElement(tourPage.getNotInterestedButton());
 		
 		if (executor.isElementExist(tourPage.getBeginTour())&&tourPage.getBeginTour().isDisplayed() && takeTour == true) {
 			tourPage.completeReportTour();

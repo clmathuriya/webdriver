@@ -23,7 +23,7 @@ public class ProfilePage {
 	private WebDriverWait wait;
 	private Actions actions;
 	private Executioner executor;
-
+	private static String msg = "";
 	WebElement firstName;
 	WebElement lastName;
 	WebElement email;
@@ -215,99 +215,123 @@ public class ProfilePage {
 	}
 
 	public ProfilePage updateUserProfile(Map<String, String> user) {
-		int timer = 1;
-		while (!executor.isElementExist(firstName) || !firstName.isDisplayed() && timer++ < 10) {
-			executor.softWaitForWebElement(firstName);
-		}
-		executor.clear(firstName, "firstName");
-
-		executor.sendKeys(firstName, user.get("firstName"), "firstName");
-
-		executor.clear(lastName, "lastName");
-		executor.sendKeys(lastName, user.get("lastName"), "lastName");
-
-		executor.clear(mobile, "mobile");
-		executor.click(mobileCountryCode, "Mobile Country Code");
-
-		if (!user.get("mobile_Country_Code").equals("")) {
-			WebElement mobileCountryCodeElement = executor
-					.getElement(By.xpath("//span[.='" + user.get("mobile_Country_Code") + "']"));
-			executor.click(mobileCountryCodeElement, "mobileCountryCode");
-		} else if (!user.get("mobile_Country").equals("")) {
-			WebElement mobileCountryElement = executor
-					.getElement(By.xpath("//span[.='" + user.get("mobile_Country") + "']"));
-			executor.click(mobileCountryElement, "mobileCountry");
-		}
-
-		executor.click(mobile, "mobile");
-		executor.sendKeys(mobile, user.get("mobile"), "mobile");
-
-		if (!user.get("dob").equals("")) {
-			executor.mouseClick(dob);
-
-			String a[] = user.get("dob").split("/");
-			String date = a[0];
-			String month = a[1];
-			String year = a[2];
-
-			int actualMonth = (Integer.parseInt(month) - 1);
-			executor.softWaitForWebElement(dob_year);
-
-			executor.selectFromDropDown(dob_year, "text", year);
-
-			executor.selectFromDropDown(dob_month, "value", "" + actualMonth);
-
-			WebElement dateDOBElement = executor.getElement(By.xpath("//a[.='" + Integer.parseInt(date) + "']"));
-			executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(dateDOBElement));
-			executor.mouseClick(dateDOBElement);
-
-		}
-
-		// Date Month Year
-		if (!user.get("target_year").equals("")) {
-			executor.selectFromDropDown(exam_target_year, "text", user.get("target_year"));
-
-		}
-		int trycount = 0;
-		while (!notify_exam_prep_checkbox.isSelected() && trycount <= 5) {
-
-			try {
-
-				executor.mouseClick(notify_exam_prep_checkbox);
-				trycount++;
-
-			} catch (Exception e) {
-				trycount++;
+		msg = "";int i=0;
+		while (msg == ""&&i<5) {
+			int timer = 1;
+			while (!executor.isElementExist(firstName) || !firstName.isDisplayed() && timer++ < 10) {
+				executor.softWaitForWebElement(firstName);
 			}
+			executor.clear(firstName, "firstName");
+
+			executor.sendKeys(firstName, user.get("firstName"), "firstName");
+
+			executor.clear(lastName, "lastName");
+			executor.sendKeys(lastName, user.get("lastName"), "lastName");
+
+			executor.clear(mobile, "mobile");
+			executor.click(mobileCountryCode, "Mobile Country Code");
+
+			if (!user.get("mobile_Country_Code").equals("")) {
+				WebElement mobileCountryCodeElement = executor
+						.getElement(By.xpath("//span[.='" + user.get("mobile_Country_Code") + "']"));
+				executor.click(mobileCountryCodeElement, "mobileCountryCode");
+			} else if (!user.get("mobile_Country").equals("")) {
+				WebElement mobileCountryElement = executor
+						.getElement(By.xpath("//span[.='" + user.get("mobile_Country") + "']"));
+				executor.click(mobileCountryElement, "mobileCountry");
+			}
+
+			executor.click(mobile, "mobile");
+			executor.sendKeys(mobile, user.get("mobile"), "mobile");
+
+			if (!user.get("dob").equals("")) {
+				executor.mouseClick(dob);
+
+				String a[] = user.get("dob").split("/");
+				String date = a[0];
+				String month = a[1];
+				String year = a[2];
+
+				int actualMonth = (Integer.parseInt(month) - 1);
+				executor.softWaitForWebElement(dob_year);
+
+				executor.selectFromDropDown(dob_year, "text", year);
+
+				executor.selectFromDropDown(dob_month, "value", "" + actualMonth);
+
+				WebElement dateDOBElement = executor.getElement(By.xpath("//a[.='" + Integer.parseInt(date) + "']"));
+				executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(dateDOBElement));
+				executor.mouseClick(dateDOBElement);
+
+			}
+
+			// Date Month Year
+			if (!user.get("target_year").equals("")) {
+				executor.selectFromDropDown(exam_target_year, "text", user.get("target_year"));
+
+			}
+			int trycount = 0;
+			while (!notify_exam_prep_checkbox.isSelected() && trycount <= 5) {
+
+				try {
+
+					executor.mouseClick(notify_exam_prep_checkbox);
+					trycount++;
+
+				} catch (Exception e) {
+					trycount++;
+				}
+			}
+			if (user.get("profilePic").equalsIgnoreCase("Yes")) {
+
+				ClassLoader classLoader = getClass().getClassLoader();
+				File file = new File(classLoader.getResource(user.get("filePath")).getFile());
+				String js = "arguments[0].style.visibility = 'visible';arguments[0].style.display = 'block'; arguments[0].style.height = '1px'; arguments[0].style.width = '1px'; arguments[0].style.opacity = 1";
+
+				((JavascriptExecutor) driver).executeScript(js, getFileInput());
+
+				getFileInput().sendKeys(file.getAbsolutePath());
+				executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(getProfileCroppedImage()));
+
+				executor.click(getProfileCroppedImage(), "Profile Cropped Image");
+			}
+
+			if (getNotify_by_email_switch().getAttribute("aria-checked").equals("false")
+					^ (user.get("emailNotification").equalsIgnoreCase("No"))) {
+
+				executor.click(getNotify_by_email(), "Email Notification");
+			}
+
+			// notify_by_email_switch.click();
+			executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(save_details_button));
+
+			executor.mouseClick(save_details_button);// , "save user details
+			msg = getAlertMessage().getAttribute("innerHTML");
+			System.out.println(getAlertMessage().getText() + " && " + msg);
+			if(msg==null){
+				msg = getAlertMessage().getText() ;
+			}
+			
+			// msg.isEmpty()
+			if (save_details_button.isEnabled()) {
+				executor.mouseClick(save_details_button);
+				msg = getAlertMessage().getAttribute("innerHTML");
+			}
+			i++;
 		}
-		if (user.get("profilePic").equalsIgnoreCase("Yes")) {
+		executor.softWaitForCondition(new ExpectedCondition<Boolean>() {
 
-			ClassLoader classLoader = getClass().getClassLoader();
-			File file = new File(classLoader.getResource(user.get("filePath")).getFile());
-			String js = "arguments[0].style.visibility = 'visible';arguments[0].style.display = 'block'; arguments[0].style.height = '1px'; arguments[0].style.width = '1px'; arguments[0].style.opacity = 1";
+			@Override
+			public Boolean apply(WebDriver driver) {
 
-			((JavascriptExecutor) driver).executeScript(js, getFileInput());
+				msg = getAlertMessage().getAttribute("innerHTML");
+				return msg.contains("Your data have been saved successfully.");
 
-			getFileInput().sendKeys(file.getAbsolutePath());
-			executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(getProfileCroppedImage()));
-
-			executor.click(getProfileCroppedImage(), "Profile Cropped Image");
-		}
-
-		if (getNotify_by_email_switch().getAttribute("aria-checked").equals("false")
-				^ (user.get("emailNotification").equalsIgnoreCase("No"))) {
-
-			executor.click(getNotify_by_email(), "Email Notification");
-		}
-
-		// notify_by_email_switch.click();
-		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(save_details_button));
-
-		executor.mouseClick(save_details_button);// , "save user details
-													// button");
-
+			}
+		});
+		System.out.println(msg);
+		executor.assertEquals(msg, "Your data have been saved successfully.", "Data have been saved successfully");
 		return new ProfilePage(driver, wait);
-
 	}
 
 	public String getTitle() {

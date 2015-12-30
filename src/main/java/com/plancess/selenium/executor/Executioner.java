@@ -5,6 +5,7 @@ import java.net.URL;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -158,6 +159,25 @@ public class Executioner {
 	}
 
 	public Executioner sendKeys(WebElement e, String text, String elementName) {
+
+		try {
+			startTime = stopWatch.getTime();
+			e.sendKeys(text);
+			addStep(startTime, stopWatch.getTime() - startTime,
+					"enter text : " + text + " in text field : " + elementName, "Pass", util.takeScreenshot(driver));
+			return this;
+		} catch (Exception exception) {
+			addStep(startTime, stopWatch.getTime() - startTime,
+					"enter text : " + text + " in text field : " + elementName, "Failed", util.takeScreenshot(driver));
+			Assert.fail("unable to enter text : " + text + " in text field : " + elementName + " exception: "
+					+ exception.getMessage());
+			return this;
+
+		}
+
+	}
+	
+	public Executioner sendKeys(WebElement e, Keys text, String elementName) {
 
 		try {
 			startTime = stopWatch.getTime();

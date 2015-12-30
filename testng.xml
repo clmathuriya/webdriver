@@ -46,6 +46,7 @@
 			<class name="com.plancess.selenium.tests.CreateAssessmentTest" />
 			<class name="com.plancess.selenium.tests.UserProfileTest" />
 			<class name="com.plancess.selenium.tests.UserSecurityTest" />
+			<class name="com.plancess.selenium.tests.TakeTourTest" />
 		</classes>
 	</test>
 
