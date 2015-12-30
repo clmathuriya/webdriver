@@ -20,6 +20,7 @@ public class SignUpDialogPage {
 	private Actions actions;
 	private Executioner executor;
 	private final String agreeCheckBoxXpath = "//input[@type='checkbox']";
+	@FindBy(xpath = "//*[@name='fname']")
 	WebElement fname;
 	@FindBy(xpath = "//*[@id='regFnameError']")
 	WebElement firstNameErrorMessage;
@@ -203,6 +204,7 @@ public class SignUpDialogPage {
 
 	public void fillSignUpForm(Map<String, String> user) {
 		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(fname));
+		executor.click(fname, "first Name");
 		executor.clear(fname, "first name");
 		executor.sendKeys(fname, user.get("firstName"), "first name");
 		executor.sendKeys(lname, user.get("lastName"), "last name");

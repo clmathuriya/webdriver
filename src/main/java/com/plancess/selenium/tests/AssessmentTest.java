@@ -54,7 +54,7 @@ public class AssessmentTest extends BaseTest {
 
 		}
 		executor.softWaitForWebElement(dashboard.getNoTopicMsg());
-		executor.assertTrue(executor.isElementExist(By.xpath("//*[@ng-if='!premiumUser']")),
+		executor.assertTrue(executor.isElementExist(By.xpath("//*[@ng-if=\"package_type != 'premium'\"]")),
 				"Verify if no more tests exist for this subject");
 		executor.click(dashboard.getCloseModel(), "close model");
 

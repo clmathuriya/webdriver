@@ -28,6 +28,7 @@ public class ProfilePage {
 	WebElement lastName;
 	WebElement email;
 
+	@FindBy(xpath = "//input[@type='file']")
 	WebElement fileInput;
 
 	@FindBy(xpath = ".//*[@class='selected-flag']")
@@ -291,7 +292,8 @@ public class ProfilePage {
 			getFileInput().sendKeys(file.getAbsolutePath());
 			executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(getProfileCroppedImage()));
 
-			executor.click(getProfileCroppedImage(), "Profile Cropped Image");
+			if (executor.isElementExist(getProfileCroppedImage()))
+				executor.click(getProfileCroppedImage(), "Profile Cropped Image");
 		}
 
 		if (getNotify_by_email_switch().getAttribute("aria-checked").equals("false")
