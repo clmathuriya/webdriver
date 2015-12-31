@@ -21,6 +21,7 @@ public class LoginDialogPage {
 	private WebDriverWait wait;
 	private Executioner executor;
 	private Actions actions;
+	
 	@FindBy(xpath = ".//*[@id='loginForm']//*[@name='email']")
 	WebElement email;
 

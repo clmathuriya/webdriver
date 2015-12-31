@@ -176,7 +176,7 @@ public class Executioner {
 		}
 
 	}
-	
+
 	public Executioner sendKeys(WebElement e, Keys text, String elementName) {
 
 		try {
@@ -410,6 +410,24 @@ public class Executioner {
 		try {
 
 			wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(frame));
+
+			addStep(startTime, stopWatch.getTime() - startTime, "switch to frame ", "Pass",
+					util.takeScreenshot(driver));
+
+		} catch (Exception e) {
+			addStep(startTime, stopWatch.getTime() - startTime, "switch to frame ", "Failed",
+					util.takeScreenshot(driver));
+			Assert.fail("wait time out for frame");
+
+		}
+
+	}
+
+	public void switchToDefaultContent() {
+
+		try {
+
+			driver.switchTo().defaultContent();
 
 			addStep(startTime, stopWatch.getTime() - startTime, "switch to frame ", "Pass",
 					util.takeScreenshot(driver));

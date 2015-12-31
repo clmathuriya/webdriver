@@ -1,9 +1,11 @@
 package com.plancess.selenium.tests;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -28,7 +30,7 @@ public class PaymentTest extends BaseTest {
 	private PaymentPage paymentPage;
 
 
-/*	@Test(enabled= false,dataProvider = "dashboardNewUserDataProvider", dataProviderClass = DashboardTest.class, groups = { "smoke","regression" })*/
+
 	@Test(dataProvider = "makePaymentLandingPageValidData", groups = { "smoke","regression" })
 	public void makePaymentFromLandingPageWithValidData(Map<String, String> user) {
 		paymentPage = landingPage.openPaymentPage();
@@ -43,27 +45,17 @@ public class PaymentTest extends BaseTest {
 				
 		paymentPage.selectPackage(user.get("packageSelected"));
 		
-		//executor.softWaitForWebElement(paymentPage.getPaymentModal());
 		
 		paymentPage.makePayment(user);
-		//paymentPage.getPaymentHeader().getText();
-		executor.assertEquals(paymentPage.getPaymentHeader().getText().contains(user.get("packageName"))
-				&&paymentPage.getPaymentHeader().getText().contains("Preplane"), 
-				true, "Verify if Payment modal has correct product name");
-		executor.assertEquals(paymentPage.getSubmitbtn().getText().contains(user.get("price")), 
-				true, "Verify if Payment modal has correct product name");
+				
+		paymentPage.testPayment("sucess");
+		paymentPage.verifyUpgradeEmail(user);
+		paymentPage.verifyEmail(user);		
 		
-		executor.sendKeys(paymentPage.getEmail(), user.get("email"), "Email");
-		
-		
-
-		
-		
-
 	}
 	
-	@Test(enabled= false,dataProvider = "makePaymentValidData", groups = { "smoke", "regression" })
-	public void takeTestTourWithValidDataTest(Map<String, String> user) {
+	@Test(dataProvider = "makePaymentLandingPageValidData", groups = { "smoke", "regression" })
+	public void makePaymentWithValidData(Map<String, String> user) {
 
 		long timestamp = System.currentTimeMillis();
 
@@ -72,35 +64,36 @@ public class PaymentTest extends BaseTest {
 
 		signUpDialogPage = landingPage.openSignUpDialogPage();
 		signUpDialogPage.signUp(user);
-		Dashboard.takeTour = true;
+		
 		dashboard = signUpDialogPage.verifyEmail(user).doLogin(user);
 
-		executor.softWaitForWebElement(dashboard.getDashBoardButton());
-
-		executor.assertTrue(dashboard.getStartAssessmentSection().isDisplayed(),
-				"assert user login succefull and start assessment section displayed");
-
-		executor.softWaitForWebElement(dashboard.getPhysicsSubjectSection());
-		executor.softWaitForWebElement(dashboard.getPhysicsSubjectSection());
-		executor.click(dashboard.getPhysicsSubjectSection(), "Physics subject section");
-		executor.click(dashboard.getTakeSubjectTest(), "take subject test");
+		executor.softWaitForWebElement(dashboard.getDashBoardButton());	
+				
+		paymentPage = dashboard.openPaymentPage();
 		
-		executor.assertTrue(!executor.isElementExist(By.xpath("//*[@ng-if='noTopic']")),
-				"Verify if no more tests error does not exist for this subject");
-		executor.softWaitForWebElement(dashboard.getTimeRequired());
-		executor.verifyEquals(dashboard.getTimeRequired().getText().trim(), user.get("timeRequired").trim(),
-				"verify time required");
-		executor.verifyEquals(dashboard.getTotalQuestions().getText().trim(), user.get("totalQuestions"),
-				"verify number of total questions");
-		executor.click(dashboard.getStartTest(), "start test button");
-		AssessmentPage.takeTour = true;
-		assessmentPage = new AssessmentPage(driver, wait);
-		ReportPage.takeTour = true;
-		reportPage = assessmentPage.takeAssessment(user);	
+		executor.softWaitForWebElement(paymentPage.getUpgradePackages());
+		executor.assertTrue(paymentPage.getUpgradePackages().isDisplayed(), "Packages are displayed");
 		
-		//reportPage = new ReportPage(driver, wait);
-		reportPage.verifyReport(user);
-		dashboard.logoutUser();
+		executor.verifyTrue(executor.isElementExist(By.xpath(".//*[.='"+user.get("packageName")+"']")),
+				"Verify if Package Exists: "+user.get("packageName"));
+		List<WebElement> elements=driver.findElements(By.xpath(".//*[@id='content']//*[@class='package-cost']//span"));
+		String packageText="";
+		for(WebElement e:elements){			
+			if(e.getText().contains(user.get("price"))){
+				packageText=e.getText();
+				break;
+			}
+			//System.out.println(e.getText());
+		}
+		executor.assertTrue(packageText.contains(user.get("price")),
+				"Verify if Package Exists: "+user.get("price"));
+				
+		paymentPage.selectPackageAfterLogin(user.get("packageSelected"));
+		paymentPage.makePayment(user);
+		paymentPage.testPayment("sucess");
+		paymentPage.verifyUpgradeEmail(user);
+		
+		//dashboard.logoutUser();
 
 	}
 	

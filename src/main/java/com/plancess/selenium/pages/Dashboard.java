@@ -167,6 +167,9 @@ public class Dashboard {
 
 	@FindBy(xpath = "//*[.='UPCOMING MOCK TESTS']")
 	WebElement upcomingTests;
+	
+	@FindBy(xpath = "(.//*[@class='btn offer-btn'])[1]") 
+	WebElement buyNow;
 
 	public Dashboard(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
@@ -406,9 +409,14 @@ public class Dashboard {
 		return closeModel;
 	}
 
-	/*
-	 * public WebElement getSkipTour() { return skipTour; }
-	 */
+	public PaymentPage openPaymentPage() {
+
+		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(buyNow));
+		executor.mouseClick(buyNow);
+
+		return new PaymentPage(driver, wait);
+
+	}
 	public LandingPage logoutUser() {
 		int i = 0;
 		boolean flag=true;
