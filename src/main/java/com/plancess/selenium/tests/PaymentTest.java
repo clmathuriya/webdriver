@@ -97,12 +97,6 @@ public class PaymentTest extends BaseTest {
 
 	}
 	
-	@DataProvider(name = "dashboardNewUserDataProvider")
-	public Object[][] takeTestValidData() {
-
-		return new ExcelReader().getUserDataFromExcel("testData.xlsx", "assessment_valid");
-	}
-	
 	@DataProvider(name = "makePaymentLandingPageValidData")
 	public static Object[][] signUpDataProviderMandatoryData() {
 		Map<String, String> user = new HashMap<String, String>();
