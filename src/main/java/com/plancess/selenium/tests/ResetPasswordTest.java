@@ -64,7 +64,7 @@ public class ResetPasswordTest extends BaseTest {
 		executor.verifyEquals(forgotPasswordDialogPage.getSuccessMessage().getText().trim(),
 				"Instructions sent to your email.", "verify instruction sent ,message displayed");
 
-		forgotPasswordDialogPage.resetPassword(user);
+		// forgotPasswordDialogPage.resetPassword(user);
 
 	}
 

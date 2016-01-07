@@ -203,7 +203,7 @@ public class ReportPage {
 		String notificationItemText = getNotificationItem().getAttribute("innerHTML").toLowerCase();
 		
 		executor.verifyTrue(
-				(notificationItemText.contains(user.get("subject")) || notificationItemText.contains("custom test"))
+				(notificationItemText.contains(user.get("subject").toLowerCase().trim()) || notificationItemText.contains("custom test"))
 						&& (notificationItemText.contains("completed") || notificationItemText.contains("available")),
 
 		"verify notification item contains test completed for subject" + user.get("subject"));

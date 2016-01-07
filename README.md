@@ -34,6 +34,6 @@
 	
 #To run with headless firefox 
 1. sudo apt-get install Xvfb firefox
-2.  Xvfb :1 -screen 0 1024x768x24 &
+
 
 
