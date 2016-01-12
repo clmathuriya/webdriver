@@ -2,6 +2,7 @@ package com.plancess.selenium.pages;
 
 import java.util.List;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -15,11 +16,14 @@ import com.plancess.selenium.executor.Executioner;
 import com.plancess.selenium.utils.Config;
 
 public class Dashboard {
+	public static boolean takeTour;
 	private final WebDriver driver;
 	private WebDriverWait wait;
 	private Actions actions;
 	private String performanceSummarySectionXpath = "//*[@ng-if='isNewUser']";
 	private Executioner executor;
+
+	private TourPage tourPage;
 
 	@FindBy(css = "header img[title='Preplane Logo']")
 	WebElement preplaneHeaderLogo;
@@ -122,7 +126,7 @@ public class Dashboard {
 	@FindBy(css = "div.toast-title")
 	WebElement toastTitle;
 
-	@FindBy(xpath = "//*[@ng-if='noTopic']")
+	@FindBy(xpath = "//*[@ng-click='upgradeNow()']")
 	WebElement noTopicMsg;
 
 	@FindBy(xpath = "//*[@ng-click='closeModal()']")
@@ -164,21 +168,6 @@ public class Dashboard {
 	@FindBy(xpath = "//*[.='UPCOMING MOCK TESTS']")
 	WebElement upcomingTests;
 
-	@FindBy(xpath = "//*[.=\"No I'm not interested\"]")
-	WebElement notInterestedButton;
-
-	@FindBys(value = @FindBy(xpath = "//a[.='Begin Tour']") )
-	List<WebElement> beginTour;
-
-	@FindBys(value = @FindBy(xpath = "//a[.='Got it!']") )
-	List<WebElement> gotIt;
-
-	@FindBys(value = @FindBy(xpath = "//a[.='Start Test' and @class='shepherd-button ']") )
-	List<WebElement> startTourTest;
-
-	@FindBys(value = @FindBy(xpath = "//a[.='Take Test' and @class='shepherd-button ']") )
-	List<WebElement> tourTestBtn;
-
 	public Dashboard(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
 		this.wait = wait;
@@ -190,20 +179,19 @@ public class Dashboard {
 			throw new IllegalStateException("This is not  the Plancess Dashboard page");
 		}
 		driver.manage().window().maximize();
-		executor.softWaitForWebElement(notInterestedButton);
 
-		for (WebElement tourBtn : beginTour) {
-			if (tourBtn.isDisplayed()) {
-				completeTour();
-			}
+		tourPage = new TourPage(driver, wait);
+		executor.softWaitForWebElement(tourPage.getNotInterestedButton());
+
+		if (executor.isElementExist(tourPage.getBeginTour()) && takeTour == true) {
+			tourPage.completeDashboardTour();
 		}
-		if (executor.isElementExist(notInterestedButton) && notInterestedButton.isDisplayed()) {
-			executor.click(notInterestedButton, "Not interested button");
+		if (executor.isElementExist(tourPage.getNotInterestedButton())
+				&& tourPage.getNotInterestedButton().isDisplayed()) {
+			executor.click(tourPage.getNotInterestedButton(), "Not interested button");
 		}
 
 	}
-
-	// getter and setters
 
 	public WebDriver getDriver() {
 		return driver;
@@ -410,22 +398,30 @@ public class Dashboard {
 		return preplaneHeaderLogoIcon;
 	}
 
-	public WebElement getNotInterestedButton() {
-		return notInterestedButton;
-	}
-
+	/*
+	 * public WebElement getNotInterestedButton() { return notInterestedButton;
+	 * }
+	 */
 	public WebElement getCloseModel() {
 		return closeModel;
 	}
 
+	/*
+	 * public WebElement getSkipTour() { return skipTour; }
+	 */
 	public LandingPage logoutUser() {
-
-		executor.softWaitForWebElement(toggleDropDown);
-		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(toggleDropDown));
-		executor.mouseClick(toggleDropDown);
-		executor.softWaitForWebElement(logoutLink);
-		executor.click(logoutLink, "logout link");
-
+		int i = 0;
+		boolean flag = true;
+		while (i++ < 5 && flag == true) {
+			executor.softWaitForWebElement(toggleDropDown);
+			executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(toggleDropDown));
+			executor.mouseClick(toggleDropDown);
+			executor.softWaitForWebElement(logoutLink);
+			if (executor.isElementExist(logoutLink) && logoutLink.isDisplayed()) {
+				executor.click(logoutLink, "logout link");
+				flag = false;
+			}
+		}
 		return new LandingPage(driver, wait);
 
 	}
@@ -461,37 +457,6 @@ public class Dashboard {
 		}
 
 		return new CreateAccessment(driver, wait);
-	}
-
-	private Dashboard completeTour() {
-
-		for (WebElement tourBtn : beginTour) {
-			if (tourBtn.isDisplayed()) {
-				executor.click(tourBtn, "Begin Tour Button");
-
-			}
-		}
-		for (int i = 0; i <= 5; i++) {
-			for (WebElement gotItBtn : gotIt) {
-				if (gotItBtn.isDisplayed()) {
-					executor.click(gotItBtn, "Got It Tour Button");
-				}
-			}
-		}
-
-		for (WebElement testBtn : tourTestBtn) {
-			if (testBtn.isDisplayed()) {
-				executor.click(testBtn, "Take test Tour Button");
-			}
-		}
-
-		for (WebElement startTestBtn : startTourTest) {
-			if (startTestBtn.isDisplayed()) {
-				executor.click(startTestBtn, "start test Tour Button");
-			}
-		}
-
-		return this;
 	}
 
 }

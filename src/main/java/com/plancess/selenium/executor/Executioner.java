@@ -5,6 +5,7 @@ import java.net.URL;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -16,7 +17,6 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.Reporter;
-import org.testng.annotations.Optional;
 
 import com.plancess.selenium.reporter.PlancessReporter;
 import com.plancess.selenium.utils.Util;
@@ -176,6 +176,25 @@ public class Executioner {
 
 	}
 
+	public Executioner sendKeys(WebElement e, Keys text, String elementName) {
+
+		try {
+			startTime = stopWatch.getTime();
+			e.sendKeys(text);
+			addStep(startTime, stopWatch.getTime() - startTime,
+					"enter text : " + text + " in text field : " + elementName, "Pass", util.takeScreenshot(driver));
+			return this;
+		} catch (Exception exception) {
+			addStep(startTime, stopWatch.getTime() - startTime,
+					"enter text : " + text + " in text field : " + elementName, "Failed", util.takeScreenshot(driver));
+			Assert.fail("unable to enter text : " + text + " in text field : " + elementName + " exception: "
+					+ exception.getMessage());
+			return this;
+
+		}
+
+	}
+
 	public Executioner clear(WebElement e, String elementName) {
 
 		try {
@@ -231,7 +250,7 @@ public class Executioner {
 			Assert.assertTrue(flag);
 			addStep(startTime, stopWatch.getTime() - startTime, step, "Pass", util.takeScreenshot(driver));
 			return this;
-		} catch (Exception exception) {
+		} catch (AssertionError exception) {
 			addStep(startTime, stopWatch.getTime() - startTime, step, "Failed", util.takeScreenshot(driver));
 			// Assert.fail("expected true found :" + flag);
 			return this;
@@ -337,7 +356,7 @@ public class Executioner {
 			wait.until(ExpectedConditions.visibilityOf(element));
 		} catch (Exception e) {
 			Reporter.log("wait timeout for web element", 0, true);
-			System.out.println("time out for web element");
+			// System.out.println("time out for web element");
 		}
 	}
 

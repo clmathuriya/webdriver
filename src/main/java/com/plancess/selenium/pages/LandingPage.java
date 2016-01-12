@@ -1,8 +1,11 @@
 package com.plancess.selenium.pages;
 
+import java.util.List;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.FindBys;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -34,6 +37,9 @@ public class LandingPage {
 
 	@FindBy(css = "a[ng-click='logoutUser()']")
 	WebElement logoutLink;
+
+	@FindBy(xpath = "(.//*[@class='btn offer-btn'])[1]")
+	WebElement buyNow;
 
 	// getter and setters
 
@@ -85,6 +91,8 @@ public class LandingPage {
 
 	// user operations
 	public SignUpDialogPage openSignUpDialogPage() {
+		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(signupLink));
+		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(signupLink));
 		executor.click(signupLink, "Signup Link");
 
 		return new SignUpDialogPage(driver, wait);
@@ -97,6 +105,15 @@ public class LandingPage {
 		executor.mouseClick(loginLink);
 
 		return new LoginDialogPage(driver, wait);
+
+	}
+
+	public PaymentPage openPaymentPage() {
+
+		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(buyNow));
+		executor.mouseClick(buyNow);
+
+		return new PaymentPage(driver, wait);
 
 	}
 

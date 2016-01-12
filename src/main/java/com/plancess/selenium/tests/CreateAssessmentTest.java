@@ -147,7 +147,7 @@ public class CreateAssessmentTest extends BaseTest {
 
 					String selectedSubjects = "";
 					for (WebElement e : createAssessment.getTopicsSelected()) {
-						// selectedTopics += e.getText();
+						selectedSubjects += e.getText();
 						selectedSubjects += e.getAttribute("innerHTML");
 					}
 					return selectedSubjects.contains(MODULE);
@@ -156,11 +156,11 @@ public class CreateAssessmentTest extends BaseTest {
 
 			String selectedTopics = "";
 			for (WebElement e : createAssessment.getTopicsSelected()) {
-				// selectedTopics += e.getText();
+				selectedTopics += e.getText();
 				selectedTopics += e.getAttribute("innerHTML");
 			}
 
-			executor.assertTrue(selectedTopics.contains(sub_Module) && selectedTopics.contains(module),
+			executor.verifyTrue(selectedTopics.contains(sub_Module) && selectedTopics.contains(module),
 					"verify topic selected");
 
 		}
