@@ -57,7 +57,7 @@ public class BaseTest {
 	@BeforeMethod
 	public void setUp(@Optional("localhost") String host, @Optional("4444") String port, @Optional("LINUX") String os,
 			@Optional("firefox") String browser, @Optional("40.0") String browserVersion,
-			@Optional("true") String useProxy, @Optional("") String deviceName, @Optional Method method) {
+			@Optional("false") String useProxy, @Optional("") String deviceName, @Optional Method method) {
 
 		// to log starting of test case in report table
 		startTable(method.getName());
@@ -85,7 +85,7 @@ public class BaseTest {
 
 		this.driver = executor.openBrowser(host, port, capabilities);
 
-		wait = new WebDriverWait(driver, 40);
+		wait = new WebDriverWait(driver, 60);
 		executor = new Executioner(driver, wait);
 		executor.navigateToURL(Config.URL);
 		landingPage = new LandingPage(driver, wait);

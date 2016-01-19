@@ -1,13 +1,11 @@
 package com.plancess.selenium.pages;
 
-import java.util.List;
 import java.util.Map;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.FindBys;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -21,10 +19,10 @@ public class LoginDialogPage {
 	private WebDriverWait wait;
 	private Executioner executor;
 	private Actions actions;
-	@FindBy(xpath = ".//*[@id='loginForm']//*[@name='email']")
+	@FindBy(xpath = ".//*[@id='loginForm']//*[@name='logindataEmail']")
 	WebElement email;
 
-	@FindBy(xpath = ".//*[@id='loginForm']//*[@name='password']")
+	@FindBy(xpath = ".//*[@id='loginForm']//*[@name='logindataPass']")
 	WebElement password;
 	WebElement remember;
 
@@ -34,7 +32,7 @@ public class LoginDialogPage {
 	@FindBy(css = "footer img[title='Plancess Logo']")
 	WebElement plancessFooterLogo;
 
-	@FindBy(xpath = "//*[@id='loginBtn']")
+	@FindBy(xpath = "//*[@ng-click='userLogin(logindata)']")
 	WebElement loginButton;
 
 	@FindBy(xpath = "//*[@ng-click='signUpForFree()']")
@@ -49,7 +47,7 @@ public class LoginDialogPage {
 	@FindBy(xpath = "//div[@class='error-message' and @id='loginError']")
 	WebElement failureMessage;
 
-	@FindBy(xpath = "(//*[@id='FbBtn'])[2]")
+	@FindBy(xpath = "//*[@id='FbBtn']")
 	WebElement FbBtn;
 
 	// @FindBy(xpath = "(//*[@id='GBtn'])[2]")
@@ -60,9 +58,11 @@ public class LoginDialogPage {
 		this.wait = wait;
 		this.actions = new Actions(driver);
 		this.executor = new Executioner(driver, wait);
+		executor.softWaitForCondition(ExpectedConditions.titleIs(Config.LANDING_PAGE_TITLE));
 
-		if (!Config.LANDING_PAGE_TITLE.equals(driver.getTitle())) {
-			throw new IllegalStateException("This is not  the Plancess Home page");
+		if (!Config.LANDING_PAGE_TITLE.equals(driver.getTitle().trim())
+				&& !Config.LOGIN_PAGE_TITLE.equals(driver.getTitle().trim())) {
+			throw new IllegalStateException("This is not  the Plancess login dialog page");
 		}
 		PageFactory.initElements(driver, this);
 

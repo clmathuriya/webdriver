@@ -26,10 +26,10 @@ public class LandingPage {
 	@FindBy(css = "footer img[title='Plancess Logo']")
 	WebElement plancessFooterLogo;
 
-	@FindBy(xpath = "//a[normalize-space(.)='Login']")
+	@FindBy(linkText = "LOGIN")
 	WebElement loginLink;
 
-	@FindBy(xpath = "//a[.='Sign Up']")
+	@FindBy(linkText = "SIGN UP")
 	WebElement signupLink;
 
 	@FindBy(css = "a[data-toggle='dropdown'] img")
@@ -92,9 +92,7 @@ public class LandingPage {
 	// user operations
 	public SignUpDialogPage openSignUpDialogPage() {
 		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(signupLink));
-		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(signupLink));
-		executor.click(signupLink, "Signup Link");
-
+		executor.click(signupLink, "Signup link");
 		return new SignUpDialogPage(driver, wait);
 
 	}
@@ -102,7 +100,7 @@ public class LandingPage {
 	public LoginDialogPage openLoginDialogPage() {
 
 		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(loginLink));
-		executor.mouseClick(loginLink);
+		executor.click(loginLink, "login link");
 
 		return new LoginDialogPage(driver, wait);
 
