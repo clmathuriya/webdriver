@@ -18,10 +18,10 @@ public class ReportPage {
 	private WebDriverWait wait;
 	private Actions actions;
 	private Executioner executor;
-	
+
 	public static boolean takeTour;
 	private TourPage tourPage;
-	
+
 	@FindBy(css = "header img[title='Plancess Logo']")
 	WebElement plancessHeaderLogo;
 
@@ -63,28 +63,30 @@ public class ReportPage {
 	WebElement notificationsButton;
 	@FindBy(xpath = "//*[.=\"No I'm not interested\"]")
 	WebElement notInterestedButton;
-	
-	
 
 	public ReportPage(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
 		this.wait = wait;
 		this.actions = new Actions(driver);
 		this.executor = new Executioner(driver, wait);
+		driver.navigate().refresh();
+		executor.softWaitForCondition(ExpectedConditions.titleIs(Config.REPORT_TITLE));
 		PageFactory.initElements(driver, this);
-		// new Executioner(driver).navigateToURL(url);
+
 		if (!Config.REPORT_TITLE.equals(driver.getTitle())) {
 			throw new IllegalStateException("This is not  the Plancess Report page");
 		}
-		tourPage=new TourPage(driver, wait);
-		
+		tourPage = new TourPage(driver, wait);
+
 		executor.softWaitForWebElement(tourPage.getNotInterestedButton());
-		//executor.softWaitForWebElement(tourPage.getNotInterestedButton());
-		
-		if (executor.isElementExist(tourPage.getBeginTour())&&tourPage.getBeginTour().isDisplayed() && takeTour == true) {
+		// executor.softWaitForWebElement(tourPage.getNotInterestedButton());
+
+		if (executor.isElementExist(tourPage.getBeginTour()) && tourPage.getBeginTour().isDisplayed()
+				&& takeTour == true) {
 			tourPage.completeReportTour();
 		}
-		if (executor.isElementExist(tourPage.getNotInterestedButton()) && tourPage.getNotInterestedButton().isDisplayed()) {
+		if (executor.isElementExist(tourPage.getNotInterestedButton())
+				&& tourPage.getNotInterestedButton().isDisplayed()) {
 			executor.click(tourPage.getNotInterestedButton(), "not interested button");
 		}
 
@@ -194,14 +196,14 @@ public class ReportPage {
 		executor.verifyTrue(getQuestionsWisePerformance().isDisplayed(), "verify questions wise performance displayed");
 		// executor.mouseClick(getDashBoardButton());
 
-		executor.refresh();
+		// executor.refresh();
 
-		executor.softWaitForWebElement(getNotificationsButton());
+		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(getNotificationsButton()));
 
 		// to verify notification displayed for test completion
 		executor.click(getNotificationsButton(), "Notifications button ");
 		String notificationItemText = getNotificationItem().getAttribute("innerHTML").toLowerCase();
-		
+
 		executor.verifyTrue(
 				(notificationItemText.contains(user.get("subject")) || notificationItemText.contains("custom test"))
 						&& (notificationItemText.contains("completed") || notificationItemText.contains("available")),

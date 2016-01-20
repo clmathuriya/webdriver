@@ -15,6 +15,9 @@
 5. Clone repository
 	$git clone ssh://vcs-user@phabricator.plancess.com/diffusion/QA/quality-assurance.git
 6. Import maven project in eclipse
+7. Install xvfb and firefox
+   $ sudo apt-get install Xvfb firefox
+
 
 #development
 
@@ -26,14 +29,10 @@
 #Running tests
 
 1. Start Selenium grid hub 
- 	$java -jar selenium-server-standalone-2.48.2.jar -role hub &
+ 	$java -jar selenium-server-standalone-2.49.0.jar -role hub &
 2. Register nodes to hub 
-	$xvfb-run -s "-screen 0 1920x1020x24" java -jar selenium-server-standalone-2.48.2.jar -role node -nodeConfig node.json -Dwebdriver.ie.driver=.\IEDriverServer.exe -Dwebdriver.chrome.driver=./chromedriver & 
+	$xvfb-run -s "-screen 0 1920x1020x24" java -jar selenium-server-standalone-2.49.0.jar -role node -nodeConfig node.json -Dwebdriver.ie.driver=.\IEDriverServer.exe -Dwebdriver.chrome.driver=./chromedriver & 
 3. Run project as maven test
-	$mvn test
-	
-#To run with headless firefox 
-1. sudo apt-get install Xvfb firefox
-2.  Xvfb :1 -screen 0 1024x768x24 &
+	$mvn clean install
 
 

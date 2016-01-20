@@ -59,12 +59,11 @@ public class LoginDialogPage {
 		this.actions = new Actions(driver);
 		this.executor = new Executioner(driver, wait);
 		executor.softWaitForCondition(ExpectedConditions.titleIs(Config.LANDING_PAGE_TITLE));
+		PageFactory.initElements(driver, this);
 
-		if (!Config.LANDING_PAGE_TITLE.equals(driver.getTitle().trim())
-				&& !Config.LOGIN_PAGE_TITLE.equals(driver.getTitle().trim())) {
+		if (!loginButton.isDisplayed()) {
 			throw new IllegalStateException("This is not  the Plancess login dialog page");
 		}
-		PageFactory.initElements(driver, this);
 
 	}
 

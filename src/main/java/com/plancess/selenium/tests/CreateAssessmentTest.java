@@ -101,7 +101,8 @@ public class CreateAssessmentTest extends BaseTest {
 			case "chemistry":
 				executor.softWaitForWebElement(createAssessment.getsubjectChemistryLink(), "wait for chemistry link");
 				// wait.until(ExpectedConditions.visibilityOf(createAssessment.getsubjectChemistryLink()));
-				executor.click(createAssessment.getsubjectChemistryLink(), "Chemistry Link");
+				if (createAssessment.getsubjectChemistryLink().isEnabled())
+					executor.click(createAssessment.getsubjectChemistryLink(), "Chemistry Link");
 				// createAssessment.getsubjectChemistryLink().click();
 				break;
 			case "math":
@@ -109,7 +110,8 @@ public class CreateAssessmentTest extends BaseTest {
 			case "mathematics":
 				executor.softWaitForWebElement(createAssessment.getsubjectMathematicsLink());
 				// wait.until(ExpectedConditions.visibilityOf(createAssessment.getsubjectMathematicsLink()));
-				executor.click(createAssessment.getsubjectMathematicsLink(), "Subject Mathematics Link");
+				if (createAssessment.getsubjectMathematicsLink().isEnabled())
+					executor.click(createAssessment.getsubjectMathematicsLink(), "Subject Mathematics Link");
 				// createAssessment.getsubjectMathematicsLink().click();
 				break;
 			default:
@@ -173,7 +175,10 @@ public class CreateAssessmentTest extends BaseTest {
 		// new
 		// Select(createAssessment.getExamDurationDropDown()).selectByVisibleText(user.get("TestDuration"));
 
-		executor.getElement(By.xpath("//span[.='" + user.get("DifficultyLevel") + "']")).click();
+		WebElement difficultyLevel = executor
+				.getElement(By.xpath("//span[.='" + user.get("DifficultyLevel") + "']/ins"));
+		if (difficultyLevel != null && difficultyLevel.isEnabled())
+			executor.mouseClick(difficultyLevel);
 
 		return new CreateAccessment(driver, wait);
 	}
