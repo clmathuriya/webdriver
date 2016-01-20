@@ -108,7 +108,9 @@ public class SignUpFromLandingPageTest extends BaseTest {
 		executor.softWaitForCondition(ExpectedConditions.textToBePresentInElement(signUpDialogPage.getFailureMessage(),
 				"This field must be unique."));
 
-		executor.assertEquals(signUpDialogPage.getFailureMessage().getText(), "This field must be unique.",
+		/*executor.assertEquals(signUpDialogPage.getFailureMessage().getText(), "This field must be unique.",
+				"assert failure message for existing email");*/
+		executor.assertEquals(signUpDialogPage.getFailureMessage().getText(), "Email already registered",
 				"assert failure message for existing email");
 	}
 

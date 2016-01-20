@@ -21,7 +21,6 @@ public class DashboardTest extends BaseTest {
 	@Test(dataProvider = "dashboardNewUserDataProvider", groups = { "smoke", "regression" })
 	public void dashboardNewUserContentTest(Map<String, String> user) {
 		
-
 		user.put("email", "chhaganlal.m@plancess.com");
         dashboard = landingPage.openLoginDialogPage().doLogin(user);
 		executor.softWaitForWebElement(dashboard.getDashBoardButton());
@@ -46,9 +45,11 @@ public class DashboardTest extends BaseTest {
 				"verify maths take test button  displayed");
 
 		executor.verifyTrue(dashboard.getUpcomingTests().isDisplayed(), "verify upcoming test button  displayed");
-
-		executor.verifyTrue(!executor.isElementExist(By.xpath(dashboard.getPerformanceSummarySectionXpath())),
+		executor.softWaitForWebElement(dashboard.getperformanceSummarySection());
+		executor.verifyTrue(!executor.isElementExist(dashboard.getperformanceSummarySection()),
 				"verify performance summary section not displayed");
+		/*executor.verifyTrue(!executor.isElementExist(By.xpath(dashboard.getPerformanceSummarySectionXpath())),
+				"verify performance summary section not displayed");*/
 
 	}
 

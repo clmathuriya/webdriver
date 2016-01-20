@@ -33,29 +33,34 @@ public class PaymentTest extends BaseTest {
 
 	@Test(dataProvider = "makePaymentLandingPageValidData", groups = { "smoke","regression" })
 	public void makePaymentFromLandingPageWithValidData(Map<String, String> user) {
+		long timestamp = System.currentTimeMillis();
+
+		user.put("email", "webuser" + timestamp + "@mailinator.com");
 		paymentPage = landingPage.openPaymentPage();
 		executor.softWaitForWebElement(paymentPage.getPackages());
-		executor.verifyTrue(paymentPage.getPackages().isDisplayed(), "Packages are displayed");
+		executor.assertTrue(paymentPage.getPackages().isDisplayed(), "Packages are displayed");
 		
 		executor.verifyTrue(executor.isElementExist(By.xpath(".//*[.='"+user.get("packageName")+"']")),
 				"Verify if Package Exists: "+user.get("packageName"));
 		
-		executor.assertTrue(executor.isElementExist(By.xpath(".//*[.='"+user.get("price")+"']")),
+		executor.verifyTrue(executor.isElementExist(By.xpath(".//*[.='"+user.get("price")+"']")),
 				"Verify if Package Exists: "+user.get("price"));
 				
 		paymentPage.selectPackage(user.get("packageSelected"));
-		
-		
+		executor.softWaitForWebElement(paymentPage.getPaymentPreModal());
+		paymentPage.enterUserDetails(user);
+				
 		paymentPage.makePayment(user);
 				
 		paymentPage.testPayment("sucess");
+		paymentPage.sucessMessage(paymentPage.getPaymentSucessModal());
 		paymentPage.verifyUpgradeEmail(user);
 		paymentPage.verifyEmail(user);		
 		
 	}
 	
 	@Test(dataProvider = "makePaymentLandingPageValidData", groups = { "smoke", "regression" })
-	public void makePaymentWithValidData(Map<String, String> user) {
+	public void makePaymentAfterLoginValidData(Map<String, String> user) {
 
 		long timestamp = System.currentTimeMillis();
 
@@ -83,7 +88,7 @@ public class PaymentTest extends BaseTest {
 				packageText=e.getText();
 				break;
 			}
-			//System.out.println(e.getText());
+			System.out.println(e.getText());
 		}
 		executor.assertTrue(packageText.contains(user.get("price")),
 				"Verify if Package Exists: "+user.get("price"));
@@ -91,13 +96,14 @@ public class PaymentTest extends BaseTest {
 		paymentPage.selectPackageAfterLogin(user.get("packageSelected"));
 		paymentPage.makePayment(user);
 		paymentPage.testPayment("sucess");
+		paymentPage.sucessMessage(paymentPage.getPaymentSucessModalAfterLogin());
 		paymentPage.verifyUpgradeEmail(user);
 		
 		//dashboard.logoutUser();
 
 	}
 	
-	@DataProvider(name = "makePaymentLandingPageValidData")
+	/*@DataProvider(name = "makePaymentLandingPageValidData")
 	public static Object[][] signUpDataProviderMandatoryData() {
 		Map<String, String> user = new HashMap<String, String>();
 
@@ -113,7 +119,14 @@ public class PaymentTest extends BaseTest {
 		user.put("packageSelected", "1");
 		user.put("contact", "9167360969");
 		user.put("bank", "Axis Bank");
+		user.put("firstname", "test");
+		user.put("lastname", "user");
 		return dataSet;
 
+	}
+	*/
+	@DataProvider(name = "makePaymentLandingPageValidData")
+	public static Object[][] signUpWithGoogleDataProvider() {
+		return new ExcelReader().getUserDataFromExcel("testData.xlsx", "payment");
 	}
 }

@@ -48,7 +48,7 @@ public class LandingPage {
 		this.wait = wait;
 		executor = new Executioner(driver, wait);
 		executor.softWaitForCondition(ExpectedConditions.titleIs(Config.LANDING_PAGE_TITLE));
-
+System.out.println(driver.getTitle());
 		if (!Config.LANDING_PAGE_TITLE.equals(driver.getTitle().trim())) {
 			throw new IllegalStateException("This is not  the Plancess Landing page");
 		}

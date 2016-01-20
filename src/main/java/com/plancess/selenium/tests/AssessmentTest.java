@@ -22,10 +22,16 @@ public class AssessmentTest extends BaseTest {
 	private AssessmentPage assessmentPage;
 	private SignUpDialogPage signUpDialogPage;
 	
+@Test
+public void r(){
+	int e=5/0;
+}
 
 	@Test(dataProvider = "noMoreTestDataProvider", groups = { "regression" })
 	public void noMoreTestErorTest(Map<String, String> user) {
 		//user.put("email", "clmathuriya@gmail.com");
+		
+		
 
 		dashboard = landingPage.openLoginDialogPage().doLogin(user);
 		executor.assertTrue(dashboard.getStartAssessmentSection().isDisplayed(),

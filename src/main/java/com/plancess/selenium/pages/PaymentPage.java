@@ -26,6 +26,15 @@ public class PaymentPage {
 	// private SetNewPasswordDialogPage setNewPasswordDialogPage;
 	WebElement resetPassError;
 	WebElement resetPassSuccess;
+	
+	@FindBy(xpath = ".//*[@name='email']")
+	WebElement emailPayment;
+	
+	@FindBy(xpath = ".//*[@name='fname']")
+	WebElement fnamePayment;
+	
+	@FindBy(xpath = ".//*[@name='lname']")
+	WebElement lnamePayment;
 
 	@FindBy(css = "#email")
 	WebElement email;
@@ -71,7 +80,8 @@ public class PaymentPage {
 	/*@FindBy(xpath = ".//*[@id='payment-success']//*[@class='modal-content']")
 	WebElement paymentSucessModal;*/
 	
-	@FindBy(xpath = "(.//*[@class='modal-content'])[1]")
+	//@FindBy(xpath = "(.//*[@class='modal-content'])[1]")
+	@FindBy(xpath = ".//*[@id='payment-success']//*[@class='modal-content']")
 	WebElement paymentSucessModal;
 	
 	@FindBy(xpath = ".//*[@class='modal-content']")
@@ -124,6 +134,13 @@ public class PaymentPage {
 
 	@FindBy(xpath = "//*[@class='mainContainer']")
 	WebElement mailbox;
+	
+	@FindBy(xpath = ".//*[@id='pre-buy']//*[@class='modal-content']")
+	WebElement paymentPreModal;
+	
+	@FindBy(xpath = ".//*[@id='proceedPayBtn']")
+	WebElement proceedPayBtn;
+	
 
 	public PaymentPage(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
@@ -134,6 +151,14 @@ public class PaymentPage {
 
 	}
 
+	public WebElement getEmailPayment() {
+		return emailPayment;
+	}
+	
+	public WebElement getPaymentPreModal() {
+		return paymentPreModal;
+	}
+	
 	public WebElement getPaymentModal() {
 		return paymentModal;
 	}
@@ -195,16 +220,17 @@ public class PaymentPage {
 
 	}
 
-	public void selectPackageAfterLogin(String string) {
-		WebElement element = executor.getElement(By.xpath(".//*[@packageid='" + string + "']"));
+	public void selectPackageAfterLogin(String packageId) {
+		WebElement element = executor.getElement(By.xpath(".//*[@packageid='" + packageId + "']"));
 		executor.softWaitForWebElement(element);
+		final int windowsBefore=driver.getWindowHandles().size();
 		executor.click(element, "Upgrade Package");
 		executor.softWaitForCondition(new ExpectedCondition<Boolean>() {
 
 			@Override
 			public Boolean apply(WebDriver driver) {
 
-				return driver.getWindowHandles().size() > 1;
+				return driver.getWindowHandles().size() > windowsBefore;
 			}
 		});
 	}
@@ -266,6 +292,7 @@ public class PaymentPage {
 		String currentWindowHandle = driver.getWindowHandle();
 		Set<String> winHandles = driver.getWindowHandles();
 		int winBefore = winHandles.size();
+		final int temp=winBefore;
 		int winAfter = 0;
 
 		for (String winHandle : winHandles) {
@@ -281,7 +308,7 @@ public class PaymentPage {
 						@Override
 						public Boolean apply(WebDriver driver) {
 
-							return driver.getWindowHandles().size() == 2;
+							return driver.getWindowHandles().size() <temp;
 						}
 					});
 
@@ -298,6 +325,7 @@ public class PaymentPage {
 
 		driver.switchTo().window(currentWindowHandle);
 		
+		/*
 		executor.softWaitForWebElement(getPaymentSucessModal());
 		executor.assertTrue(executor.isElementExist(getPaymentSucessModal()), "Payment Sucess Modal");
 		//executor.softWaitForWebElement(getPaymentSucessModal()||getPaymentSucessModalAfterLogin);
@@ -309,9 +337,25 @@ public class PaymentPage {
 		executor.verifyTrue((paymentText.contains("Payment Successful")||paymentText.contains("Upgrade Successful") )&& paymentText.contains("OK"),
 				"Payment Sucessful Text");
 		executor.click(getPaymentOk(), "Sucess-Ok");
+		*/
 
 		// System.out.println();
 
+	}
+	
+	public void sucessMessage(WebElement successModal){
+
+		executor.softWaitForWebElement(successModal);
+		executor.assertTrue(executor.isElementExist(successModal), "Payment Sucess Modal");
+		//executor.softWaitForWebElement(getPaymentSucessModal()||getPaymentSucessModalAfterLogin);
+		
+
+		String paymentText = successModal.getText();
+		System.out.println(successModal.getText());
+
+		executor.verifyTrue((paymentText.contains("Payment Successful")||paymentText.contains("Upgrade Successful") )&& paymentText.contains("OK"),
+				"Payment Sucessful Text");
+		executor.click(getPaymentOk(), "Sucess-Ok");
 	}
 
 	public WebElement getSetBtn() {
@@ -365,7 +409,11 @@ public class PaymentPage {
 	}
 
 	public void setPassword(Map<String, String> user) {
+		executor.softWaitForWebElement(getPassword(), "Enter New Password");
+		executor.click(getPassword(), "New Password");
 		executor.sendKeys(getPassword(), user.get("password"), "password");
+		//executor.softWaitForWebElement(getCpassword(), "Enter confirm Password");
+		executor.click(getCpassword(), "Confirm Password");
 		executor.sendKeys(getCpassword(), user.get("password"), "confirm password");
 		executor.click(getSetBtn(), "Reset Password Button");
 		executor.softWaitForWebElement(activationMessage);
@@ -422,6 +470,22 @@ public class PaymentPage {
 
 		executor.verifyTrue(plancessWelcomeMail.isDisplayed(), "verify welcome mail displayed");
 
+	}
+	
+	public void enterUserDetails(Map<String, String> user){
+		executor.softWaitForWebElement(emailPayment);
+		executor.clear(fnamePayment, "firstname Clear");
+		executor.sendKeys(fnamePayment, user.get("firstname"), "firstname");
+		executor.clear(lnamePayment, "lastname Clear");
+		executor.sendKeys(lnamePayment, user.get("lastname"), "lastname");
+		executor.clear(emailPayment, "Payment Clear");
+		executor.sendKeys(emailPayment,  user.get("email"), "Payment Email");
+		executor.click(proceedPayBtn, "Proceed To Pay");
+		
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(".//*[@id='proceedPayBtn']")));
+		//WebElement iframe = driver.findElement(By.tagName("iframe"));
+		wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.tagName("iframe")));
+		
 	}
 
 }

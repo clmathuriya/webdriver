@@ -24,7 +24,10 @@ public class Dashboard {
 	private Executioner executor;
 
 	private TourPage tourPage;
-
+	
+	@FindBy(xpath = "//*[@ng-if='isNewUser']")
+	WebElement performanceSummarySection;
+	
 	@FindBy(css = "header img[title='Preplane Logo']")
 	WebElement preplaneHeaderLogo;
 
@@ -184,7 +187,8 @@ public class Dashboard {
 		driver.manage().window().maximize();
 
 		tourPage = new TourPage(driver, wait);
-		executor.softWaitForWebElement(tourPage.getNotInterestedButton());
+		if(takeTour == true)
+			executor.softWaitForWebElement(tourPage.getNotInterestedButton());
 
 		if (executor.isElementExist(tourPage.getBeginTour()) && takeTour == true) {
 			tourPage.completeDashboardTour();
@@ -391,6 +395,10 @@ public class Dashboard {
 
 	public String getPerformanceSummarySectionXpath() {
 		return performanceSummarySectionXpath;
+	}
+	
+	public WebElement getperformanceSummarySection(){
+		return performanceSummarySection;
 	}
 
 	public WebElement getNoTopicMsg() {

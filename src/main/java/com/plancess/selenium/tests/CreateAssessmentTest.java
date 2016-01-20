@@ -159,7 +159,7 @@ public class CreateAssessmentTest extends BaseTest {
 				// selectedTopics += e.getText();
 				selectedTopics += e.getAttribute("innerHTML");
 			}
-
+ 
 			executor.assertTrue(selectedTopics.contains(sub_Module) && selectedTopics.contains(module),
 					"verify topic selected");
 
