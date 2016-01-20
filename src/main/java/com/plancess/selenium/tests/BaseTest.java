@@ -85,7 +85,7 @@ public class BaseTest {
 
 		this.driver = executor.openBrowser(host, port, capabilities);
 
-		wait = new WebDriverWait(driver, 40);
+		wait = new WebDriverWait(driver, 60);
 		executor = new Executioner(driver, wait);
 		executor.navigateToURL(Config.URL);
 		landingPage = new LandingPage(driver, wait);

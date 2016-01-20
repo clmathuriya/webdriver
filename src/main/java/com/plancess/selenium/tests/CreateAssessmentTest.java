@@ -7,7 +7,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -93,6 +92,7 @@ public class CreateAssessmentTest extends BaseTest {
 			case "physics":
 				executor.softWaitForWebElement(
 						ExpectedConditions.elementToBeClickable(createAssessment.getsubjectPhysicsLink()));
+
 				// wait.until(ExpectedConditions.visibilityOf(createAssessment.getsubjectPhysicsLink()));
 				if (createAssessment.getsubjectPhysicsLink().isEnabled())
 					executor.mouseClick(createAssessment.getsubjectPhysicsLink());
@@ -147,7 +147,7 @@ public class CreateAssessmentTest extends BaseTest {
 
 					String selectedSubjects = "";
 					for (WebElement e : createAssessment.getTopicsSelected()) {
-						// selectedTopics += e.getText();
+						selectedSubjects += e.getText();
 						selectedSubjects += e.getAttribute("innerHTML");
 					}
 					return selectedSubjects.contains(MODULE);
@@ -156,11 +156,12 @@ public class CreateAssessmentTest extends BaseTest {
 
 			String selectedTopics = "";
 			for (WebElement e : createAssessment.getTopicsSelected()) {
-				// selectedTopics += e.getText();
+				selectedTopics += e.getText();
 				selectedTopics += e.getAttribute("innerHTML");
 			}
- 
-			executor.assertTrue(selectedTopics.contains(sub_Module) && selectedTopics.contains(module),
+
+
+			executor.verifyTrue(selectedTopics.contains(sub_Module) && selectedTopics.contains(module),
 					"verify topic selected");
 
 		}

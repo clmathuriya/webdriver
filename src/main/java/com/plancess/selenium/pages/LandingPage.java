@@ -26,10 +26,10 @@ public class LandingPage {
 	@FindBy(css = "footer img[title='Plancess Logo']")
 	WebElement plancessFooterLogo;
 
-	@FindBy(xpath = "//a[normalize-space(.)='Login']")
+	@FindBy(linkText = "LOGIN")
 	WebElement loginLink;
 
-	@FindBy(xpath = "//a[.='Sign Up']")
+	@FindBy(linkText = "SIGN UP")
 	WebElement signupLink;
 
 	@FindBy(css = "a[data-toggle='dropdown'] img")
@@ -37,8 +37,8 @@ public class LandingPage {
 
 	@FindBy(css = "a[ng-click='logoutUser()']")
 	WebElement logoutLink;
-	
-	@FindBy(xpath = "(.//*[@class='btn offer-btn'])[1]") 
+
+	@FindBy(xpath = "(.//*[@class='btn offer-btn'])[1]")
 	WebElement buyNow;
 
 	// getter and setters
@@ -55,8 +55,6 @@ System.out.println(driver.getTitle());
 		PageFactory.initElements(driver, this);
 
 	}
-	
-	
 
 	public WebDriver getDriver() {
 		return driver;
@@ -93,8 +91,8 @@ System.out.println(driver.getTitle());
 
 	// user operations
 	public SignUpDialogPage openSignUpDialogPage() {
-		executor.click(signupLink, "Signup Link");
-
+		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(signupLink));
+		executor.click(signupLink, "Signup link");
 		return new SignUpDialogPage(driver, wait);
 
 	}
@@ -102,12 +100,12 @@ System.out.println(driver.getTitle());
 	public LoginDialogPage openLoginDialogPage() {
 
 		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(loginLink));
-		executor.mouseClick(loginLink);
+		executor.click(loginLink, "login link");
 
 		return new LoginDialogPage(driver, wait);
 
 	}
-	
+
 	public PaymentPage openPaymentPage() {
 
 		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(buyNow));
@@ -146,7 +144,6 @@ System.out.println(driver.getTitle());
 	public void clickToggelDropDown() {
 		toggleDropDown.click();
 	}
-	
 
 	public void tryLogout() {
 

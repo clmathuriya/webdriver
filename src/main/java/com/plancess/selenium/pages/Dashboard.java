@@ -129,7 +129,7 @@ public class Dashboard {
 	@FindBy(css = "div.toast-title")
 	WebElement toastTitle;
 
-	@FindBy(xpath = "//*[@ng-if='noTopic']")
+	@FindBy(xpath = "//*[@ng-click='upgradeNow()']")
 	WebElement noTopicMsg;
 
 	@FindBy(xpath = "//*[@ng-click='closeModal()']")
@@ -427,16 +427,16 @@ public class Dashboard {
 	}
 	public LandingPage logoutUser() {
 		int i = 0;
-		boolean flag=true;
-		while (i < 5&&flag==true) {
+		boolean flag = true;
+		while (i++ < 5 && flag == true) {
 			executor.softWaitForWebElement(toggleDropDown);
 			executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(toggleDropDown));
 			executor.mouseClick(toggleDropDown);
 			executor.softWaitForWebElement(logoutLink);
-			if (executor.isElementExist(logoutLink) && logoutLink.isDisplayed()){
+			if (executor.isElementExist(logoutLink) && logoutLink.isDisplayed()) {
 				executor.click(logoutLink, "logout link");
-				flag=false;
-			}			
+				flag = false;
+			}
 		}
 		return new LandingPage(driver, wait);
 

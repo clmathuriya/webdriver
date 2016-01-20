@@ -20,6 +20,7 @@ public class SignUpDialogPage {
 	private Actions actions;
 	private Executioner executor;
 	private final String agreeCheckBoxXpath = "//input[@type='checkbox']";
+	@FindBy(xpath = "//*[@name='fname']")
 	WebElement fname;
 	@FindBy(xpath = "//*[@id='regFnameError']")
 	WebElement firstNameErrorMessage;
@@ -97,10 +98,10 @@ public class SignUpDialogPage {
 		this.wait = wait;
 		this.actions = new Actions(driver);
 		this.executor = new Executioner(driver, wait);
-		if (!Config.LANDING_PAGE_TITLE.equals(driver.getTitle())) {
+		PageFactory.initElements(driver, this);
+		if (!fname.isDisplayed()) {
 			throw new IllegalStateException("This is not  the Plancess SignUp page");
 		}
-		PageFactory.initElements(driver, this);
 
 	}
 
@@ -202,6 +203,7 @@ public class SignUpDialogPage {
 	}
 
 	public void fillSignUpForm(Map<String, String> user) {
+		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(fname));
 		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(fname));
 		executor.clear(fname, "first name");
 		executor.sendKeys(fname, user.get("firstName"), "first name");

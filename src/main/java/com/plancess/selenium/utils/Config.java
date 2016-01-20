@@ -15,6 +15,8 @@ public class Config {
 	public static String REPORT_TITLE = "Report - PrepLane";
 	public static String LANDING_PAGE_TITLE = "Online JEE Main & Advanced assessment platform, Practice Questions - PrepLane";
 
+	public static String LOGIN_PAGE_TITLE = "Login - PrepLane";
+
 	public static String LANDING_PAGE_TITLE_WEBSITE = "Plancess JEE Main & Advanced Preparation | IIT JEE Online Coaching | AIPMT Preparation | Test Series";
 
 	public Config getInstance() {

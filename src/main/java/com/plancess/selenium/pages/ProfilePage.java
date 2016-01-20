@@ -28,6 +28,7 @@ public class ProfilePage {
 	WebElement lastName;
 	WebElement email;
 
+	@FindBy(xpath = "//input[@type='file']")
 	WebElement fileInput;
 
 	@FindBy(xpath = ".//*[@class='selected-flag']")
@@ -215,8 +216,9 @@ public class ProfilePage {
 	}
 
 	public ProfilePage updateUserProfile(Map<String, String> user) {
-		msg = "";int i=0;
-		while (msg == ""&&i<5) {
+		msg = "";
+		int i = 0;
+		while (msg == "" && i < 5) {
 			int timer = 1;
 			while (!executor.isElementExist(firstName) || !firstName.isDisplayed() && timer++ < 10) {
 				executor.softWaitForWebElement(firstName);
@@ -308,10 +310,10 @@ public class ProfilePage {
 			executor.mouseClick(save_details_button);// , "save user details
 			msg = getAlertMessage().getAttribute("innerHTML");
 			System.out.println(getAlertMessage().getText() + " && " + msg);
-			if(msg==null){
-				msg = getAlertMessage().getText() ;
+			if (msg == null) {
+				msg = getAlertMessage().getText();
 			}
-			
+
 			// msg.isEmpty()
 			if (save_details_button.isEnabled()) {
 				executor.mouseClick(save_details_button);

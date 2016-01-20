@@ -21,18 +21,12 @@ public class AssessmentTest extends BaseTest {
 	private ReportPage reportPage;
 	private AssessmentPage assessmentPage;
 	private SignUpDialogPage signUpDialogPage;
-	
-@Test
-public void r(){
-	int e=5/0;
-}
 
+	
 	@Test(dataProvider = "noMoreTestDataProvider", groups = { "regression" })
 	public void noMoreTestErorTest(Map<String, String> user) {
 		//user.put("email", "clmathuriya@gmail.com");
-		
-		
-
+				
 		dashboard = landingPage.openLoginDialogPage().doLogin(user);
 		executor.assertTrue(dashboard.getStartAssessmentSection().isDisplayed(),
 				"assert user login succefull and start assessment section displayed");
@@ -59,17 +53,20 @@ public void r(){
 
 		}
 		executor.softWaitForWebElement(dashboard.getNoTopicMsg());
-		if(executor.isElementExist(By.xpath("//*[@ng-if='package_type === 'premium'']"))){
-			executor.assertTrue(executor.isElementExist(By.xpath("//*[@ng-if='package_type === 'premium'']")),
+
+		if (executor.isElementExist(dashboard.getNoTopicMsg())) {
+			executor.assertTrue(executor.isElementExist(dashboard.getNoTopicMsg()),
 					"Verify if no more tests exist for this subject");
 			executor.click(dashboard.getCloseModel(), "close model");
-		}else{
+		} else if (executor.isElementExist(By.xpath(".//*[@ng-click='try()']"))) {
 			executor.assertTrue(executor.isElementExist(By.xpath(".//*[@ng-click='try()']")),
-				"Verify if no more tests exist for this subject");
-			
-			executor.sendKeys(executor.getElement(By.xpath(".//*[@class='modal-content']")), Keys.ESCAPE, "No more Test found");
+
+			"Verify if no more tests exist for this subject");
+
+			executor.sendKeys(executor.getElement(By.xpath(".//*[@class='modal-content']")), Keys.ESCAPE,
+					"No more Test found");
 		}
-	
+
 		dashboard.logoutUser();
 
 	}
@@ -157,9 +154,9 @@ public void r(){
 		executor.click(dashboard.getStartTest(), "start test button");
 
 		assessmentPage = new AssessmentPage(driver, wait);
-		reportPage=assessmentPage.takeAssessment(user);
+		reportPage = assessmentPage.takeAssessment(user);
 
-		//reportPage = new ReportPage(driver, wait);
+		// reportPage = new ReportPage(driver, wait);
 		reportPage.verifyReport(user);
 		dashboard.logoutUser();
 

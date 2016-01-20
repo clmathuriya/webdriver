@@ -57,6 +57,7 @@ public class ResetPasswordTest extends BaseTest {
 		forgotPasswordDialogPage = new ForgotPasswordDialogPage(driver, wait);
 		executor.softWaitForWebElement(
 				ExpectedConditions.visibilityOf(forgotPasswordDialogPage.getSendInstructionsButton()));
+		
 		executor.sendKeys(forgotPasswordDialogPage.getEmail(), user.get("email"), "Email");
 		executor.click(forgotPasswordDialogPage.getSendInstructionsButton(), "send instruction button");
 		executor.softWaitForCondition(ExpectedConditions.textToBePresentInElement(

@@ -17,7 +17,6 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.Reporter;
-import org.testng.annotations.Optional;
 
 import com.plancess.selenium.reporter.PlancessReporter;
 import com.plancess.selenium.utils.Util;
@@ -251,7 +250,7 @@ public class Executioner {
 			Assert.assertTrue(flag);
 			addStep(startTime, stopWatch.getTime() - startTime, step, "Pass", util.takeScreenshot(driver));
 			return this;
-		} catch (Exception exception) {
+		} catch (AssertionError exception) {
 			addStep(startTime, stopWatch.getTime() - startTime, step, "Failed", util.takeScreenshot(driver));
 			// Assert.fail("expected true found :" + flag);
 			return this;
@@ -357,7 +356,7 @@ public class Executioner {
 			wait.until(ExpectedConditions.visibilityOf(element));
 		} catch (Exception e) {
 			Reporter.log("wait timeout for web element", 0, true);
-			System.out.println("time out for web element");
+			// System.out.println("time out for web element");
 		}
 	}
 
