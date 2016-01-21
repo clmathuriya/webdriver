@@ -89,7 +89,7 @@ public class AssessmentPage {
 	@FindBy(xpath = "//*[normalize-space(.)='B' and contains(@class,'option-indicator')]")
 	WebElement answerChoicesB;
 
-	@FindBy(xpath = "//*[normalize-space(.)='C' and contains(@class,'option-indicator')]")
+	@FindBy(xpath = "//*[normalize-space(.)='C' and contains(@class,'option-indicator')]/../../..")
 	WebElement answerChoicesC;
 
 	@FindBy(xpath = "//*[normalize-space(.)='D' and contains(@class,'option-indicator')]")
@@ -101,7 +101,7 @@ public class AssessmentPage {
 	@FindBy(xpath = "//*[@ng-click='nextQues(false)']")
 	WebElement previousButton;
 
-	// @FindBy(xpath = "//button[@ng-click='pauseTest(true)']")
+	@FindBy(xpath = "//button[@ng-click='pauseTest(true)']")
 	WebElement pause;
 
 	@FindBy(xpath = "//button[@ng-click='pauseTest(false)']")
@@ -154,19 +154,18 @@ public class AssessmentPage {
 
 	@FindBy(xpath = "//*[.='UPCOMING TESTS']")
 	WebElement upcomingTests;
-	
-/*	@FindBy(xpath = "//*[.=\"No I'm not interested\"]")
-	WebElement notInterestedButton;
 
-	@FindBy(xpath = "//*[.='Begin Tour']")
-	WebElement beginTour;
+	/*
+	 * @FindBy(xpath = "//*[.=\"No I'm not interested\"]") WebElement
+	 * notInterestedButton;
+	 * 
+	 * @FindBy(xpath = "//*[.='Begin Tour']") WebElement beginTour;
+	 * 
+	 * @FindBy(xpath = "//*[.='Skip Tour']") WebElement skipTour;
+	 * 
+	 * @FindBy(xpath = "//*[.='Back']") WebElement Back;
+	 */
 
-	@FindBy(xpath = "//*[.='Skip Tour']")
-	WebElement skipTour;
-	
-	@FindBy(xpath = "//*[.='Back']")
-	WebElement Back;*/
-	
 	public AssessmentPage(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
 		this.wait = wait;
@@ -178,13 +177,15 @@ public class AssessmentPage {
 		if (!Config.ASSESSMENT_TITLE.equals(driver.getTitle().trim())) {
 			throw new IllegalStateException("This is not  the Plancess Assessment page");
 		}
-		tourPage=new TourPage(driver, wait);
+		tourPage = new TourPage(driver, wait);
 		executor.softWaitForWebElement(tourPage.getNotInterestedButton());
 		executor.softWaitForWebElement(tourPage.getNotInterestedButton());
-		if (executor.isElementExist(tourPage.getBeginTour())&&tourPage.getBeginTour().isDisplayed() && takeTour == true) {
+		if (executor.isElementExist(tourPage.getBeginTour()) && tourPage.getBeginTour().isDisplayed()
+				&& takeTour == true) {
 			tourPage.completeAssessmentTour();
 		}
-		if (executor.isElementExist(tourPage.getNotInterestedButton()) && tourPage.getNotInterestedButton().isDisplayed()) {
+		if (executor.isElementExist(tourPage.getNotInterestedButton())
+				&& tourPage.getNotInterestedButton().isDisplayed()) {
 			executor.click(tourPage.getNotInterestedButton(), "Not Interested button");
 		}
 
@@ -529,6 +530,5 @@ public class AssessmentPage {
 		}
 		return new ReportPage(driver, wait);
 	}
-
 
 }
