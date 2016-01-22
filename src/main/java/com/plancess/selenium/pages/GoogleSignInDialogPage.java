@@ -94,7 +94,15 @@ public class GoogleSignInDialogPage {
 
 		String currentWindowHandle = driver.getWindowHandle();
 		actions.click(signIn).build().perform();
-		if (executor.isElementExist(PhoneVerificationChallenge)) {
+		executor.softWaitForCondition(new ExpectedCondition<Boolean>() {
+
+			@Override
+			public Boolean apply(WebDriver driver) {
+
+				return driver.getWindowHandles().size() == 1;
+			}
+		});
+		if (driver.getWindowHandles().size() > 1 && executor.isElementExist(PhoneVerificationChallenge)) {
 			executor.click(PhoneVerificationChallenge, "Phone verification radio");
 			executor.sendKeys(phoneNumber, user.get("mobile"), "enter mobile number");
 			executor.click(submitChallenge, "verify mobile challenge");

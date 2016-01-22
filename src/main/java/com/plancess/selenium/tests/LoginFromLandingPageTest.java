@@ -82,7 +82,7 @@ public class LoginFromLandingPageTest extends BaseTest {
 		loginDialogPage = landingPage.openLoginDialogPage();
 
 		Dashboard dashboard = loginDialogPage.doLogin(user);
-		executor.softWaitForWebElement(dashboard.getWelcomeMessage());
+		dashboard.logoutUser();
 	}
 
 	@Test(alwaysRun = true, groups = { "regression" })
@@ -100,7 +100,8 @@ public class LoginFromLandingPageTest extends BaseTest {
 
 		facebookLoginDialog = loginDialogPage.navigateToFacebookLoginDialog();
 		Dashboard dashboard = facebookLoginDialog.doLogin(user);
-		executor.softWaitForWebElement(dashboard.getWelcomeMessage());
+		dashboard.logoutUser();
+
 	}
 
 	@Test(alwaysRun = true, groups = { "regression" })
@@ -117,7 +118,8 @@ public class LoginFromLandingPageTest extends BaseTest {
 		loginDialogPage = landingPage.openLoginDialogPage();
 
 		googleLoginDialog = loginDialogPage.navigateToGoogleLoginDialog();
-		googleLoginDialog.doLogin(user);
+		Dashboard dashboard = googleLoginDialog.doLogin(user);
+		dashboard.logoutUser();
 
 	}
 

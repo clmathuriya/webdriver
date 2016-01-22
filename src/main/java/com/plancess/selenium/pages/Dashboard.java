@@ -50,7 +50,7 @@ public class Dashboard {
 	@FindBy(css = ".start-assessment-section")
 	WebElement startAssessmentSection;
 
-	@FindBy(xpath = "//img[@title='Profile']")
+	@FindBy(xpath = "//img[@title='Profile']/..")
 	WebElement toggleDropDown;
 
 	WebElement dashboard;
@@ -79,7 +79,7 @@ public class Dashboard {
 	@FindBy(xpath = "//*[contains(text(),'REMAINING TIME:')]/span")
 	WebElement remainingTime;
 
-	@FindBy(xpath = "//h3[.='Total Questions']/following-sibling::p")
+	@FindBy(xpath = "(//*[.='Total Questions']/following-sibling::p)[1]")
 	WebElement totalQuestions;
 
 	@FindBy(xpath = ".//button[.='Resume Test']")
@@ -415,7 +415,7 @@ public class Dashboard {
 		while (i++ < 5 && flag == true) {
 			executor.softWaitForWebElement(toggleDropDown);
 			executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(toggleDropDown));
-			executor.mouseClick(toggleDropDown);
+			executor.click(toggleDropDown, "toggle drop down");
 			executor.softWaitForWebElement(logoutLink);
 			if (executor.isElementExist(logoutLink) && logoutLink.isDisplayed()) {
 				executor.click(logoutLink, "logout link");

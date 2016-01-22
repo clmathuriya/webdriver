@@ -15,9 +15,9 @@ public class SetNewPasswordDialogPage {
 	private WebDriverWait wait;
 	private Executioner executor;
 	private Actions actions;
-	@FindBy(xpath = "(//*[@name='password' and @placeholder='New Password'])[2]")
+	@FindBy(xpath = "//*[@name='password' and @placeholder='New Password']")
 	WebElement password;
-	@FindBy(xpath = "(//*[@name='cpassword'])[2]")
+	@FindBy(xpath = "//*[@name='cpassword']")
 	WebElement cpassword;
 	WebElement resetBtn;
 
@@ -29,11 +29,11 @@ public class SetNewPasswordDialogPage {
 		this.wait = wait;
 		this.actions = new Actions(driver);
 		this.executor = new Executioner(driver, wait);
+		PageFactory.initElements(driver, this);
 
-		if (!Config.LANDING_PAGE_TITLE.equals(driver.getTitle())) {
+		if (!cpassword.isDisplayed()) {
 			throw new IllegalStateException("This is not  the Plancess Forgot Password Dialog page");
 		}
-		PageFactory.initElements(driver, this);
 
 	}
 

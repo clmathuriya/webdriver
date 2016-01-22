@@ -18,13 +18,13 @@ public class ForgotPasswordDialogPage {
 	private WebDriverWait wait;
 	private Executioner executor;
 	private Actions actions;
-	@FindBy(xpath = ".//*[@id='forgotPassForm']//*[@name='email']")
+	@FindBy(xpath = ".//*[@id='forgotPassForm']//*[@name='ForgotPassdataEmail']")
 	WebElement email;
 
 	@FindBy(xpath = "//*[@id='forgotPassBtn']")
 	WebElement sendInstructionsButton;
 
-	@FindBy(xpath = "//div[@class='success-message' and @id='forgotPassError']")
+	@FindBy(xpath = "//div[@id='forgotPassError']")
 	WebElement successMessage;
 
 	@FindBy(xpath = "//a[contains(.,'Reset your password')]")

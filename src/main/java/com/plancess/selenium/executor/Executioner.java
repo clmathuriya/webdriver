@@ -282,7 +282,7 @@ public class Executioner {
 			addStep(startTime, stopWatch.getTime() - startTime, step, "Pass", util.takeScreenshot(driver));
 			return this;
 		} catch (Exception e) {
-			Reporter.log("wait timeout for condition", 0, true);
+			Reporter.log("wait timeout for condition");
 			return this;
 
 		}
@@ -298,7 +298,7 @@ public class Executioner {
 			// util.takeScreenshot(driver));
 			return this;
 		} catch (Exception e) {
-			Reporter.log("wait timeout for condition", 0, true);
+			Reporter.log("wait timeout for condition", 0, false);
 			return this;
 
 		}
@@ -313,7 +313,7 @@ public class Executioner {
 			addStep(startTime, stopWatch.getTime() - startTime, step, "Pass", util.takeScreenshot(driver));
 			return this;
 		} catch (Exception e) {
-			Reporter.log("wait timeout for web element", 0, true);
+			Reporter.log("wait timeout for web element", 0, false);
 			return this;
 
 		}
@@ -329,7 +329,7 @@ public class Executioner {
 					util.takeScreenshot(driver));
 			return e;
 		} catch (Exception e) {
-			Reporter.log("wait timeout for web element", 0, true);
+			Reporter.log("wait timeout for web element", 0, false);
 			return null;
 
 		}
@@ -355,7 +355,7 @@ public class Executioner {
 		try {
 			wait.until(ExpectedConditions.visibilityOf(element));
 		} catch (Exception e) {
-			Reporter.log("wait timeout for web element", 0, true);
+			Reporter.log("wait timeout for web element", 0, false);
 			// System.out.println("time out for web element");
 		}
 	}
@@ -429,7 +429,7 @@ public class Executioner {
 			addStep(startTime, stopWatch.getTime() - startTime, "refresh page", "Pass", util.takeScreenshot(driver));
 
 		} catch (Exception e) {
-			Reporter.log("wait timeout for web element", 0, true);
+			Reporter.log("wait timeout for web element", 0, false);
 		}
 
 	}
@@ -447,7 +447,7 @@ public class Executioner {
 					"Pass", util.takeScreenshot(driver));
 
 		} catch (Exception e) {
-			Reporter.log("wait timeout for web element", 0, true);
+			Reporter.log("wait timeout for web element", 0, false);
 		}
 
 	}

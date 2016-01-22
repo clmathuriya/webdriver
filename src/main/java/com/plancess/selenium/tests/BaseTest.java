@@ -90,6 +90,7 @@ public class BaseTest {
 		executor.navigateToURL(Config.URL);
 		landingPage = new LandingPage(driver, wait);
 		util = Util.getInstance();
+		
 
 		// driver.manage().window().setSize(new Dimension(1920, 1080));
 		// driver.manage().window().maximize();
