@@ -127,7 +127,8 @@ public class LoginDialogPage {
 		executor.clear(password, "Password");
 		executor.sendKeys(password, user.get("password"), "Password");
 		executor.click(loginButton, "login button");
-
+		
+		
 		return new Dashboard(driver, wait);
 	}
 

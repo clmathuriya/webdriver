@@ -24,10 +24,10 @@ public class Dashboard {
 	private Executioner executor;
 
 	private TourPage tourPage;
-	
+
 	@FindBy(xpath = "//*[@ng-if='isNewUser']")
 	WebElement performanceSummarySection;
-	
+
 	@FindBy(css = "header img[title='Preplane Logo']")
 	WebElement preplaneHeaderLogo;
 
@@ -82,7 +82,7 @@ public class Dashboard {
 	@FindBy(xpath = "//*[contains(text(),'REMAINING TIME:')]/span")
 	WebElement remainingTime;
 
-	@FindBy(xpath = " (//*[.='Total Questions']/following-sibling::P)[1]")
+	@FindBy(xpath = "(//*[.='Total Questions']/following-sibling::p)[1]")
 	WebElement totalQuestions;
 
 	@FindBy(xpath = ".//button[.='Resume Test']")
@@ -144,7 +144,7 @@ public class Dashboard {
 	@FindBy(xpath = "//*[@ng-if='showHint']")
 	WebElement hintText;
 
-	//@FindBy(css = "header img[title='Preplane Logo']")
+	// @FindBy(css = "header img[title='Preplane Logo']")
 	@FindBy(xpath = "//header//img[@title='Preplane Logo']/..")
 	WebElement dashBoardButton;
 
@@ -171,8 +171,8 @@ public class Dashboard {
 
 	@FindBy(xpath = "//*[.='UPCOMING MOCK TESTS']")
 	WebElement upcomingTests;
-	
-	@FindBy(xpath = "(.//*[@class='btn offer-btn'])[1]") 
+
+	@FindBy(xpath = "(.//*[@class='btn offer-btn'])[1]")
 	WebElement buyNow;
 
 	public Dashboard(WebDriver driver, WebDriverWait wait) {
@@ -182,13 +182,17 @@ public class Dashboard {
 		executor = new Executioner(driver, wait);
 		PageFactory.initElements(driver, this);
 		executor.softWaitForCondition(ExpectedConditions.titleIs(Config.DASHBOARD_TITLE));
+
+		//executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(getDashBoardButton()), "Dashboard To be loaded");
+		executor.softWaitForCondition(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[@class='preplane-loader-img']")), "Wait for Loader");
+		
 		if (!Config.DASHBOARD_TITLE.equals(driver.getTitle().trim())) {
 			throw new IllegalStateException("This is not  the Plancess Dashboard page");
 		}
 		driver.manage().window().maximize();
 
 		tourPage = new TourPage(driver, wait);
-		if(takeTour == true)
+		if (takeTour == true)
 			executor.softWaitForWebElement(tourPage.getNotInterestedButton());
 
 		if (executor.isElementExist(tourPage.getBeginTour()) && takeTour == true) {
@@ -198,7 +202,7 @@ public class Dashboard {
 				&& tourPage.getNotInterestedButton().isDisplayed()) {
 			executor.click(tourPage.getNotInterestedButton(), "Not interested button");
 		}
-		
+
 		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(getDashBoardButton()));
 	}
 
@@ -398,8 +402,8 @@ public class Dashboard {
 	public String getPerformanceSummarySectionXpath() {
 		return performanceSummarySectionXpath;
 	}
-	
-	public WebElement getperformanceSummarySection(){
+
+	public WebElement getperformanceSummarySection() {
 		return performanceSummarySection;
 	}
 
@@ -427,13 +431,14 @@ public class Dashboard {
 		return new PaymentPage(driver, wait);
 
 	}
+
 	public LandingPage logoutUser() {
 		int i = 0;
 		boolean flag = true;
 		while (i++ < 5 && flag == true) {
 			executor.softWaitForWebElement(toggleDropDown);
 			executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(toggleDropDown));
-			executor.mouseClick(toggleDropDown);
+			executor.click(toggleDropDown, "toggle drop down");
 			executor.softWaitForWebElement(logoutLink);
 			if (executor.isElementExist(logoutLink) && logoutLink.isDisplayed()) {
 				executor.click(logoutLink, "logout link");
@@ -457,8 +462,7 @@ public class Dashboard {
 
 	public SecurityPage navigateToUserSecurity() {
 		// actions.click(toggleDropDown).build().perform();
-		
-		
+
 		executor.click(toggleDropDown, "toggle drop down");
 
 		executor.click(securityLink, "security tab link");

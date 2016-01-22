@@ -2,6 +2,7 @@ package com.plancess.selenium.pages;
 
 import java.util.Map;
 
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -63,6 +64,9 @@ public class ReportPage {
 	WebElement notificationsButton;
 	@FindBy(xpath = "//*[.=\"No I'm not interested\"]")
 	WebElement notInterestedButton;
+	
+	@FindBy(xpath = ".//*[contains(@class,'modal') ]/section")
+	WebElement recommendations;
 
 	public ReportPage(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
@@ -88,6 +92,11 @@ public class ReportPage {
 		if (executor.isElementExist(tourPage.getNotInterestedButton())
 				&& tourPage.getNotInterestedButton().isDisplayed()) {
 			executor.click(tourPage.getNotInterestedButton(), "not interested button");
+		}
+		
+		if (executor.isElementExist(recommendations)
+				&& recommendations.isDisplayed()) {
+			executor.sendKeys(recommendations, Keys.ESCAPE, "Recommendations Modal");
 		}
 
 	}

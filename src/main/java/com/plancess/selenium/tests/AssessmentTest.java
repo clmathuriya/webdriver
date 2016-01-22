@@ -5,6 +5,7 @@ import java.util.Map;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -88,7 +89,9 @@ public class AssessmentTest extends BaseTest {
 
 		executor.assertTrue(dashboard.getStartAssessmentSection().isDisplayed(),
 				"assert user login succefull and start assessment section displayed");
-
+		
+		//executor.softWaitForCondition(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[@class='preplane-loader-img']")), "Wait for Loader");
+		
 		switch (user.get("subject").toLowerCase()) {
 
 		case "physics":

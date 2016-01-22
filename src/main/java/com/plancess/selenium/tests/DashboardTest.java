@@ -24,8 +24,11 @@ public class DashboardTest extends BaseTest {
 		
 		user.put("email", "chhaganlal.m@plancess.com");
         dashboard = landingPage.openLoginDialogPage().doLogin(user);
+        
+        executor.softWaitForCondition(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[@class='preplane-loader-img']")), "Wait for Loader");
 		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(dashboard.getDashBoardButton()));
-		if (dashboard.getDashBoardButton().isDisplayed())
+		
+		if (dashboard.getDashBoardButton().isEnabled())
 			executor.click(dashboard.getDashBoardButton(), "dashboard button");
 		executor.verifyTrue(dashboard.getNotificationsButton().isDisplayed(), "verify notifications button displayed");
 

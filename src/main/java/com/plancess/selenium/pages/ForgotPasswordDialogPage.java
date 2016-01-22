@@ -18,13 +18,14 @@ public class ForgotPasswordDialogPage {
 	private WebDriverWait wait;
 	private Executioner executor;
 	private Actions actions;
-	@FindBy(xpath = ".//*[@id='forgotPassForm']//*[@type='email']")
+
+	@FindBy(xpath = ".//*[@id='forgotPassForm']//*[@name='ForgotPassdataEmail']")
 	WebElement email;
 
 	@FindBy(xpath = "//*[@id='forgotPassBtn']")
 	WebElement sendInstructionsButton;
 
-	@FindBy(xpath = "//div[@ng-if='msgCode' and @id='forgotPassError']")
+	@FindBy(xpath = "//div[@id='forgotPassError']")
 	WebElement successMessage;
 
 	@FindBy(xpath = "//a[contains(.,'Reset your password')]")
