@@ -53,7 +53,7 @@ public class Dashboard {
 	@FindBy(css = ".start-assessment-section")
 	WebElement startAssessmentSection;
 
-	@FindBy(xpath = "//img[@title='Profile']")
+	@FindBy(xpath = "//img[@title='Profile']/..")
 	WebElement toggleDropDown;
 
 	WebElement dashboard;
@@ -82,7 +82,7 @@ public class Dashboard {
 	@FindBy(xpath = "//*[contains(text(),'REMAINING TIME:')]/span")
 	WebElement remainingTime;
 
-	@FindBy(xpath = "//h3[.='Total Questions']/following-sibling::p")
+	@FindBy(xpath = " (//*[.='Total Questions']/following-sibling::P)[1]")
 	WebElement totalQuestions;
 
 	@FindBy(xpath = ".//button[.='Resume Test']")
@@ -144,7 +144,8 @@ public class Dashboard {
 	@FindBy(xpath = "//*[@ng-if='showHint']")
 	WebElement hintText;
 
-	@FindBy(css = "header img[title='Preplane Logo']")
+	//@FindBy(css = "header img[title='Preplane Logo']")
+	@FindBy(xpath = "//header//img[@title='Preplane Logo']/..")
 	WebElement dashBoardButton;
 
 	@FindBy(xpath = "(//*[@ui-sref='usertest.customize-test'])[2]")
@@ -197,7 +198,8 @@ public class Dashboard {
 				&& tourPage.getNotInterestedButton().isDisplayed()) {
 			executor.click(tourPage.getNotInterestedButton(), "Not interested button");
 		}
-
+		
+		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(getDashBoardButton()));
 	}
 
 	public WebDriver getDriver() {
@@ -455,6 +457,8 @@ public class Dashboard {
 
 	public SecurityPage navigateToUserSecurity() {
 		// actions.click(toggleDropDown).build().perform();
+		
+		
 		executor.click(toggleDropDown, "toggle drop down");
 
 		executor.click(securityLink, "security tab link");

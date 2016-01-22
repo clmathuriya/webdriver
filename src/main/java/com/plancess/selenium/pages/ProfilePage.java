@@ -296,6 +296,7 @@ public class ProfilePage {
 				executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(getProfileCroppedImage()));
 
 				executor.click(getProfileCroppedImage(), "Profile Cropped Image");
+				executor.softWaitForCondition(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[@ng-click='croppedImg(myCroppedImage)'])")));
 			}
 
 			if (getNotify_by_email_switch().getAttribute("aria-checked").equals("false")

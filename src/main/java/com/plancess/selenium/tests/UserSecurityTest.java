@@ -26,6 +26,7 @@ public class UserSecurityTest extends BaseTest {
 		executor.assertTrue(dashboard.getCreateAssessmentButton().isDisplayed(),
 				"assert user login succefull and start assessment section displayed");
 		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(dashboard.getToggleDropDown()));
+		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(dashboard.getToggleDropDown()));
 		userSecurity = dashboard.navigateToUserSecurity();
 		executor.softWaitForWebElement(userSecurity.getCurrentPassword());
 		userSecurity.updateUserSecurity(user);

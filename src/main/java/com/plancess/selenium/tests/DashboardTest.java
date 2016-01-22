@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -23,7 +24,7 @@ public class DashboardTest extends BaseTest {
 		
 		user.put("email", "chhaganlal.m@plancess.com");
         dashboard = landingPage.openLoginDialogPage().doLogin(user);
-		executor.softWaitForWebElement(dashboard.getDashBoardButton());
+		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(dashboard.getDashBoardButton()));
 		if (dashboard.getDashBoardButton().isDisplayed())
 			executor.click(dashboard.getDashBoardButton(), "dashboard button");
 		executor.verifyTrue(dashboard.getNotificationsButton().isDisplayed(), "verify notifications button displayed");
@@ -57,9 +58,9 @@ public class DashboardTest extends BaseTest {
 	public void dashboardWithPerformanceSectionContentTest(Map<String, String> user) {
 		loginDialogPage = landingPage.openLoginDialogPage();
 		dashboard = loginDialogPage.doLogin(user);
-
-		executor.softWaitForWebElement(dashboard.getDashBoardButton());
-		executor.click(dashboard.getDashBoardButton(), "Dashboard button");
+		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(dashboard.getDashBoardButton()));
+		if (dashboard.getDashBoardButton().isDisplayed())
+			executor.click(dashboard.getDashBoardButton(), "Dashboard button");
 		executor.verifyTrue(dashboard.getNotificationsButton().isDisplayed(), "verify notifications button displayed");
 
 		executor.verifyTrue(dashboard.getToggleDropDown().isDisplayed(), "verify toggle dropdown displayed");
