@@ -3,6 +3,7 @@ package com.plancess.selenium.pages;
 import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -424,9 +425,10 @@ public class Dashboard {
 	}
 
 	public PaymentPage openPaymentPage() {
-
-		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(buyNow));
-		executor.mouseClick(buyNow);
+		executor.softWaitForWebElement(buyNow);
+		//executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(buyNow));
+		((JavascriptExecutor) driver).executeScript("arguments[0].click();", buyNow);
+		//executor.mouseClick(buyNow);
 
 		return new PaymentPage(driver, wait);
 

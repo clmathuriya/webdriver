@@ -73,6 +73,7 @@ public class PaymentTest extends BaseTest {
 		dashboard = signUpDialogPage.verifyEmail(user).doLogin(user);
 
 		executor.softWaitForWebElement(dashboard.getDashBoardButton());	
+		
 				
 		paymentPage = dashboard.openPaymentPage();
 		
@@ -90,7 +91,7 @@ public class PaymentTest extends BaseTest {
 			}
 			System.out.println(e.getText());
 		}
-		executor.assertTrue(packageText.contains(user.get("price")),
+		executor.verifyTrue(packageText.contains(user.get("price")),
 				"Verify if Package Exists: "+user.get("price"));
 				
 		paymentPage.selectPackageAfterLogin(user.get("packageSelected"));

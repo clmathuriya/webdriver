@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -124,10 +126,10 @@ public class PaymentPage {
 	@FindBy(xpath = "//*[@title='VERIFY MY EMAIL ID']")
 	WebElement activationLink;
 
-	@FindBy(xpath = "//*[@id='myModalLabel' and contains(text(),'activated')]")
+	@FindBy(xpath = "//*[@id='resetPassSuccess' and contains(text(),'activated')]")
 	WebElement activationMessage;
 
-	@FindBy(xpath = "//*[@id='setBtn']")
+	@FindBy(xpath = "//*[@id='resetBtn']")
 	WebElement setBtn;
 
 	@FindBy(xpath = "(//*[@name='password' and @placeholder='New Password'])[1]")
@@ -142,7 +144,7 @@ public class PaymentPage {
 	@FindBy(xpath = ".//*[@id='pre-buy']//*[@class='modal-content']")
 	WebElement paymentPreModal;
 
-	//@FindBy(xpath = ".//*[@id='proceedPayBtn']")
+	// @FindBy(xpath = ".//*[@id='proceedPayBtn']")
 	@FindBy(xpath = ".//*[@type='submit']")
 	WebElement proceedPayBtn;
 
@@ -227,8 +229,12 @@ public class PaymentPage {
 	public void selectPackageAfterLogin(String packageId) {
 		WebElement element = executor.getElement(By.xpath(".//*[@packageid='" + packageId + "']"));
 		executor.softWaitForWebElement(element);
-		final int windowsBefore = driver.getWindowHandles().size();
-		executor.click(element, "Upgrade Package");
+		// final int windowsBefore = driver.getWindowHandles().size();
+		// new Actions(driver).sendKeys(Keys.PAGE_DOWN).perform();
+		// driver.
+		((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
+		// ExecuteScript("document.getElementById('elementHtmlId').click();");
+		//executor.mouseClick(element);
 		/*
 		 * executor.softWaitForCondition(new ExpectedCondition<Boolean>() {
 		 * 
@@ -245,9 +251,9 @@ public class PaymentPage {
 		executor.switchToDefaultContent();
 
 		WebElement iframe = driver.findElement(By.cssSelector("iframe.razorpay-checkout-frame"));
-		//String frame = "iframe.razorpay-checkout-frame";
-		//driver.switchTo().frame(frame);
-		 executor.switchToFrame(iframe);
+		// String frame = "iframe.razorpay-checkout-frame";
+		// driver.switchTo().frame(frame);
+		executor.switchToFrame(iframe);
 
 		Set<String> winHandles = driver.getWindowHandles();
 		winBefore = winHandles.size();
@@ -260,9 +266,8 @@ public class PaymentPage {
 				getPaymentHeader().getText().contains(user.get("packageName"))
 						&& getPaymentHeader().getText().contains("Preplane"),
 				true, "Verify if Payment modal has correct product name");
-		executor.assertEquals(getSubmitbtn().getText().contains(user.get("price")), true,
-				"Verify if Payment modal has correct product name");
-
+		executor.verifyTrue(getSubmitbtn().getText().contains(user.get("price")), "Verify if Payment modal has correct price");
+				
 		executor.clear(getEmail(), "Email Clear");
 		executor.sendKeys(getEmail(), user.get("email"), "Email");
 
