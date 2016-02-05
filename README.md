@@ -31,7 +31,7 @@
 1. Start Selenium grid hub 
  	$java -jar selenium-server-standalone-2.49.0.jar -role hub -timeout 300000&
 2. Register nodes to hub 
-	$xvfb-run -s "-screen 0 1920x1020x24" java -jar selenium-server-standalone-2.49.0.jar -role node -nodeConfig node.json -Dwebdriver.ie.driver=.\IEDriverServer.exe -Dwebdriver.chrome.driver=./chromedriver & 
+	$xvfb-run -s "-screen 0 1920x1020x24" java -jar selenium-server-standalone-2.49.0.jar -role node -nodeConfig node.json -Dwebdriver.ie.driver=.\IEDriverServer.exe -Dwebdriver.chrome.driver=./chromedriver &
 3. Run project as maven test
 	$mvn clean install
 

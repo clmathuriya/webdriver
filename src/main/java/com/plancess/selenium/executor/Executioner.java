@@ -391,7 +391,7 @@ public class Executioner {
 	}
 
 	public void mouseClick(WebElement e) {
-		new Actions(driver).click(e).build().perform();
+		new Actions(driver).moveToElement(e).click(e).build().perform();
 	}
 
 	public boolean isElementExist(WebElement e) {
