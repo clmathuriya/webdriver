@@ -291,7 +291,7 @@ public class ProfilePage {
 				String js = "arguments[0].style.visibility = 'visible';arguments[0].style.display = 'block'; arguments[0].style.height = '1px'; arguments[0].style.width = '1px'; arguments[0].style.opacity = 1";
 
 				((JavascriptExecutor) driver).executeScript(js, getFileInput());
-
+				//executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(getFileInput()));
 				getFileInput().sendKeys(file.getAbsolutePath());
 				executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(getProfileCroppedImage()));
 

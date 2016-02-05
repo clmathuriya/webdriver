@@ -61,13 +61,7 @@ public class UserSecurityTest extends BaseTest {
 						+ userSecurity.getAlertMessage().getText())
 								.contains("Your password has been changed successfully");
 			}
-		});
-
-		// executor.assertEquals(
-		// userSecurity.getAlertMessage().getAttribute("alert-message") +
-		// userSecurity.getAlertMessage().getText(),
-		// "Your password has been changed successfully", "Your password has
-		// been changed successfully");
+		});	
 
 	}
 

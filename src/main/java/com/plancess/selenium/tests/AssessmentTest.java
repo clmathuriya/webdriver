@@ -31,6 +31,7 @@ public class AssessmentTest extends BaseTest {
 		dashboard = landingPage.openLoginDialogPage().doLogin(user);
 		executor.assertTrue(dashboard.getStartAssessmentSection().isDisplayed(),
 				"assert user login succefull and start assessment section displayed");
+		executor.softWaitForCondition(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[@class='preplane-loader-img']")), "Wait for Loader");
 		switch (user.get("subject").toLowerCase()) {
 		case "physics":
 			executor.softWaitForWebElement(dashboard.getPhysicsSubjectSection());

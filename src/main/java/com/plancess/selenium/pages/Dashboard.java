@@ -452,7 +452,8 @@ public class Dashboard {
 	}
 
 	public ProfilePage navigateToUserProfile() {
-		executor.softWaitForWebElement(toggleDropDown);
+		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(toggleDropDown));
+		
 		executor.click(toggleDropDown, "toggleDropDown");
 
 		executor.softWaitForWebElement(profileLink);

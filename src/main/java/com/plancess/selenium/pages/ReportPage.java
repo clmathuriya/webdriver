@@ -2,6 +2,7 @@ package com.plancess.selenium.pages;
 
 import java.util.Map;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -208,7 +209,7 @@ public class ReportPage {
 		// executor.refresh();
 
 		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(getNotificationsButton()));
-
+		executor.softWaitForCondition(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[@class='preplane-loader-img']")), "Wait for Loader");
 		// to verify notification displayed for test completion
 		executor.click(getNotificationsButton(), "Notifications button ");
 		String notificationItemText = getNotificationItem().getAttribute("innerHTML").toLowerCase();

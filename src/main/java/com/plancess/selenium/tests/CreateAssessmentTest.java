@@ -31,14 +31,14 @@ public class CreateAssessmentTest extends BaseTest {
 	@Test(dataProvider = "createAssessmentDataProvider", groups = { "smoke", "regression" })
 	public void CreateAssessmentWithValidDataTest(Map<String, String> user) {
 
-		// long timestamp = System.currentTimeMillis();
-		//
-		// user.put("email", "webuser" + timestamp + "@mailinator.com");
-		//
-		// signUpDialogPage = landingPage.openSignUpDialogPage();
-		// signUpDialogPage.signUp(user);
-		// dashboard = signUpDialogPage.verifyEmail(user).doLogin(user);
-		user.put("email", "clmathuriya@gmail.com");
+		 long timestamp = System.currentTimeMillis();
+		
+		 user.put("email", "webuser" + timestamp + "@mailinator.com");
+		
+		 signUpDialogPage = landingPage.openSignUpDialogPage();
+		 signUpDialogPage.signUp(user);
+		 dashboard = signUpDialogPage.verifyEmail(user).doLogin(user);
+		 user.put("email", "clmathuriya@gmail.com");
 		dashboard = landingPage.openLoginDialogPage().doLogin(user);
 		executor.softWaitForWebElement(dashboard.getDashBoardButton());
 		// executor.softWaitForWebElement(ExpectedConditions.visibilityOf(dashboard.getToggleDropDown()));
