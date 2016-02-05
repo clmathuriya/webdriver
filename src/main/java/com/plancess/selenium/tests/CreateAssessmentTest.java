@@ -27,19 +27,21 @@ public class CreateAssessmentTest extends BaseTest {
 	private AssessmentPage assessmentPage;
 	private SignUpDialogPage signUpDialogPage;
 	private Dashboard dashboard;
+	
+	
 
 	@Test(dataProvider = "createAssessmentDataProvider", groups = { "smoke", "regression" })
 	public void CreateAssessmentWithValidDataTest(Map<String, String> user) {
 
-		// long timestamp = System.currentTimeMillis();
-		//
-		// user.put("email", "webuser" + timestamp + "@mailinator.com");
-		//
-		// signUpDialogPage = landingPage.openSignUpDialogPage();
-		// signUpDialogPage.signUp(user);
-		// dashboard = signUpDialogPage.verifyEmail(user).doLogin(user);
-		user.put("email", "clmathuriya@gmail.com");
-		dashboard = landingPage.openLoginDialogPage().doLogin(user);
+		long timestamp = System.currentTimeMillis();
+
+		user.put("email", "webuser" + timestamp + "@mailinator.com");
+
+		signUpDialogPage = landingPage.openSignUpDialogPage();
+		signUpDialogPage.signUp(user);
+		dashboard = signUpDialogPage.verifyEmail(user).doLogin(user);
+		// user.put("email", "clmathuriya@gmail.com");
+		// dashboard = landingPage.openLoginDialogPage().doLogin(user);
 		executor.softWaitForWebElement(dashboard.getDashBoardButton());
 		// executor.softWaitForWebElement(ExpectedConditions.visibilityOf(dashboard.getToggleDropDown()));
 
@@ -111,7 +113,7 @@ public class CreateAssessmentTest extends BaseTest {
 				executor.softWaitForWebElement(createAssessment.getsubjectMathematicsLink());
 				// wait.until(ExpectedConditions.visibilityOf(createAssessment.getsubjectMathematicsLink()));
 				if (createAssessment.getsubjectMathematicsLink().isEnabled())
-					executor.click(createAssessment.getsubjectMathematicsLink(), "Subject Mathematics Link");
+					executor.mouseClick(createAssessment.getsubjectMathematicsLink());
 				// createAssessment.getsubjectMathematicsLink().click();
 				break;
 			default:
@@ -161,7 +163,6 @@ public class CreateAssessmentTest extends BaseTest {
 				selectedTopics += e.getText();
 				selectedTopics += e.getAttribute("innerHTML");
 			}
-
 
 			executor.verifyTrue(selectedTopics.contains(sub_Module) && selectedTopics.contains(module),
 					"verify topic selected");

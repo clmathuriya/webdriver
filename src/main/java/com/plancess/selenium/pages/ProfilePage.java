@@ -28,6 +28,8 @@ public class ProfilePage {
 	WebElement lastName;
 	WebElement email;
 
+	@FindBy(xpath = "//input[@type='file']/..")
+	WebElement fileInputDiv;
 	@FindBy(xpath = "//input[@type='file']")
 	WebElement fileInput;
 
@@ -207,6 +209,14 @@ public class ProfilePage {
 
 	// user operations
 
+	public WebElement getFileInputDiv() {
+		return fileInputDiv;
+	}
+
+	public void setFileInputDiv(WebElement fileInputDiv) {
+		this.fileInputDiv = fileInputDiv;
+	}
+
 	public LoginPage logoutUser() {
 		toggleDropDown.click();
 		logoutLink.click();
@@ -290,14 +300,15 @@ public class ProfilePage {
 				File file = new File(classLoader.getResource(user.get("filePath")).getFile());
 				String js = "arguments[0].style.visibility = 'visible';arguments[0].style.display = 'block'; arguments[0].style.height = '1px'; arguments[0].style.width = '1px'; arguments[0].style.opacity = 1";
 
-				((JavascriptExecutor) driver).executeScript(js, getFileInput());
+				((JavascriptExecutor) driver).executeScript(js, getFileInputDiv());
 
 				getFileInput().sendKeys(file.getAbsolutePath());
 				executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(getProfileCroppedImage()));
 
 				executor.click(getProfileCroppedImage(), "Profile Cropped Image");
 
-				executor.softWaitForCondition(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[@ng-click='croppedImg(myCroppedImage)'])")));
+				executor.softWaitForCondition(ExpectedConditions
+						.invisibilityOfElementLocated(By.xpath("//*[@ng-click='croppedImg(myCroppedImage)'])")));
 
 			}
 
