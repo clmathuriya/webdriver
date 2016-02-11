@@ -85,7 +85,7 @@ public class SignUpFromLandingPageTest extends BaseTest {
 		signUpDialogPage = landingPage.openSignUpDialogPage();
 
 		signUpDialogPage.fillSignUpForm(user);
-		executor.verifyEquals(signUpDialogPage.getPasswordErrorMessage().getText(), passwordError,
+		executor.verifyEquals(signUpDialogPage.getPasswordErrorMessage().getText().toLowerCase(), passwordError.toLowerCase(),
 				"assert password error message for invalid password values");
 		executor.assertEquals(signUpDialogPage.getSubmit().getAttribute("disabled"), "true",
 				"assert submit button disabled for invalid password values");
@@ -162,7 +162,7 @@ public class SignUpFromLandingPageTest extends BaseTest {
 		signUpDialogPage = landingPage.openSignUpDialogPage();
 
 		googleLoginDialog = signUpDialogPage.navigateToGoogleLoginDialog();
-		googleLoginDialog.cancelLogin();
+		googleLoginDialog.cancelLoginSignUp();
 		executor.verifyTrue(signUpDialogPage.getFbBtn().isDisplayed(), "Verify facebook login button displayed");
 	}
 

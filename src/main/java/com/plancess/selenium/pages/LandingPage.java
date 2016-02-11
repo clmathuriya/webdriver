@@ -40,6 +40,9 @@ public class LandingPage {
 
 	@FindBy(xpath = "(.//*[@class='btn offer-btn'])[1]")
 	WebElement buyNow;
+	
+	@FindBy(xpath = "(.//*[@ui-sref='landing.pricing'])[1]")
+	WebElement pricing;
 
 	// getter and setters
 
@@ -48,7 +51,7 @@ public class LandingPage {
 		this.wait = wait;
 		executor = new Executioner(driver, wait);
 		executor.softWaitForCondition(ExpectedConditions.titleIs(Config.LANDING_PAGE_TITLE));
-System.out.println(driver.getTitle());
+		System.out.println(driver.getTitle());
 		if (!Config.LANDING_PAGE_TITLE.equals(driver.getTitle().trim())) {
 			throw new IllegalStateException("This is not  the Plancess Landing page");
 		}
@@ -107,9 +110,15 @@ System.out.println(driver.getTitle());
 	}
 
 	public PaymentPage openPaymentPage() {
-
-		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(buyNow));
-		executor.mouseClick(buyNow);
+		executor.verifyTrue(executor.isElementExist(buyNow), "Element 'BuyNow' exists:");
+		if(executor.isElementExist(buyNow)){
+			executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(buyNow));
+			executor.mouseClick(buyNow);	
+		}else{
+			executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(pricing));
+			executor.mouseClick(pricing);	
+		}
+		
 
 		return new PaymentPage(driver, wait);
 

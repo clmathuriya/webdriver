@@ -150,6 +150,29 @@ public class GoogleSignInDialogPage {
 
 		return new LoginDialogPage(driver, wait);
 	}
+	
+	public SignUpDialogPage cancelLoginSignUp() {
+		wait.until(ExpectedConditions.visibilityOf(email));
+
+		String currentWindowHandle = driver.getWindowHandle();
+		// actions.click(cancel).build().perform();
+		driver.close();
+		wait.until(new ExpectedCondition<Boolean>() {
+
+			@Override
+			public Boolean apply(WebDriver driver) {
+
+				return driver.getWindowHandles().size() == 1;
+			}
+		});
+		for (String handle : driver.getWindowHandles()) {
+
+			if (!handle.equals(currentWindowHandle))
+				driver.switchTo().window(handle);
+		}
+
+		return new SignUpDialogPage(driver, wait);
+	}
 
 	public String getTitle() {
 		return driver.getTitle();

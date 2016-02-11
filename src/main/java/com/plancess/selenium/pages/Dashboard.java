@@ -41,6 +41,9 @@ public class Dashboard {
 	@FindBy(css = "a[ng-click='logoutUser()']")
 	WebElement logoutLink;
 
+	@FindBy(xpath = ".//*[@ui-sref='upgrade']")
+	WebElement upgrageLink;
+	
 	// @FindBy(xpath = "//a[contains(.,'Profile')]")
 	@FindBy(css = "a[ui-sref='profile.main']")
 	WebElement profileLink;
@@ -184,9 +187,12 @@ public class Dashboard {
 		PageFactory.initElements(driver, this);
 		executor.softWaitForCondition(ExpectedConditions.titleIs(Config.DASHBOARD_TITLE));
 
-		//executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(getDashBoardButton()), "Dashboard To be loaded");
-		executor.softWaitForCondition(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[@class='preplane-loader-img']")), "Wait for Loader");
-		
+		// executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(getDashBoardButton()),
+		// "Dashboard To be loaded");
+		executor.softWaitForCondition(
+				ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[@class='preplane-loader-img']")),
+				"Wait for Loader");
+
 		if (!Config.DASHBOARD_TITLE.equals(driver.getTitle().trim())) {
 			throw new IllegalStateException("This is not  the Plancess Dashboard page");
 		}
@@ -425,16 +431,37 @@ public class Dashboard {
 	}
 
 	public PaymentPage openPaymentPage() {
-		executor.softWaitForWebElement(buyNow);
-		//executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(buyNow));
+		executor.verifyTrue(executor.isElementExist(buyNow), "Element 'BuyNow' exists:");
+		if(executor.isElementExist(buyNow)){
+			executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(buyNow));
+			((JavascriptExecutor) driver).executeScript("arguments[0].click();", buyNow);
+		}else{
+			executor.softWaitForWebElement(toggleDropDown);
+			executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(toggleDropDown));
+			executor.click(toggleDropDown, "toggle drop down");
+			
+			executor.softWaitForWebElement(upgrageLink);
+			if (executor.isElementExist(upgrageLink) && upgrageLink.isDisplayed()) {
+				executor.click(upgrageLink, "upgrage link");
+				
+			}
+				
+		}
+		
+		/*executor.softWaitForWebElement(buyNow);
+		// executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(buyNow));
 		((JavascriptExecutor) driver).executeScript("arguments[0].click();", buyNow);
-		//executor.mouseClick(buyNow);
-
+		// executor.mouseClick(buyNow);
+*/
 		return new PaymentPage(driver, wait);
+		
+	
+
+	
 
 	}
 
-	public LandingPage logoutUser() {
+	public LoginDialogPage logoutUser() {
 		int i = 0;
 		boolean flag = true;
 		while (i++ < 5 && flag == true) {
@@ -445,14 +472,19 @@ public class Dashboard {
 			if (executor.isElementExist(logoutLink) && logoutLink.isDisplayed()) {
 				executor.click(logoutLink, "logout link");
 				flag = false;
+				executor.softWaitForCondition(
+						ExpectedConditions.invisibilityOfElementLocated(By.xpath(".//*[@title='Profile']")));
 			}
+			// executor.softWaitForCondition(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[@class='preplane-loader-img']")),
+			// "Wait for Loader");
 		}
-		return new LandingPage(driver, wait);
+		return new LoginDialogPage(driver, wait);
 
 	}
 
 	public ProfilePage navigateToUserProfile() {
-		executor.softWaitForWebElement(toggleDropDown);
+		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(toggleDropDown));
+
 		executor.click(toggleDropDown, "toggleDropDown");
 
 		executor.softWaitForWebElement(profileLink);

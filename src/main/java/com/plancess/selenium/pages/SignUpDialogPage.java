@@ -30,7 +30,7 @@ public class SignUpDialogPage {
 
 	WebElement email;
 
-	@FindBy(xpath = ".//*[@id='regEmailError']")
+	@FindBy(xpath = ".//*[@ng-if='regForm.email.$error.email && regForm.email.$touched']")
 	WebElement emailErrorMessage;
 
 	@FindBy(css = "input[name='tel']")
@@ -41,7 +41,7 @@ public class SignUpDialogPage {
 
 	WebElement password;
 
-	@FindBy(xpath = ".//*[@id='regPasswordError']")
+	@FindBy(xpath = ".//*[@ng-if='regForm.password.$error.minlength']")
 	WebElement passwordErrorMessage;
 	// WebElement confirmPassword;
 	// @FindBy(xpath = "//input[@name='confirmPassword']/../../div[3]")

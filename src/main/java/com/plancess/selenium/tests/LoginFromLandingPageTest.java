@@ -53,10 +53,12 @@ public class LoginFromLandingPageTest extends BaseTest {
 
 		executor.softWaitForCondition(ExpectedConditions.textToBePresentInElement(loginDialogPage.getFailureMessage(),
 				"Invalid username or password"), "wait for invalid username or password error message");
+		executor.verifyTrue(loginDialogPage.getFailureMessage().getText().contains("Your username and password did not match"), "assert error message for invalid credentials");
+		/*
 		executor.verifyEquals(loginDialogPage.getFailureMessage().getText(),
 				"Your username and password did not match. Please try again",
 				"assert error message for invalid credentials");
-	}
+*/	}
 
 	@Test(alwaysRun = true, dataProvider = "loginWithInvalidPassword", groups = { "regression" })
 	public void loginWithInvalidPasswordTest(Map<String, String> user) {
