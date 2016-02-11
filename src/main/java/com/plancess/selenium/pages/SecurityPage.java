@@ -161,10 +161,10 @@ public class SecurityPage {
 
 	public SecurityPage updateUserSecurity(Map<String, String> user) {
 		int timer = 1;
-		while (!executor.isElementExist(currentPassword) || !currentPassword.isDisplayed() && timer++ < 10) {
+		while ((!executor.isElementExist(currentPassword) || !currentPassword.isDisplayed()) && timer++ < 10) {
 			executor.softWaitForWebElement(currentPassword);
 		}
-		
+
 		executor.click(currentPassword, "current password");
 		executor.clear(currentPassword, "current password");
 		executor.sendKeys(currentPassword, user.get("currentPassword"), "current password");
