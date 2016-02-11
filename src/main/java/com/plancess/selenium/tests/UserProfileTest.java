@@ -58,11 +58,55 @@ public class UserProfileTest extends BaseTest {
 		executor.assertEquals(msg, "Your data have been saved successfully.", "Data have been saved successfully");
 */
 	}
+	
+	@Test(dataProvider = "userProfileInvalidData", groups = { "smoke", "regression" })
+	public void userProfileWithInValidDataTest(Map<String, String> user) {
+		// user.put("email", "clmathuriya@gmail.com");
+		//user.put("firstName", "test1");
+		//user.put("lastName", "user1");
+		//user.put("mobile", "9920543");
+		dashboard = landingPage.openLoginDialogPage().doLogin(user);
+
+		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(dashboard.getStartAssessmentSection()));
+
+		executor.assertTrue(dashboard.getStartAssessmentSection().isDisplayed(),
+				"assert user login succefull and start assessment section displayed");
+		userProfile = dashboard.navigateToUserProfile();
+		executor.softWaitForWebElement(userProfile.getFirstName());
+		
+		int timer = 1;
+		while (!executor.isElementExist(userProfile.getFirstName()) || !userProfile.getFirstName().isDisplayed() && timer++ < 10) {
+			executor.softWaitForWebElement(userProfile.getFirstName());
+		}
+		executor.clear(userProfile.getFirstName(), "firstName");
+
+		executor.sendKeys(userProfile.getFirstName(), user.get("firstName"), "firstName");
+		executor.click(userProfile.getFirstName(), "firstName");
+		
+		executor.clear(userProfile.getLastName(), "lastName");
+		executor.sendKeys(userProfile.getLastName(), user.get("lastName"), "lastName");
+		executor.click(userProfile.getLastName(), "lastName");
+		
+		executor.clear(userProfile.getMobile(), "mobile");
+		executor.click(userProfile.getMobile(), "Mobile Country Code");
+		
+		
+		executor.verifyEquals(userProfile.getFirstNameInvalid().getText(),"Please enter a valid data", "ErrorMessage for invalid firstname");
+		executor.verifyEquals(userProfile.getLastNameInvalid().getText(),"Please enter a valid data", "ErrorMessage for invalid lastname");
+		executor.verifyEquals(userProfile.getMobileInvalid().getText(),"Valid phone number with country code is required", "ErrorMessage for invalid mobile");
+	}
 
 	@DataProvider(name = "userProfileValidData")
-	public static Object[][] dashboardDataProvider() {
+	public static Object[][] userProfileDataProvider() {
 
 		return new ExcelReader().getUserDataFromExcel("testData.xlsx", "userProfile");
+
+	}
+	
+	@DataProvider(name = "userProfileInvalidData")
+	public static Object[][] userProfileInvalidDataProvider() {
+
+		return new ExcelReader().getUserDataFromExcel("testData.xlsx", "userProfileInvalidData");
 
 	}
 

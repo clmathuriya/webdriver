@@ -65,6 +65,54 @@ public class UserSecurityTest extends BaseTest {
 
 	}
 
+	@Test(dataProvider = "userSecurityValidData", groups = { "smoke", "regression" })
+	public void userProfileSecurityWithInValidDataTest(Map<String, String> user) {
+		// user.put("email", "clmathuriya@gmail.com");
+
+		Dashboard dashboard = landingPage.openLoginDialogPage().doLogin(user);
+		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(dashboard.getCreateAssessmentButton()));
+
+		executor.assertTrue(dashboard.getCreateAssessmentButton().isDisplayed(),
+				"assert user login succefull and start assessment section displayed");
+		executor.softWaitForWebElement(ExpectedConditions.visibilityOf(dashboard.getToggleDropDown()));
+		executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(dashboard.getToggleDropDown()));
+		userSecurity = dashboard.navigateToUserSecurity();
+		executor.softWaitForWebElement(userSecurity.getCurrentPassword());
+		userSecurity.updateUserSecurity(user);
+		executor.softWaitForCondition(new ExpectedCondition<Boolean>() {
+
+			@Override
+			public Boolean apply(WebDriver driver) {
+				System.out.println(userSecurity.getAlertMessage().getAttribute("alert-message")
+						+ userSecurity.getAlertMessage().getText());
+
+				return (userSecurity.getAlertMessage().getAttribute("alert-message")
+						+ userSecurity.getAlertMessage().getText())
+								.contains("Your password has been changed successfully");
+			}
+		});
+		executor.assertEquals(userSecurity.getAlertMessage().getText(), "Your password has been changed successfully.",
+				"Your password has been changed successfully");
+
+		String currentPassword = user.get("currentPassword");
+		user.put("currentPassword", user.get("newPassword"));
+		user.put("newPassword", currentPassword);
+		user.put("confirmPassword", currentPassword);
+		userSecurity.updateUserSecurity(user);
+		executor.softWaitForCondition(new ExpectedCondition<Boolean>() {
+
+			@Override
+			public Boolean apply(WebDriver driver) {
+				System.out.println(userSecurity.getAlertMessage().getAttribute("alert-message")
+						+ userSecurity.getAlertMessage().getText());
+
+				return (userSecurity.getAlertMessage().getAttribute("alert-message")
+						+ userSecurity.getAlertMessage().getText())
+								.contains("Your password has been changed successfully");
+			}
+		});	
+
+	}
 	// update user security data providers
 
 	@DataProvider(name = "userSecurityValidData")

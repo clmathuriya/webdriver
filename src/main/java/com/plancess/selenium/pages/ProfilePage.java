@@ -95,7 +95,19 @@ public class ProfilePage {
 
 	@FindBy(xpath = "//*[@ng-click='croppedImg(myCroppedImage)']")
 	WebElement profileCroppedImage;
+	
+	@FindBy(xpath = ".//*[@id='myImg']")
+	WebElement myImage;
+	
+	@FindBy(xpath = ".//*[contains(@ng-if, 'firstName')]")
+	WebElement firstNameInvalid;
+	
+	@FindBy(xpath = ".//*[contains(@ng-if, 'lastName')]")
+	WebElement lastNameInvalid;
 
+	@FindBy(xpath = ".//*[contains(@ng-if, 'phone')]")
+	WebElement mobileInvalid;
+	
 	public ProfilePage(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
 		this.wait = wait;
@@ -216,6 +228,18 @@ public class ProfilePage {
 	public void setFileInputDiv(WebElement fileInputDiv) {
 		this.fileInputDiv = fileInputDiv;
 	}
+	
+	public WebElement getFirstNameInvalid() {
+		return firstNameInvalid;
+	}
+	
+	public WebElement getLastNameInvalid() {
+		return lastNameInvalid;
+	}
+	
+	public WebElement getMobileInvalid() {
+		return mobileInvalid;
+	}
 
 	public LoginPage logoutUser() {
 		toggleDropDown.click();
@@ -313,16 +337,21 @@ public class ProfilePage {
 
 			}
 
-			if (getNotify_by_email_switch().getAttribute("aria-checked").equals("false")
+			/*if (getNotify_by_email_switch().getAttribute("aria-checked").equals("false")
+					^ (user.get("emailNotification").equalsIgnoreCase("No")))*/
+			if (getNotify_by_email_switch().getAttribute("aria-invalid").equals("false")
 					^ (user.get("emailNotification").equalsIgnoreCase("No"))) {
 
 				executor.click(getNotify_by_email(), "Email Notification");
 			}
 
 			// notify_by_email_switch.click();
+			//executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(myImage));			
 			executor.softWaitForWebElement(ExpectedConditions.elementToBeClickable(save_details_button));
-
-			executor.mouseClick(save_details_button);// , "save user details
+			executor.click(save_details_button, "SAVE button");
+			new Actions(driver).click();
+			//new Actions(driver).moveToElement(save_details_button).click(save_details_button).build().perform();
+			//executor.mouseClick(save_details_button);// , "save user details
 			msg = getAlertMessage().getAttribute("innerHTML");
 			System.out.println(getAlertMessage().getText() + " && " + msg);
 			if (msg == null) {
