@@ -44,6 +44,7 @@ public class PlancessReporter implements IReporter {
 	private PrintWriter mOut;
 	private static PlancessReporter instance;
 	private StopWatch stopWatch;
+	private String reportFileName = "";
 
 	public PlancessReporter() {
 		new File("./test-output/custom-reports").mkdirs();
@@ -55,6 +56,8 @@ public class PlancessReporter implements IReporter {
 			mOut = new PrintWriter(new BufferedWriter(new FileWriter(reportFile)), true);
 			Reporter.log("<h1><a href='" + reportFile.getAbsolutePath() + "'>Custom Report</a></h1>");
 			instance = this;
+			if (reportFile.getAbsolutePath().contains("jenkins"))
+				reportFileName = reportFile.getName();
 		} catch (IOException e) {
 			System.out.println("Error in creating writer: " + e);
 		}
@@ -117,7 +120,8 @@ public class PlancessReporter implements IReporter {
 					buildNumber = currentValue.split("<tr>").length - 1;
 					step = "<tr> <td>" + buildNumber + "</td> <td>" + date + "</td><td>" + passCount + "</td><td>"
 							+ skipCount + "</td><td>" + failCount + "</td><td>" + buildStatus
-							+ "</td><td> for suite name : " + suiteName + "</td></tr>";
+							+ "</td><td> for suite name : <a href='http://phabricator.plancess.com:8080/job/webapp-selenium-tests/ws/test-output/custom-reports/"
+							+ reportFileName + "'>" + suiteName + "</a></td></tr>";
 
 					String replacewith = replaceString + step;
 					String valuetoPost = currentValue.replace(replaceString, replacewith).replaceAll("\"", "'");

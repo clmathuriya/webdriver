@@ -4,7 +4,7 @@ public class Config {
 
 	private Config instance = null;
 
-	public static String URL = "http://dev.preplane.com/";
+	public static String URL = "https://dev.preplane.com/";
 	// public static String URL = "http://newtest.preplane.com/";
 
 	public static String URL_WEBSITE = "http://dev.plancess.com/";

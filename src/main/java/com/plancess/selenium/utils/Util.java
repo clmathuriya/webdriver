@@ -61,6 +61,10 @@ public class Util {
 			// Reporter.log("Screenshot captured as <a href='" +
 			// file.getAbsolutePath()
 			// + "' target='_blank'> screenshot </a> <br>");
+			if (file.getAbsolutePath().contains("/jenkins/")) {
+				return "http://phabricator.plancess.com:8080/job/webapp-selenium-tests/ws/screenshots/"
+						+ file.getName();
+			}
 			return file.getAbsolutePath();
 		} catch (Exception e) {
 			// Reporter.log("Exception in taking screenshot");
