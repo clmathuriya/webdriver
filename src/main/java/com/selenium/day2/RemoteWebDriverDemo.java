@@ -22,8 +22,8 @@ public class RemoteWebDriverDemo {
 		// to open chrome browser
 		// 1. set system property or add chromedriver in classpath
 		DesiredCapabilities capabilities = new DesiredCapabilities();
-		capabilities.setCapability(CapabilityType.BROWSER_NAME, "firefox");
-		WebDriver driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), capabilities);
+		capabilities.setCapability(CapabilityType.BROWSER_NAME, "chrome");
+		WebDriver driver = new RemoteWebDriver(new URL("http://192.168.2.125:5555/wd/hub"), capabilities);
 
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 		// to navigate to google
