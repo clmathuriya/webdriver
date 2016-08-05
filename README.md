@@ -6,7 +6,7 @@ find webdriver related examples here.
 
 ### Selenium Grid ###
 1. Setup
-   download selenium server from here (http://docs.seleniumhq.org/download/)
+   - download selenium server from here (http://docs.seleniumhq.org/download/)
 2. Starting selenium grid hub
    
    ``` java -jar selenium-server-standalone.2.53.1.jar -role hub ```
@@ -51,7 +51,7 @@ sudo apt-get install xvfb
 
 driver.findElement(By.id("uploadBtn")).sendKeys("/absolute/path/to/file.png");
 
-		```
+```
 
 
 
