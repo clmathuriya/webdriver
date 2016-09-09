@@ -18,13 +18,17 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
 
 import com.newton.selenium.executor.Executioner;
-import com.newton.selenium.reporter.PlancessReporter;
+import com.newton.selenium.reporter.CustomReporter;
+import com.newton.selenium.reporter.MyReporter;
 import com.newton.selenium.utils.Config;
 import com.newton.selenium.utils.Util;
 import com.newton.selenium.utils.Verifications;
-import com.newton.selenium.website.pages.LandingPage;
+
+import com.relevantcodes.extentreports.ExtentTest;
+import com.relevantcodes.extentreports.LogStatus;
 
 public class BaseTest {
 	public WebDriver driver;
@@ -34,19 +38,21 @@ public class BaseTest {
 	String startTable = "<table style='width:100%'> <caption><h3>TESTCASE_NAME</h3></caption> <tr> <th>Start Time</th> <th>Duration</th> <th>Step Description</th> <th>Status</th> <th>Screenshot</th> </tr>";
 	String endReport = "</body> </html>";
 	String endTable = "</table>";
-	public static PlancessReporter reporter;
+	public static CustomReporter reporter;
 	String PROXY = "localhost:8080";
 
-	protected LandingPage landingPage;
-	protected String pageTitle = Config.LANDING_PAGE_TITLE;
 	protected WebDriverWait wait;
 	protected Executioner executor;
+	MyReporter extentReporter;
+	ExtentTest test;
 
 	@BeforeTest
 	public void beforeSuite() {
 
-		reporter = PlancessReporter.getInstance();
+		reporter = CustomReporter.getInstance();
 		startReport();
+		util = Util.getInstance();
+		extentReporter = MyReporter.getInstance(util.getReportPath());
 
 	}
 
@@ -58,6 +64,7 @@ public class BaseTest {
 
 		// to log starting of test case in report table
 		startTable(method.getName());
+		test = extentReporter.startTest(method.getName());
 
 		DesiredCapabilities capabilities = new DesiredCapabilities();
 
@@ -83,9 +90,9 @@ public class BaseTest {
 		this.driver = executor.openBrowser(host, port, capabilities);
 
 		wait = new WebDriverWait(driver, 60);
-		executor = new Executioner(driver, wait);
+		executor = new Executioner(driver, wait, test);
 		executor.navigateToURL(Config.URL);
-		landingPage = new LandingPage(driver, wait);
+
 		util = Util.getInstance();
 
 		// driver.manage().window().setSize(new Dimension(1920, 1080));
@@ -102,11 +109,19 @@ public class BaseTest {
 	}
 
 	@AfterMethod(alwaysRun = true)
-	public void tearDown(ITestResult testResult) {
+	public void tearDown(ITestResult result) {
 
 		if (driver != null)
 			executor.closeBrowser();
 		endTable();
+		if (result.getStatus() == ITestResult.FAILURE) {
+			test.log(LogStatus.FAIL, result.getThrowable());
+		} else if (result.getStatus() == ITestResult.SKIP) {
+			test.log(LogStatus.SKIP, "Test skipped " + result.getThrowable());
+		} else {
+			test.log(LogStatus.PASS, "Test passed");
+		}
+		extentReporter.endTest(test);
 	}
 
 	@AfterTest(alwaysRun = true)
@@ -115,6 +130,7 @@ public class BaseTest {
 		if (driver != null)
 			driver.quit();
 		endReport();
+		extentReporter.flush();
 	}
 
 	private void endReport() {
@@ -144,5 +160,15 @@ public class BaseTest {
 
 		capabilities.setCapability(CapabilityType.PROXY, proxy);
 
+	}
+
+	public ExtentTest getTest() {
+		return test;
+	}
+
+	@Test
+	public void test() {
+		System.out.println("in test");
+		executor.assertEquals("actual", "expected", "message");
 	}
 }

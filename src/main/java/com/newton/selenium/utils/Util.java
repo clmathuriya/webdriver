@@ -3,6 +3,8 @@ package com.newton.selenium.utils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpEntity;
@@ -22,8 +24,10 @@ public class Util {
 	private static Util instance;
 	String jira_attachment_baseURL = "";
 	String jira_attachment_authentication = "";
+	private String reportPath;
 
 	private Util() {
+		reportPath = getExtentReportPath();
 
 	}
 
@@ -131,5 +135,23 @@ public class Util {
 		}
 
 		return true;
+	}
+
+	public List<String> getBrokenLinks(WebDriver driver) {
+		List<String> links = new ArrayList<String>();
+
+		return links;
+
+	}
+
+	private String getExtentReportPath() {
+
+		new File("./test-output/extent-reports").mkdirs();
+		String reportPath = "./test-output/extent-reports/extent-report" + System.currentTimeMillis() + ".html";
+		return reportPath;
+	}
+
+	public String getReportPath() {
+		return reportPath;
 	}
 }

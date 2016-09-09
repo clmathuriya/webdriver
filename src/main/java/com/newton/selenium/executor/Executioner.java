@@ -18,8 +18,11 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.Reporter;
 
-import com.newton.selenium.reporter.PlancessReporter;
+import com.newton.selenium.reporter.CustomReporter;
+import com.newton.selenium.reporter.MyReporter;
 import com.newton.selenium.utils.Util;
+import com.relevantcodes.extentreports.ExtentTest;
+import com.relevantcodes.extentreports.LogStatus;
 
 import io.appium.java_client.android.AndroidDriver;
 
@@ -30,35 +33,43 @@ public class Executioner {
 	private long startTime;
 	private long duration;
 	public StopWatch stopWatch;
-	public PlancessReporter reporter;
+	public MyReporter reporter;
+	private ExtentTest test;
 
 	public Executioner(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
 		this.wait = wait;
 		util = Util.getInstance();
-		reporter = PlancessReporter.getInstance();
+		reporter = MyReporter.getInstance(util.getReportPath());
 		stopWatch = reporter.getStopWatch();
 
 	}
 
 	public Executioner() {
 		util = Util.getInstance();
-		reporter = PlancessReporter.getInstance();
+		reporter = MyReporter.getInstance(util.getReportPath());
 		stopWatch = reporter.getStopWatch();
 	}
 
-	public PlancessReporter getReporter() {
-		return reporter;
+	public Executioner(WebDriver driver, WebDriverWait wait, ExtentTest test) {
+		this.driver = driver;
+		this.wait = wait;
+		this.test = test;
+		util = Util.getInstance();
+		reporter = MyReporter.getInstance(util.getReportPath());
+		stopWatch = reporter.getStopWatch();
+
 	}
 
 	private void addStep(long start, long duration, String step, String status, String screenShot) {
 
 		if (screenShot.length() > 4) {
-			reporter.log("<tr> <td>" + start + "</td> <td>" + duration + "</td> <td>" + step + " </td> <td>" + status
-					+ "</td> <td><a href='" + screenShot + "' > screenshot </a></td></tr>");
+
+			test.log(LogStatus.PASS,
+					step + "</td> <td class='step-details'><a href='" + screenShot + "' > screenshot </a></td>");
 		} else {
-			reporter.log("<tr> <td>" + start + "</td> <td>" + duration + "</td> <td>" + step + " </td> <td>" + status
-					+ "</td> <td>" + screenShot + "</td></tr>");
+
+			test.log(LogStatus.PASS, step + "</td> <td class='step-details'>" + screenShot + "</td>");
 		}
 	}
 

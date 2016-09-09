@@ -24,7 +24,7 @@ import org.testng.ISuiteResult;
 import org.testng.ITestContext;
 import org.testng.Reporter;
 
-public class PlancessReporter implements IReporter {
+public class CustomReporter implements IReporter {
 	private String getURL = "https://company.atlassian.net/wiki/rest/api/content/2097245/?expand=body.storage";
 	private String putURL = "https://company.atlassian.net/wiki/rest/api/content/2097245/";
 
@@ -42,11 +42,11 @@ public class PlancessReporter implements IReporter {
 
 	private Date date;
 	private PrintWriter mOut;
-	private static PlancessReporter instance;
+	private static CustomReporter instance;
 	private StopWatch stopWatch;
 	private String reportFileName = "";
 
-	public PlancessReporter() {
+	public CustomReporter() {
 		new File("./test-output/custom-reports").mkdirs();
 		String reportPath = "./test-output/custom-reports/custom-report" + System.currentTimeMillis() + ".html";
 		stopWatch = new StopWatch();
@@ -64,9 +64,9 @@ public class PlancessReporter implements IReporter {
 
 	}
 
-	public static PlancessReporter getInstance() {
+	public static CustomReporter getInstance() {
 		if (instance == null) {
-			instance = new PlancessReporter();
+			instance = new CustomReporter();
 		}
 		return instance;
 	}
