@@ -60,6 +60,10 @@ public class Executioner {
 		stopWatch = reporter.getStopWatch();
 
 	}
+	
+	public void setTest(ExtentTest test) {
+		this.test = test;
+	}
 
 	private void addStep(long start, long duration, String step, String status, String screenShot) {
 

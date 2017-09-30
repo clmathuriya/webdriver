@@ -58,8 +58,8 @@ public class BaseTest {
 
 	@Parameters({ "host_ip", "port", "os", "browser", "browserVersion", "useProxy", "deviceName" })
 	@BeforeMethod
-	public void setUp(@Optional("localhost") String host, @Optional("4444") String port, @Optional("LINUX") String os,
-			@Optional("firefox") String browser, @Optional("40.0") String browserVersion,
+	public void setUp(@Optional("localhost") String host, @Optional("4444") String port, @Optional("MAC") String os,
+			@Optional("chrome") String browser, @Optional("40.0") String browserVersion,
 			@Optional("false") String useProxy, @Optional("") String deviceName, @Optional Method method) {
 
 		// to log starting of test case in report table
@@ -86,6 +86,8 @@ public class BaseTest {
 		}
 
 		executor = new Executioner();
+		executor.setTest(test);
+	
 
 		this.driver = executor.openBrowser(host, port, capabilities);
 
@@ -166,9 +168,4 @@ public class BaseTest {
 		return test;
 	}
 
-	@Test
-	public void test() {
-		System.out.println("in test");
-		executor.assertEquals("actual", "expected", "message");
-	}
 }
